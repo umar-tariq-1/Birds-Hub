@@ -6,8 +6,6 @@ import Home from "../src/pages/Home/Home";
 import CustomLoadingAnimation from "./components/LoadingAnimation/loadingAnimation";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
-//Other options:
-
 // import SignUp from "./pages/SignUp/signUp";
 // import Login from "./pages/Login/login";
 // import Contact from "./pages/Contact/contact";
