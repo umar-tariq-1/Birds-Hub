@@ -1,0 +1,82 @@
+* {
+  font-family: sans-serif;
+}
+
+.sign_up_button {
+  background-color: #1b854a;
+  width: 124px;
+  height: 38px;
+  color: aliceblue;
+  border-radius: 20px;
+  transition: all 0.4s;
+  border-style: solid;
+  border-color: aliceblue;
+  border-width: 1px;
+}
+.sign_up_button:hover {
+  height: 38px;
+  color: #1b854a;
+  border-color: aliceblue;
+  background: aliceblue;
+  font-size: 21px;
+}
+
+.login_button {
+  background-color: #1b854a;
+  width: 103px;
+  height: 38px;
+  color: aliceblue;
+  border-radius: 20px;
+  transition: all 0.4s;
+  border-style: solid;
+  border-color: aliceblue;
+  border-width: 1px;
+}
+.login_button:hover {
+  height: 38px;
+  color: #1b854a;
+  border-color: aliceblue;
+  background: aliceblue;
+  font-size: 21px;
+}
+
+.animatedParagraph {
+  will-change: transform, filter;
+}
+
+@keyframes scale {
+  0% {
+    filter: blur(12px);
+  }
+  100% {
+    transform: scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* Apply animation to all paragraphs */
+.ani1 {
+  transform: scale(0);
+  animation: scale 1s forwards cubic-bezier(0.5, 1, 0.89, 1);
+  animation-delay: 0.015s; /* Apply animation delays */
+}
+.ani2 {
+  transform: scale(0);
+  animation: scale 1s forwards cubic-bezier(0.5, 1, 0.89, 1);
+  animation-delay: 0.085s; /* Apply animation delays */
+}
+.ani3 {
+  transform: scale(0);
+  animation: scale 1s forwards cubic-bezier(0.5, 1, 0.89, 1);
+  animation-delay: 0.165s; /* Apply animation delays */
+}
+.ani4 {
+  transform: scale(0);
+  animation: scale 1s forwards cubic-bezier(0.5, 1, 0.89, 1);
+  animation-delay: 0.245s; /* Apply animation delays */
+}
+.ani5 {
+  transform: scale(0);
+  animation: scale 1s forwards cubic-bezier(0.5, 1, 0.89, 1);
+  animation-delay: 0.325s; /* Apply animation delays */
+}
