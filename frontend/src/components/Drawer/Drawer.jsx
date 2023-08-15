@@ -48,6 +48,7 @@ function ResponsiveDrawer(props) {
       setIsLoading(false);
       enqueueSnackbar("Logged out successfully.", { variant: "success" });
       localStorage.setItem("isLoggedIn", "false");
+      localStorage.setItem("tokenExpirationTime", "null");
       navigate("/login");
     } catch (err) {
       setIsLoading(false);

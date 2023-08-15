@@ -34,7 +34,7 @@ const Navbar = (props) => {
         </div>
         <div
           className={`menu-icon shadow align-items-center justify-content-center ${showNavbar && "pressed"}`}
-          style={{width:"51px"}}
+          style={{width:"48px"}}
         >
           <HamburgerButton handleShowNavbar={handleShowNavbar} showNavbar={showNavbar} />
           

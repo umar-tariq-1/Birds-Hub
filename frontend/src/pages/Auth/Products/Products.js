@@ -4,9 +4,11 @@ import ProductCard from "../../../components/ProductCard/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import CustomRefreshAnimation from "../../../components/CustomRefreshAnimation/CustomRefreshAnimation";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const AllProducts = () => {
-  const [enable, setEnable] = useState(false);
+  const [settled, setSettled] = useState(false);
+  const [parent] = useAutoAnimate();
   const { isFetching, isLoading, data } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
@@ -22,32 +24,34 @@ const AllProducts = () => {
       console.log(error);
     },
     onSettled: () => {
-      setEnable(false);
+      setSettled(false);
     },
-    enabled: enable,
+    enabled: settled,
   });
 
   return (
     <ResponsiveDrawer Products={1}>
-      {isLoading && <CustomRefreshAnimation />}
-      <div className="container-fluid">
-        <ProductCard
-          image="327167969"
-          rating={3.8}
-          name="Cotton"
-          city="Lahore"
-          description="Best cotton you can find in market"
-          price={1200}
-          ratingsCount={109}
-        />
-      </div>
-      <div
-        className="btn btn-primary"
-        onClick={() => {
-          setEnable(true);
-        }}
-      >
-        Fetch
+      <div ref={parent}>
+        {isLoading ? <CustomRefreshAnimation /> : null}
+        <div className="container-fluid">
+          <ProductCard
+            image="327167969"
+            rating={3.8}
+            name="Cotton"
+            city="Lahore"
+            description="Best cotton you can find in market"
+            price={1200}
+            ratingsCount={109}
+          />
+        </div>
+        <div
+          className="btn btn-primary"
+          onClick={() => {
+            setSettled(true);
+          }}
+        >
+          Fetch
+        </div>
       </div>
     </ResponsiveDrawer>
   );
