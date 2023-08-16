@@ -37,12 +37,12 @@ export default function HomeContent() {
                     className="text-uppercase text-center fw-bold"
                     style={{ color: "aliceblue" ,fontFamily:'Titillium Web, sans-serif',fontSize: "285%" }}
                   >
-                    Bringing farm
+                    Empowering
                   </h1>
                 </div>
                 <div className={`${styles.ani2} ${styles.animatedParagraph}`}>
                   <h1 style={{ color: "aliceblue",fontFamily:'Titillium Web, sans-serif' ,fontSize: "200%" }}>
-                    To Your Doorstep And
+                    Bird Entrepreneurs
                   </h1>
                 </div>
                 <div className={`${styles.ani3} ${styles.animatedParagraph}`}>
@@ -50,12 +50,12 @@ export default function HomeContent() {
                     className="text-capitalize mb-5"
                     style={{ color: "aliceblue",fontFamily:'Titillium Web, sans-serif', fontSize: "190%" }}
                   >
-                    Neighbourhood stores
+                     with Avian Inventory
                   </h1>
                 </div>
                 <div className={`${styles.ani4} ${styles.animatedParagraph}`}>
                   <p style={{ color: "aliceblue",fontFamily:'Titillium Web, sans-serif' ,fontSize: "130%" }}>
-                    We are a team of passionate individuals who are committed to bridge the gap between farmers and merket, empowering both. {/* them to reach wider audience and ensure fair prices */}{/*  Our mission is to bridge the gap between farmers and market. */}
+                    We are a team of passionate individuals who are committed to enhance bird entrepreneurs by powerful inventory. {/* them to reach wider audience and ensure fair prices */}{/*  Our mission is to bridge the gap between farmers and market. */}
                   </p>
                 </div>
                 <div className={`${styles.ani5} ${styles.animatedParagraph}`}>

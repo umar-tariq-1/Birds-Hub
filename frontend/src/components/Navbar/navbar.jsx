@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 import "./navbar.css";
 // import { FiMenu } from "react-icons/fi";
-import { FaTractor } from "react-icons/fa";
+
+import { GiEgyptianBird } from "react-icons/gi";
+
 import { FiArrowRightCircle } from "react-icons/fi";
 import HamburgerButton from "../HamburgerButton/HamburgerButton";
 
@@ -28,9 +30,9 @@ const Navbar = (props) => {
   return (
     <nav className="navbar shadow-custom">
       <div className="container">
-        <div style={{ display: "flex" }} className="logo">
-          <FaTractor size={58} />
-          <h2 style={{ marginTop: 8, marginLeft: 15 }}>KISAAN APP</h2>
+        <div style={{ display: "flex",marginLeft:4 }} className="logo">
+          <GiEgyptianBird size={55}/>
+          <h2 style={{ marginTop: 8, marginLeft: 8 }}>BIRDS HUB</h2>
         </div>
         <div
           className={`menu-icon shadow align-items-center justify-content-center ${showNavbar && "pressed"}`}

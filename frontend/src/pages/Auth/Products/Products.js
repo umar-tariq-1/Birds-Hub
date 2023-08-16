@@ -3,12 +3,11 @@ import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 import ProductCard from "../../../components/ProductCard/ProductCard";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import CustomRefreshAnimation from "../../../components/CustomRefreshAnimation/CustomRefreshAnimation";
+import CustomRefreshAnimation from "../../../components/RefreshAnimation/RefreshAnimation";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const AllProducts = () => {
   const [settled, setSettled] = useState(false);
-  const [parent] = useAutoAnimate();
   const { isFetching, isLoading, data } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
@@ -28,6 +27,8 @@ const AllProducts = () => {
     },
     enabled: settled,
   });
+
+  const [parent] = useAutoAnimate({ duration: 200 });
 
   return (
     <ResponsiveDrawer Products={1}>
