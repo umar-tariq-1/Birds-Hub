@@ -202,14 +202,13 @@ function SignUp() {
       {loading && <CustomLoadingAnimation />}
       <Navbar SignUp={1} data-aos />
       <div
-        className="d-flex mt-lg-5 align-items-center justify-contennt-center"
+        className="d-flex align-items-center justify-content-center custom-center"
         style={{
-          height: "calc(90vh - 70px)",
           width: "100%",
         }}
       >
         <div
-          className="container pb-4 pb-md-0 mx-auto"
+          className="container pb-5 mx-auto"
           style={{
             backgroundColor: "#eee",
           }}
