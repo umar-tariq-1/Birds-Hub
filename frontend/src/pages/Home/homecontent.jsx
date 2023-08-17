@@ -22,7 +22,7 @@ export default function HomeContent() {
       {/* <Navbar Home={1} /> */}
       <div
         style={{
-          height: "600px",
+          height: "570px",
           backgroundImage: `url(${preloadSrcList[0]})`,
           backgroundPosition: "81%",
           backgroundSize: "cover",
