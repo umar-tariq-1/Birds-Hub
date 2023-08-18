@@ -4,9 +4,9 @@ const { authorize } = require("../middlewares/authorize");
 const User = require("../models/user");
 const product = require("../models/product");
 
-const getProducts = express.Router();
+const getBirds = express.Router();
 
-getProducts.get("/", authorize, async (req, res) => {
+getBirds.get("/", authorize, async (req, res) => {
   try {
     const products = await product.find({}, { _id: 0, __v: 0 });
     data = [...products];
@@ -22,4 +22,4 @@ getProducts.get("/", authorize, async (req, res) => {
   }
 });
 
-module.exports = getProducts;
+module.exports = getBirds;

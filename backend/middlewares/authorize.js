@@ -20,10 +20,13 @@ module.exports.authorize = async (req, res, next) => {
   }
   jwt.verify(token, process.env.TOKEN_KEY, async (err, data) => {
     if (err) {
-      return res.clearCookie("token", { httpOnly: true }).status(401).send({
-        message: "Access token expired. Please login again!",
-        isLoggedIn: false,
-      });
+      return res
+        .clearCookie("token", { httpOnly: true, secure: true })
+        .status(401)
+        .send({
+          message: "Access token expired. Please login again!",
+          isLoggedIn: false,
+        });
     } else {
       const user = await User.findById(data.id);
 

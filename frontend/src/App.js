@@ -56,7 +56,7 @@ function App() {
 
   const queryClient = new QueryClient({
     defaultOptions: {
-      queries: { cacheTime: 1000 * 60 * 60 * 24, retry: false },
+      queries: { cacheTime: 1000 * 60 * 60 * 48, retry: false },
     },
   });
   return (

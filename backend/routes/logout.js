@@ -4,9 +4,9 @@ const logout = express.Router();
 
 logout.post("/", authorize, (req, res) => {
   return res
-    .clearCookie("token", { httpOnly: true })
-    .send({ message: "Logged out successfully!", isLoggedIn: false })
-    .status(200);
+    .clearCookie("token", { httpOnly: true, secure: true })
+    .status(200)
+    .send({ message: "Logged out successfully!", isLoggedIn: false });
 });
 
 module.exports = logout;

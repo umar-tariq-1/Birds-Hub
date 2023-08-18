@@ -7,7 +7,7 @@ const ImageKit = require("imagekit");
 const User = require("../models/user");
 const product = require("../models/product");
 
-const addProduct = express.Router();
+const addBird = express.Router();
 
 var imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -21,7 +21,7 @@ const storage = multer.memoryStorage();
 // Create the multer upload object
 const upload = multer({ storage });
 
-addProduct.post(
+addBird.post(
   "/",
   authorize,
   upload.array("image", 4),
@@ -96,4 +96,4 @@ addProduct.post(
   }
 );
 
-module.exports = addProduct;
+module.exports = addBird;

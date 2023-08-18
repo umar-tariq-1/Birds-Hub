@@ -81,10 +81,10 @@ function AddBird() {
         var jsonData = { name, address, quantity, description, price };
         formData.append("data", JSON.stringify(jsonData));
 
-        const url = process.env.REACT_APP_BASE_URL + "/addProduct";
+        const url = process.env.REACT_APP_BASE_URL + "/addBird";
         const { data } = await axios.post(url, formData, config);
         // console.log(data);
-        enqueueSnackbar("Images uploaded successfully", {
+        enqueueSnackbar("Bird data uploaded successfully", {
           variant: "success",
         });
       } catch (error) {

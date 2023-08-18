@@ -35,7 +35,7 @@ export default function HomeFeatures() {
       <div className="mt-3 py-4 py-xl-5">
         <div className="row-6 mb-5">
           <div className="col-10 col-md-8 col-xl-3 text-center mx-auto">
-            <h1 data-aos="zoom-in-up" className="mb-2">Salient Features</h1>
+            <h1 className="mb-2">Salient Features</h1>
             <p data-aos="zoom-in-up">
               Carefully catered necessary features for user friendly
               environment.

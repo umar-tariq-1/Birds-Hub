@@ -35,7 +35,6 @@ const Navbar = (props) => {
           <h2 style={{ marginTop: 8, marginLeft: 8 }}>BIRDS HUB</h2>
         </div>
         <div
-        onClick={handleShowNavbar}
           className={`menu-icon shadow align-items-center justify-content-center ${showNavbar && "pressed"}`}
           style={{width:"48px"}}
         >

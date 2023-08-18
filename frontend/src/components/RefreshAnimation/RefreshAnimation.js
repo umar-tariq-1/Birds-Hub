@@ -12,7 +12,7 @@ const CustomRefreshAnimation = (props) => {
           display: "flex",
         }}
       >
-        <div class="spinner"></div>
+        <div className="spinner"></div>
       </div>
 
       {/* <div className="loader">

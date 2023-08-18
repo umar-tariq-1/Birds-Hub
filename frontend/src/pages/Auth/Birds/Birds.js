@@ -11,7 +11,7 @@ const AllProducts = () => {
   const { isFetching, isLoading, data } = useQuery({
     queryKey: ["birds"],
     queryFn: async () => {
-      return await axios.get("http://localhost:3001/getProducts", {
+      return await axios.get("http://localhost:3001/getBirds", {
         withCredentials: true,
       });
     },
@@ -20,7 +20,7 @@ const AllProducts = () => {
       console.log(data.data);
     },
     onError: (error) => {
-      console.log(error);
+      console.log(error?.response?.data?.message);
     },
     onSettled: () => {
       setSettled(false);
@@ -28,12 +28,12 @@ const AllProducts = () => {
     enabled: settled,
   });
 
-  const [parent] = useAutoAnimate({ duration: 200 });
+  const [parent] = useAutoAnimate({ duration: 250 });
 
   return (
     <ResponsiveDrawer Birds={1}>
       <div ref={parent}>
-        {isLoading ? <CustomRefreshAnimation /> : null}
+        {isFetching ? <CustomRefreshAnimation /> : null}
         <div className="container-fluid">
           <ProductCard
             image="327167969"

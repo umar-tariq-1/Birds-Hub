@@ -7,8 +7,8 @@ const cookieParser = require("cookie-parser");
 const register = require("./routes/register");
 const login = require("./routes/login");
 const logout = require("./routes/logout");
-const addProduct = require("./routes/addProduct");
-const getProducts = require("./routes/getProducts");
+const addBird = require("./routes/addBird");
+const getBirds = require("./routes/getBirds");
 
 const app = express();
 
@@ -28,8 +28,8 @@ app.use(cookieParser());
 app.use("/register", register);
 app.use("/login", login);
 app.use("/logout", logout);
-app.use("/addProduct", addProduct);
-app.use("/getProducts", getProducts);
+app.use("/addBird", addBird);
+app.use("/getBirds", getBirds);
 
 const PORT = process.env.PORT || 3001;
 const CONN_URL = process.env.DB_CONN_URL;
