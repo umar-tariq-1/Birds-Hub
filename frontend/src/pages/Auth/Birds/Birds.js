@@ -9,7 +9,7 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 const AllProducts = () => {
   const [settled, setSettled] = useState(false);
   const { isFetching, isLoading, data } = useQuery({
-    queryKey: ["products"],
+    queryKey: ["birds"],
     queryFn: async () => {
       return await axios.get("http://localhost:3001/getProducts", {
         withCredentials: true,

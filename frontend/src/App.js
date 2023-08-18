@@ -73,8 +73,8 @@ function App() {
             <Route path="/about" Component={AboutComponent} />
             <Route path="/contact" Component={ContactComponent} />
             <Route path="/dashboard" Component={Dashboard} />
-            <Route path="/products" Component={Birds} />
-            <Route path="/myProducts" Component={MyBirds} />
+            <Route path="/birds" Component={Birds} />
+            <Route path="/myBirds" Component={MyBirds} />
             <Route path="/favourites" Component={Favourites} />
             <Route path="/profile" Component={Profile} />
             <Route path="/settings" Component={Settings} />

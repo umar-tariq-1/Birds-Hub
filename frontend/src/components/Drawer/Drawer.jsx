@@ -109,7 +109,7 @@ function delay(ms) {
           active={props.Birds}
           icon={<FaListUl size={22} style={{marginBottom:"2px"}} />}
           handleClick={() => {
-            delay(280).then(() => {navigate("/products");})
+            delay(280).then(() => {navigate("/birds");})
             
           }}
           closeDrawer={closeDrawer}
@@ -129,7 +129,7 @@ function delay(ms) {
           active={props.MyBirds}
           icon={<BsBasketFill style={{marginBottom:"3px"}} />}
           handleClick={() => {
-            delay(280).then(() => {navigate("/myProducts");})
+            delay(280).then(() => {navigate("/myBirds");})
             
           }}
           closeDrawer={closeDrawer}
@@ -186,7 +186,7 @@ function delay(ms) {
           active={props.Birds}
           icon={<FaListUl size={22} style={{marginBottom:"2px"}} />}
           handleClick={() => {
-            navigate("/products")
+            navigate("/birds")
           }}
           closeDrawer={closeDrawer}
         />
@@ -204,7 +204,7 @@ function delay(ms) {
           active={props.MyBirds}
           icon={<BsBasketFill style={{marginBottom:"3px"}} />}
           handleClick={() => {
-           navigate("/myProducts")
+           navigate("/myBirds")
           }}
           closeDrawer={closeDrawer}
         />
@@ -342,7 +342,7 @@ function delay(ms) {
             ? props.AllProducts
             : active.categories
             ? props.Categories
-            : active.myProducts
+            : active.myBirds
             ? props.MyBirds
             : active.mProfile
             ? props.MyProfile
