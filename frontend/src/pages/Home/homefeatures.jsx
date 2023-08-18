@@ -32,10 +32,10 @@ export default function HomeFeatures() {
         letterSpacing: "1px",
       }}
     >
-      <div className="mt-4 py-4 py-xl-5">
+      <div className="mt-3 py-4 py-xl-5">
         <div className="row-6 mb-5">
           <div className="col-10 col-md-8 col-xl-3 text-center mx-auto">
-            <h1 className="mb-2">Salient Features</h1>
+            <h1 data-aos="zoom-in-up" className="mb-2">Salient Features</h1>
             <p data-aos="zoom-in-up">
               Carefully catered necessary features for user friendly
               environment.
@@ -55,7 +55,7 @@ export default function HomeFeatures() {
                 <img
                   style={{ height: "93px", width: "93px" }}
                   src={checkPic}
-                  alt=""
+                  alt=" Loading..."
                   data-aos="zoom-in-up"
                 />
               </div>
@@ -78,7 +78,7 @@ export default function HomeFeatures() {
                 <img
                   style={{ height: "93px", width: "107px" }}
                   src={moneyPic}
-                  alt=""
+                  alt=" Loading..."
                   data-aos="zoom-in-up"
                 />
               </div>
@@ -92,15 +92,15 @@ export default function HomeFeatures() {
                   Also ensure the fair prices of all crops.
                 </p>
               </div>
+              </div>
             </div>
-          </div>
           <div className="col">
             <div className="text-center d-flex flex-column align-items-center align-items-xl-center">
               <div className="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon">
                 <img
                   style={{ height: "92px", width: "92px" }}
                   src={searchPic}
-                  alt=""
+                  alt=" Loading..."
                   data-aos="zoom-in-up"
                 />
               </div>
@@ -116,8 +116,8 @@ export default function HomeFeatures() {
               </div>
             </div>
           </div>
+              </div>
         </div>
-      </div>
 
       <div style={{ marginTop: "20px" }}>
         <footer
