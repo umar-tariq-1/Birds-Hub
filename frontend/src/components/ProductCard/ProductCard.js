@@ -36,7 +36,7 @@ const ProductCard = (props) => {
                 <div className="d-flex flex-row">
                   <div className="text-warning mb-1 me-2">
                     {Array.from({ length: props.rating }, (_, index) => (
-                      <FaStar size={"17px"} />
+                      <FaStar key={index} size={"17px"} />
                     ))}
                     {halfStar && <FaStarHalf size={"17px"} />}
                   </div>
