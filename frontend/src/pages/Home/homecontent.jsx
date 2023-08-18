@@ -54,7 +54,7 @@ export default function HomeContent() {
                      with Avian Inventory
                   </h1>
                 </div>
-                <div className={`${styles.ani5} ${styles.animatedParagraph}`}>
+                <div className={`${styles.ani4} ${styles.animatedParagraph}`}>
                   <Link
                     to="/signup"
                     style={{
