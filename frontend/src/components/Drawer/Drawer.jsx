@@ -105,8 +105,8 @@ function delay(ms) {
           closeDrawer={closeDrawer}
         />
          <CustomListItem
-          text="Products"
-          active={props.Products}
+          text="Birds"
+          active={props.Birds}
           icon={<FaListUl size={22} style={{marginBottom:"2px"}} />}
           handleClick={() => {
             delay(280).then(() => {navigate("/products");})
@@ -125,8 +125,8 @@ function delay(ms) {
           closeDrawer={closeDrawer}
         />
         <CustomListItem
-          text="My Products"
-          active={props.MyProducts}
+          text="My Birds"
+          active={props.MyBirds}
           icon={<BsBasketFill style={{marginBottom:"3px"}} />}
           handleClick={() => {
             delay(280).then(() => {navigate("/myProducts");})
@@ -182,8 +182,8 @@ function delay(ms) {
           closeDrawer={closeDrawer}
         />
         <CustomListItem
-          text="Products"
-          active={props.Products}
+          text="Birds"
+          active={props.Birds}
           icon={<FaListUl size={22} style={{marginBottom:"2px"}} />}
           handleClick={() => {
             navigate("/products")
@@ -200,8 +200,8 @@ function delay(ms) {
           closeDrawer={closeDrawer}
         />
         <CustomListItem
-          text="My Products"
-          active={props.MyProducts}
+          text="My Birds"
+          active={props.MyBirds}
           icon={<BsBasketFill style={{marginBottom:"3px"}} />}
           handleClick={() => {
            navigate("/myProducts")
@@ -343,7 +343,7 @@ function delay(ms) {
             : active.categories
             ? props.Categories
             : active.myProducts
-            ? props.MyProducts
+            ? props.MyBirds
             : active.mProfile
             ? props.MyProfile
             : props.Settings} */}

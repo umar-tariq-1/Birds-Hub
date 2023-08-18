@@ -13,8 +13,8 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 // import MainPage from "../src/pages/Auth/MainPage/MainPage";
 
 import Dashboard from "./pages/Auth/Dashboard/Dashboard";
-import Products from "./pages/Auth/Products/Products";
-import MyProducts from "./pages/Auth/MyProducts/MyProducts";
+import Birds from "./pages/Auth/Birds/Birds";
+import MyBirds from "./pages/Auth/MyBirds/MyBirds";
 import Favourites from "./pages/Auth/Favourites/Favourites";
 import Profile from "./pages/Auth/Profile/Profile";
 import Settings from "./pages/Auth/Settings/Settings";
@@ -30,10 +30,10 @@ const AboutComponent = lazyWithPreload(() => import("./pages/About/about"));
 //   import("./pages/Auth/Dashboard/Dashboard")
 // );
 // const ProductsComponent = lazyWithPreload(() =>
-//   import("./pages/Auth/Products/Products")
+//   import("./pages/Auth/Birds/Birds")
 // );
 // const MyProductsComponent = lazyWithPreload(() =>
-//   import("./pages/Auth/MyProducts/MyProducts")
+//   import("./pages/Auth/MyBirds/MyBirds")
 // );
 // const FavouritesComponent = lazyWithPreload(() =>
 //   import("./pages/Auth/Favourites/Favourites")
@@ -73,8 +73,8 @@ function App() {
             <Route path="/about" Component={AboutComponent} />
             <Route path="/contact" Component={ContactComponent} />
             <Route path="/dashboard" Component={Dashboard} />
-            <Route path="/products" Component={Products} />
-            <Route path="/myProducts" Component={MyProducts} />
+            <Route path="/products" Component={Birds} />
+            <Route path="/myProducts" Component={MyBirds} />
             <Route path="/favourites" Component={Favourites} />
             <Route path="/profile" Component={Profile} />
             <Route path="/settings" Component={Settings} />

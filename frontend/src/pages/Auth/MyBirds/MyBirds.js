@@ -5,7 +5,7 @@ import CustomLoadingAnimation from "../../../components/LoadingAnimation/loading
 import { useSnackbar } from "notistack";
 import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 
-const MyProducts = () => {
+const MyBirds = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(false);
@@ -113,10 +113,10 @@ const MyProducts = () => {
   };
 
   return (
-    <ResponsiveDrawer MyProducts={1}>
+    <ResponsiveDrawer MyBirds={1}>
       {/* <CustomLoadingAnimation /> */}
       <div className="App">
-        <h1>Product Form</h1>
+        <h1>Add Bird Form</h1>
         <div>
           <label>Name:</label>
           <input
@@ -216,4 +216,4 @@ const MyProducts = () => {
   );
 };
 
-export default MyProducts;
+export default MyBirds;

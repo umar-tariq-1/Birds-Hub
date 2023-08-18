@@ -31,7 +31,7 @@ const AllProducts = () => {
   const [parent] = useAutoAnimate({ duration: 200 });
 
   return (
-    <ResponsiveDrawer Products={1}>
+    <ResponsiveDrawer Birds={1}>
       <div ref={parent}>
         {isLoading ? <CustomRefreshAnimation /> : null}
         <div className="container-fluid">

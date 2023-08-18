@@ -60,7 +60,7 @@ export default function HomeFeatures() {
                 />
               </div>
               <div className="px-3">
-                <h4 data-aos="zoom-in-up">Featured Products</h4>
+                <h4 data-aos="zoom-in-up">Featured Birds</h4>
                 <p data-aos="zoom-in-up">
                   Showcase a selection of the freshest and most in-demand crops
                   from local farmers and highlights unique qualities and
