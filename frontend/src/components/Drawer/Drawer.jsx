@@ -246,8 +246,9 @@ function delay(ms) {
       <Box sx={{ display: "flex" }}>
         {/* <CssBaseline /> */}
         <AppBar
-          position="fixed"
+          position="absolute"
           sx={{
+            position:{md:"fixed"},
             background: "#1b854a",
             height: "66px",
             zIndex: 9999 /* (theme) => theme.zIndex.drawer + 1 */,
@@ -294,6 +295,7 @@ function delay(ms) {
             open={mobileOpen}
             onClose={handleDrawerToggle}
             sx={{
+              zIndex:9998,
               display: { xs: "block", md: "none" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
@@ -329,24 +331,13 @@ function delay(ms) {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
+            p:{md:3},
             width: { xs:"100%", md: `calc(100% - ${drawerWidth}px)` },
             background: "rgba(182,251,203,0.1)",
           }}
         >
           <Toolbar />
           {props.children}
-          {/* {active.dashboard
-            ? props.Dashboard
-            : active.allProducts
-            ? props.AllProducts
-            : active.categories
-            ? props.Categories
-            : active.myBirds
-            ? props.MyBirds
-            : active.mProfile
-            ? props.MyProfile
-            : props.Settings} */}
         </Box>
       </Box>
     </>

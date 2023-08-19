@@ -1,12 +1,349 @@
-import React, { useState } from "react";
-import AddBird from "./AddBird";
+import React, { useState, useMemo, useRef } from "react";
+// import AddBird from "./AddBird";
+import "./MyBirds.css";
+import { MaterialReactTable } from "material-react-table";
 import ResponsiveDrawer from "../../../components/Drawer/Drawer";
+import { format, parse } from "date-fns";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Slide from "@mui/material/Slide";
+
+const data = [
+  { name: "Arif", date: "5-Aug-23", price: 25000 },
+  { name: "Arif", date: "15-Aug-23", price: 25000 },
+  { name: "Arif", date: "10-Aug-23", price: 25000 },
+  { name: "Arif", date: "19-Aug-23", price: 25000 },
+];
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const todayDate = new Date();
+
+const monthsArray = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const yearsArray = Array.from(
+  { length: todayDate.getFullYear() - 1969 },
+  (_, index) => Number(todayDate.getFullYear() - index)
+);
 
 const MyBirds = () => {
+  const [open, setOpen] = useState(false);
+  const [month, setMonth] = useState(todayDate.getMonth());
+  const [year, setYear] = useState(todayDate.getFullYear());
+
+  const handleYearChange = (e) => {
+    if (e.target.value === "") {
+      setYear(todayDate.getFullYear());
+    } else {
+      setYear(e.target.value);
+    }
+  };
+  const handleMonthChange = (e) => {
+    if (e.target.value === "") {
+      setMonth(todayDate.getMonth());
+    } else {
+      setMonth(e.target.value);
+    }
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const [range, setRange] = useState({});
+
+  const handleSelect = (selectedRange) => {
+    if (!selectedRange?.to) {
+      setRange({ from: selectedRange?.from, to: selectedRange?.from });
+    } else {
+      setRange(selectedRange);
+    }
+  };
+
+  let footer = <></>;
+
+  if (range?.from) {
+    footer = (
+      <div
+        className="w-100 d-flex justify-content-evenly align-items-center mt-3"
+        style={{ color: "darkgreen", fontSize: "18px" }}
+      >
+        {range?.from === range?.to ? (
+          <p>{format(range.from, "dd-MMM-yy")}</p>
+        ) : (
+          <>
+            <p>{format(range.from, "dd-MMM-yy")}</p>
+            <p>to</p>
+            <p>{format(range.to, "dd-MMM-yy")}</p>
+          </>
+        )}
+      </div>
+    );
+  } else {
+    footer = (
+      <div
+        className="w-100 d-flex justify-content-evenly align-items-center mt-3"
+        style={{ color: "darkgreen", fontSize: "18px" }}
+      >
+        <p>Please pick the range...</p>
+      </div>
+    );
+  }
+
+  const tableInstanceRef = useRef(null);
+  const [showColumnFilters, setShowColumnFilters] = useState(false);
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: "name",
+        header: "Name",
+        size: 200,
+        // All of the options you can specify here
+      },
+      {
+        accessorKey: "price",
+        header: "Price",
+        size: 131,
+        Cell: ({ cell }) =>
+          cell.getValue().toLocaleString("en-US", {
+            style: "currency",
+            currency: "PKR",
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+          }),
+        filterVariant: "range-slider",
+        filterFn: "betweenInclusive", // default (or between)
+        muiTableHeadCellFilterSliderProps: {
+          //no need to specify min/max/step if using faceted values
+          min: 2000,
+          max: 20000,
+          marks: true,
+          step: 500,
+          valueLabelFormat: (value) =>
+            value.toLocaleString("en-US", {
+              style: "currency",
+              currency: "PKR",
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            }),
+        },
+      },
+      {
+        accessorKey: "date",
+        header: "Date Purchased",
+        // Cell: ({ cell }) =>
+        //   cell
+        //     .getValue()
+        //     .toLocaleString("en", {
+        //       day: "2-digit",
+        //       month: "short",
+        //       year: "2-digit",
+        //     })
+        //     .replace(/,/g, ""),
+        Filter: ({ header }) => (
+          <div className="d-flex flex-column justify-content-between align-items-center w-100">
+            <Button
+              variant="outlined"
+              onClick={handleClickOpen}
+              className="mt-2"
+            >
+              Select range
+            </Button>
+
+            {/* {range.from !== undefined && range.to !== undefined ? (
+              <p>
+                {`${format(range.from, "dd-MMM-yy")} - ${format(
+                  range.to,
+                  "dd-MMM-yy"
+                )}`}
+              </p>
+            ) : null} */}
+          </div>
+        ),
+        filterFn: (row, _columnIds, filterValue) =>
+          Object.keys(filterValue).length === 0 ||
+          (filterValue?.to === undefined && filterValue?.from === undefined) ||
+          (parse(row.getValue("date"), "dd-MMM-yy", todayDate).getTime() >=
+            filterValue.from &&
+            parse(row.getValue("date"), "dd-MMM-yy", todayDate).getTime() <=
+              filterValue.to),
+      },
+    ],
+    []
+  );
   return (
     <ResponsiveDrawer MyBirds={1}>
-      <AddBird />
+      {/* <AddBird /> */}
       {/* <CustomLoadingAnimation /> */}
+      <div className="py-2 px-1">
+        <MaterialReactTable
+          columns={columns}
+          data={data}
+          tableInstanceRef={tableInstanceRef}
+          muiTableHeadCellProps={{
+            sx: {
+              fontWeight: "bold",
+              fontSize: "21px",
+              backgroundColor: "rgb(182,251,203)",
+              whiteSpace: "nowrap",
+            },
+            style: { paddingTop: "14px", paddingBottom: "8px" },
+          }}
+          muiTableBodyCellProps={{
+            sx: { fontSize: "18px" },
+          }}
+          enablePinning={true}
+          positionGlobalFilter="left"
+          enableBottomToolbar={false}
+          enablePagination={false}
+          enableStickyHeader={true}
+          enableRowNumbers={true}
+          enableFullScreenToggle={false}
+          enableColumnFilters={true}
+          enableColumnResizing={true}
+          enableGlobalFilterRankedResults={true}
+          enableRowSelection={true}
+          // enableSubRowSelection={true}
+          onShowColumnFiltersChange={() => {
+            tableInstanceRef.current.resetColumnFilters();
+            setShowColumnFilters(!showColumnFilters);
+          }}
+          enableGlobalFilter={true}
+          enableColumnDragging={false}
+          enableGrouping={true}
+          initialState={{ showColumnFilters: showColumnFilters }}
+          state={{
+            showColumnFilters: showColumnFilters,
+          }}
+        />
+      </div>
+
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogContent>
+          <div className="d-flex align-items-center justify-content-center">
+            <DayPicker
+              id="rangeFilter"
+              mode="range"
+              selected={range}
+              footer={footer}
+              defaultMonth={new Date(year, month)}
+              month={new Date(year, month)}
+              disableNavigation={true}
+              onSelect={handleSelect}
+            />
+          </div>
+          <div className="d-flex w-100 justify-content-evenly align-items-center">
+            <FormControl size="small">
+              <InputLabel id="monthLabel">Month</InputLabel>
+              <Select
+                labelId="monthLabel"
+                id="monthSelect"
+                value={month}
+                onChange={handleMonthChange}
+                label="Month"
+                sx={{ width: 120 }}
+              >
+                <MenuItem sx={{ backgroundColor: "lightgrey" }} value="">
+                  <em>
+                    <b>Current Month</b>
+                  </em>
+                </MenuItem>
+                {monthsArray.map((value, index) => {
+                  return (
+                    <MenuItem key={value} value={index}>
+                      {value.toLocaleString()}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+            <FormControl size="small">
+              <InputLabel id="yearLabel">Year</InputLabel>
+              <Select
+                labelId="yearLabel"
+                id="yearSelect"
+                value={year}
+                onChange={handleYearChange}
+                label="Year"
+                sx={{ width: 120 }}
+              >
+                <MenuItem sx={{ backgroundColor: "lightgrey" }} value="">
+                  <em>
+                    <b>Current Year</b>
+                  </em>
+                </MenuItem>
+                {yearsArray.map((value) => {
+                  return (
+                    <MenuItem key={value} value={value}>
+                      {value}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <div
+            className="btn btn-outline-danger"
+            onClick={() => {
+              // setRange({});
+              handleClose();
+            }}
+          >
+            Close
+          </div>
+          <div
+            className="btn btn-outline-success"
+            onClick={() => {
+              tableInstanceRef.current.getColumn("date").setFilterValue({});
+              setRange({});
+            }}
+          >
+            Reset Filter
+          </div>
+          <div
+            className="btn btn-primary"
+            onClick={() => {
+              tableInstanceRef.current.getColumn("date").setFilterValue(range);
+              handleClose();
+            }}
+          >
+            Apply
+          </div>
+        </DialogActions>
+      </Dialog>
     </ResponsiveDrawer>
   );
 };
