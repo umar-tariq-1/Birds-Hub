@@ -9,6 +9,8 @@ import "react-day-picker/dist/style.css";
 import Menu from "@mui/material/Menu";
 import GetAppIcon from "@mui/icons-material/GetApp";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import {
   IconButton,
   Slide,
@@ -248,6 +250,7 @@ const MyBirds = () => {
           enableColumnFilters={true}
           enableColumnResizing={true}
           enableGlobalFilterRankedResults={true}
+          selectAllMode="all"
           onShowColumnFiltersChange={() => {
             tableInstanceRef.current.resetColumnFilters();
             setShowColumnFilters(!showColumnFilters);
@@ -271,9 +274,17 @@ const MyBirds = () => {
               //Exporting logic here
               handleMenuClose();
             };
+            const selectAll = () => {
+              //Select All logic here
+              handleMenuClose();
+            };
+            const unselectAll = () => {
+              //Unselect All logic here
+              handleMenuClose();
+            };
             return (
               <div>
-                <Tooltip arrow title="Export Options">
+                <Tooltip arrow title="More Options">
                   <IconButton
                     aria-label="more"
                     id="long-button"
@@ -282,7 +293,7 @@ const MyBirds = () => {
                     aria-haspopup="true"
                     onClick={handleMenuIconClick}
                   >
-                    <MoreVertIcon />
+                    <MoreVertIcon fontSize="large" />
                   </IconButton>
                 </Tooltip>
                 <Menu
@@ -303,9 +314,31 @@ const MyBirds = () => {
                     sx={{ height: "4.55ch" }}
                     disableRipple
                     // selected={option === "Pyxis"}
+                    onClick={selectAll}
+                  >
+                    <CheckBoxIcon fontSize="medium" />
+                    <p style={{ fontSize: "18px", margin: "0px 0px 0px 10px" }}>
+                      Select All
+                    </p>
+                  </MenuItem>
+                  <MenuItem
+                    sx={{ height: "4.55ch" }}
+                    disableRipple
+                    // selected={option === "Pyxis"}
+                    onClick={unselectAll}
+                  >
+                    <CheckBoxOutlineBlankIcon fontSize="medium" />
+                    <p style={{ fontSize: "18px", margin: "0px 0px 0px 10px" }}>
+                      Unselect All
+                    </p>
+                  </MenuItem>
+                  <MenuItem
+                    sx={{ height: "4.55ch" }}
+                    disableRipple
+                    // selected={option === "Pyxis"}
                     onClick={exportPDF}
                   >
-                    <GetAppIcon />
+                    <GetAppIcon fontSize="medium" />
                     <p style={{ fontSize: "18px", margin: "0px 0px 2px 10px" }}>
                       Export PDF
                     </p>
@@ -316,7 +349,7 @@ const MyBirds = () => {
                     // selected={option === "Pyxis"}
                     onClick={exportXLS}
                   >
-                    <GetAppIcon />
+                    <GetAppIcon fontSize="medium" />
                     <p style={{ fontSize: "18px", margin: "0px 0px 2px 10px" }}>
                       Export Excel
                     </p>
