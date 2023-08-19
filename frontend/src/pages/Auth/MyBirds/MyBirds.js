@@ -6,15 +6,26 @@ import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 import { format, parse } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import Slide from "@mui/material/Slide";
+import Menu from "@mui/material/Menu";
+import GetAppIcon from "@mui/icons-material/GetApp";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import {
+  IconButton,
+  Slide,
+  Tooltip,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Select,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+} from "@mui/material";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const data = [
   { name: "Arif", date: "5-Aug-23", price: 25000 },
@@ -22,9 +33,6 @@ const data = [
   { name: "Arif", date: "10-Aug-23", price: 25000 },
   { name: "Arif", date: "19-Aug-23", price: 25000 },
 ];
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const todayDate = new Date();
 
@@ -51,6 +59,20 @@ const MyBirds = () => {
   const [open, setOpen] = useState(false);
   const [month, setMonth] = useState(todayDate.getMonth());
   const [year, setYear] = useState(todayDate.getFullYear());
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [range, setRange] = useState({});
+  const [rowSelection, setRowSelection] = useState({});
+  const tableInstanceRef = useRef(null);
+  const [showColumnFilters, setShowColumnFilters] = useState(false);
+
+  const menuOpen = Boolean(anchorEl);
+
+  const handleMenuIconClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleYearChange = (e) => {
     if (e.target.value === "") {
@@ -70,12 +92,9 @@ const MyBirds = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
-
-  const [range, setRange] = useState({});
 
   const handleSelect = (selectedRange) => {
     if (!selectedRange?.to) {
@@ -86,7 +105,6 @@ const MyBirds = () => {
   };
 
   let footer = <></>;
-
   if (range?.from) {
     footer = (
       <div
@@ -115,8 +133,6 @@ const MyBirds = () => {
     );
   }
 
-  const tableInstanceRef = useRef(null);
-  const [showColumnFilters, setShowColumnFilters] = useState(false);
   const columns = useMemo(
     () => [
       {
@@ -174,15 +190,6 @@ const MyBirds = () => {
             >
               Select range
             </Button>
-
-            {/* {range.from !== undefined && range.to !== undefined ? (
-              <p>
-                {`${format(range.from, "dd-MMM-yy")} - ${format(
-                  range.to,
-                  "dd-MMM-yy"
-                )}`}
-              </p>
-            ) : null} */}
           </div>
         ),
         filterFn: (row, _columnIds, filterValue) =>
@@ -196,6 +203,7 @@ const MyBirds = () => {
     ],
     []
   );
+
   return (
     <ResponsiveDrawer MyBirds={1}>
       {/* <AddBird /> */}
@@ -205,6 +213,17 @@ const MyBirds = () => {
           columns={columns}
           data={data}
           tableInstanceRef={tableInstanceRef}
+          muiTableBodyRowProps={({ row }) => ({
+            onClick: () =>
+              setRowSelection((prev) => ({
+                ...prev,
+                [row.id]: !prev[row.id],
+              })),
+            selected: rowSelection[row.id],
+            sx: {
+              cursor: "pointer",
+            },
+          })}
           muiTableHeadCellProps={{
             sx: {
               fontWeight: "bold",
@@ -215,7 +234,9 @@ const MyBirds = () => {
             style: { paddingTop: "14px", paddingBottom: "8px" },
           }}
           muiTableBodyCellProps={{
-            sx: { fontSize: "18px" },
+            sx: {
+              fontSize: "18px",
+            },
           }}
           enablePinning={true}
           positionGlobalFilter="left"
@@ -227,8 +248,6 @@ const MyBirds = () => {
           enableColumnFilters={true}
           enableColumnResizing={true}
           enableGlobalFilterRankedResults={true}
-          enableRowSelection={true}
-          // enableSubRowSelection={true}
           onShowColumnFiltersChange={() => {
             tableInstanceRef.current.resetColumnFilters();
             setShowColumnFilters(!showColumnFilters);
@@ -236,9 +255,75 @@ const MyBirds = () => {
           enableGlobalFilter={true}
           enableColumnDragging={false}
           enableGrouping={true}
-          initialState={{ showColumnFilters: showColumnFilters }}
+          initialState={{
+            showColumnFilters: showColumnFilters,
+          }}
           state={{
             showColumnFilters: showColumnFilters,
+            rowSelection,
+          }}
+          renderTopToolbarCustomActions={() => {
+            const exportPDF = () => {
+              //Exporting logic here
+              handleMenuClose();
+            };
+            const exportXLS = () => {
+              //Exporting logic here
+              handleMenuClose();
+            };
+            return (
+              <div>
+                <Tooltip arrow title="Export Options">
+                  <IconButton
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={menuOpen ? "long-menu" : undefined}
+                    aria-expanded={menuOpen ? "true" : undefined}
+                    aria-haspopup="true"
+                    onClick={handleMenuIconClick}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  id="long-menu"
+                  MenuListProps={{
+                    "aria-labelledby": "long-button",
+                  }}
+                  anchorEl={anchorEl}
+                  open={menuOpen}
+                  onClose={handleMenuClose}
+                  PaperProps={{
+                    style: {
+                      width: "23ch",
+                    },
+                  }}
+                >
+                  <MenuItem
+                    sx={{ height: "4.55ch" }}
+                    disableRipple
+                    // selected={option === "Pyxis"}
+                    onClick={exportPDF}
+                  >
+                    <GetAppIcon />
+                    <p style={{ fontSize: "18px", margin: "0px 0px 2px 10px" }}>
+                      Export PDF
+                    </p>
+                  </MenuItem>
+                  <MenuItem
+                    sx={{ height: "4.55ch" }}
+                    disableRipple
+                    // selected={option === "Pyxis"}
+                    onClick={exportXLS}
+                  >
+                    <GetAppIcon />
+                    <p style={{ fontSize: "18px", margin: "0px 0px 2px 10px" }}>
+                      Export Excel
+                    </p>
+                  </MenuItem>
+                </Menu>
+              </div>
+            );
           }}
         />
       </div>
