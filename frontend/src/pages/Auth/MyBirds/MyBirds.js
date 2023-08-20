@@ -266,6 +266,13 @@ const MyBirds = () => {
             rowSelection,
           }}
           renderTopToolbarCustomActions={() => {
+            const getTrueObject = (number) => {
+              const result = {};
+              for (let i = 0; i < number; i++) {
+                result[i] = true;
+              }
+              return result;
+            };
             const exportPDF = () => {
               //Exporting logic here
               handleMenuClose();
@@ -275,11 +282,11 @@ const MyBirds = () => {
               handleMenuClose();
             };
             const selectAll = () => {
-              //Select All logic here
+              setRowSelection(getTrueObject(data.length));
               handleMenuClose();
             };
             const unselectAll = () => {
-              //Unselect All logic here
+              setRowSelection({});
               handleMenuClose();
             };
             return (
@@ -296,6 +303,7 @@ const MyBirds = () => {
                     <MoreVertIcon fontSize="large" />
                   </IconButton>
                 </Tooltip>
+
                 <Menu
                   id="long-menu"
                   MenuListProps={{
@@ -310,28 +318,35 @@ const MyBirds = () => {
                     },
                   }}
                 >
-                  <MenuItem
-                    sx={{ height: "4.55ch" }}
-                    disableRipple
-                    // selected={option === "Pyxis"}
-                    onClick={selectAll}
-                  >
-                    <CheckBoxIcon fontSize="medium" />
-                    <p style={{ fontSize: "18px", margin: "0px 0px 0px 10px" }}>
-                      Select All
-                    </p>
-                  </MenuItem>
-                  <MenuItem
-                    sx={{ height: "4.55ch" }}
-                    disableRipple
-                    // selected={option === "Pyxis"}
-                    onClick={unselectAll}
-                  >
-                    <CheckBoxOutlineBlankIcon fontSize="medium" />
-                    <p style={{ fontSize: "18px", margin: "0px 0px 0px 10px" }}>
-                      Unselect All
-                    </p>
-                  </MenuItem>
+                  {tableInstanceRef.current.getIsAllRowsSelected() ? (
+                    <MenuItem
+                      sx={{ height: "4.55ch" }}
+                      disableRipple
+                      // selected={option === "Pyxis"}
+                      onClick={unselectAll}
+                    >
+                      <CheckBoxOutlineBlankIcon fontSize="medium" />
+                      <p
+                        style={{ fontSize: "18px", margin: "0px 0px 0px 10px" }}
+                      >
+                        Unselect All
+                      </p>
+                    </MenuItem>
+                  ) : (
+                    <MenuItem
+                      sx={{ height: "4.55ch" }}
+                      disableRipple
+                      // selected={option === "Pyxis"}
+                      onClick={selectAll}
+                    >
+                      <CheckBoxIcon fontSize="medium" />
+                      <p
+                        style={{ fontSize: "18px", margin: "0px 0px 0px 10px" }}
+                      >
+                        Select All
+                      </p>
+                    </MenuItem>
+                  )}
                   <MenuItem
                     sx={{ height: "4.55ch" }}
                     disableRipple
