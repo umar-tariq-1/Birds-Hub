@@ -17,6 +17,7 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { FaFilePdf } from "react-icons/fa6";
 import { FaFileExcel } from "react-icons/fa6";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 import {
   IconButton,
@@ -165,7 +166,7 @@ const MyBirds = () => {
   const [rowSelection, setRowSelection] = useState({});
   const tableInstanceRef = useRef(null);
   const [showColumnFilters, setShowColumnFilters] = useState(false);
-
+  const [parent] = useAutoAnimate({ duration: 500 });
   const menuOpen = Boolean(anchorEl);
 
   const handleMenuIconClick = (event) => {
@@ -363,14 +364,15 @@ const MyBirds = () => {
             tableInstanceRef.current.resetColumnFilters();
             setShowColumnFilters(!showColumnFilters);
           }}
+          muiTableBodyProps={{ ref: parent }}
           enableGlobalFilter={true}
           enableColumnDragging={false}
           enableGrouping={true}
           initialState={{
-            showColumnFilters: showColumnFilters,
+            showColumnFilters,
           }}
           state={{
-            showColumnFilters: showColumnFilters,
+            showColumnFilters,
             rowSelection,
           }}
           renderTopToolbarCustomActions={() => {
