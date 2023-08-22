@@ -19,16 +19,6 @@ import { FaFilePdf } from "react-icons/fa6";
 import { FaFileExcel } from "react-icons/fa6";
 
 import {
-  MRT_FullScreenToggleButton,
-  MRT_GlobalFilterTextField,
-  MRT_ShowHideColumnsButton,
-  MRT_ToggleDensePaddingButton,
-  MRT_ToggleFiltersButton,
-} from "material-react-table";
-import PrintIcon from "@mui/icons-material/Print";
-import { alpha, Box, Toolbar } from "@mui/material";
-
-import {
   IconButton,
   Slide,
   Tooltip,
@@ -359,7 +349,7 @@ const MyBirds = () => {
             },
           }}
           enablePinning={true}
-          positionGlobalFilter="left"
+          positionGlobalFilter="right"
           enableBottomToolbar={false}
           enablePagination={false}
           enableStickyHeader={true}
@@ -449,7 +439,7 @@ const MyBirds = () => {
                     aria-haspopup="true"
                     onClick={handleMenuIconClick}
                   >
-                    <MoreVertIcon fontSize="large" />
+                    <MoreVertIcon fontSize="medium" />
                   </IconButton>
                 </Tooltip>
 
