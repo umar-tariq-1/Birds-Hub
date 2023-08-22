@@ -24,7 +24,7 @@ body {
 
 .navbar {
   padding-top: 0.2rem;
-  z-index: 9999;
+  z-index: 1291;
   height: 65px;
   background-color: #1b854a;
   position: relative;

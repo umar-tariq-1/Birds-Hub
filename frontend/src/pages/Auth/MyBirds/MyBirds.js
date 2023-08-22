@@ -1,6 +1,10 @@
 import React, { useState, useMemo, useRef } from "react";
 // import AddBird from "./AddBird";
 import "./MyBirds.css";
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+import * as FileSaver from "file-saver";
+import XLSX from "sheetjs-style";
 import { MaterialReactTable } from "material-react-table";
 import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 import { format, parse } from "date-fns";
@@ -11,6 +15,19 @@ import GetAppIcon from "@mui/icons-material/GetApp";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import { FaFilePdf } from "react-icons/fa6";
+import { FaFileExcel } from "react-icons/fa6";
+
+import {
+  MRT_FullScreenToggleButton,
+  MRT_GlobalFilterTextField,
+  MRT_ShowHideColumnsButton,
+  MRT_ToggleDensePaddingButton,
+  MRT_ToggleFiltersButton,
+} from "material-react-table";
+import PrintIcon from "@mui/icons-material/Print";
+import { alpha, Box, Toolbar } from "@mui/material";
+
 import {
   IconButton,
   Slide,
@@ -25,15 +42,107 @@ import {
   DialogContent,
 } from "@mui/material";
 
+const fileType =
+  "application/vnd.openxmlformats.officedocument.spreadsheetml.sheet;charset-UTF-8";
+const fileExtension = ".xlsx";
+const exportToExcel = async (excelData, fileName) => {
+  let maxNameWidth = 0;
+  const maxColumnWidths = {};
+
+  excelData.forEach((item) => {
+    if (item.name && item.name.length > maxNameWidth) {
+      maxNameWidth = item.name.length;
+    }
+    console.log(maxNameWidth);
+  });
+
+  const capitalizedData = excelData.map((item) => {
+    const capitalizedItem = {};
+    for (const key in item) {
+      const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+      capitalizedItem[capitalizedKey] = item[key];
+    }
+    return capitalizedItem;
+  });
+
+  const ws = XLSX.utils.json_to_sheet(capitalizedData);
+
+  excelData.forEach((item) => {
+    for (const key in item) {
+      const cellValue = item[key].toString();
+      if (!maxColumnWidths[key] || cellValue.length > maxColumnWidths[key]) {
+        if (key === "name") {
+          maxColumnWidths[key] = cellValue.length - 7;
+        } else {
+          maxColumnWidths[key] = cellValue.length;
+        }
+      }
+    }
+  });
+
+  // Apply column widths
+  const columnWidths = Object.keys(maxColumnWidths).map((key) => ({
+    wch: maxColumnWidths[key] + 2, // Adding a buffer for cell padding
+  }));
+
+  ws["!cols"] = columnWidths;
+
+  // Apply header style to header cells
+  const headerCells = columnWidths.map((col, index) =>
+    XLSX.utils.encode_cell({ c: index, r: 0 })
+  );
+
+  const headerStyle = {
+    font: {
+      name: "arial",
+      sz: 13,
+      bold: true,
+      color: { rgb: "black" },
+    },
+  };
+
+  headerCells.forEach((cell) => {
+    ws[cell].s = headerStyle;
+  });
+
+  const alignmentStyle = {
+    alignment: { horizontal: "left" },
+  };
+
+  // Apply the alignment style to all cells in the worksheet
+  for (const cellAddress in ws) {
+    if (cellAddress.startsWith("B")) {
+      // Adjust the column letter if needed
+      if (cellAddress === "B1") {
+        continue;
+      }
+      ws[cellAddress].s = alignmentStyle;
+    }
+  }
+
+  const wb = {
+    Sheets: {
+      [format(todayDate, "dd-MMM-yy", { useAdditionalWeekYearTokens: true })]:
+        ws,
+    },
+    SheetNames: [
+      format(todayDate, "dd-MMM-yy", { useAdditionalWeekYearTokens: true }),
+    ],
+  };
+  const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  const Data = new Blob([excelBuffer], { type: fileType });
+  FileSaver.saveAs(Data, fileName + fileExtension);
+};
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const data = [
-  { name: "Arif", date: "5-Aug-23", price: 25000 },
-  { name: "Arif", date: "15-Aug-23", price: 25000 },
-  { name: "Arif", date: "10-Aug-23", price: 25000 },
-  { name: "Arif", date: "19-Aug-23", price: 25000 },
+  { name: "Parblue split palefellow red eye", price: 25000, date: "5-Aug-23" },
+  { name: "Arif", price: 20000, date: "15-Aug-23" },
+  { name: "Arif", price: 19000, date: "10-Aug-23" },
+  { name: "Arif", price: 25000, date: "19-Aug-23" },
 ];
 
 const todayDate = new Date();
@@ -156,24 +265,25 @@ const MyBirds = () => {
           }),
         filterVariant: "range-slider",
         filterFn: "betweenInclusive", // default (or between)
+        enableGlobalFilter: true,
         muiTableHeadCellFilterSliderProps: {
-          //no need to specify min/max/step if using faceted values
-          min: 2000,
-          max: 20000,
+          min: 3000,
+          max: 30000,
           marks: true,
-          step: 500,
-          valueLabelFormat: (value) =>
-            value.toLocaleString("en-US", {
-              style: "currency",
-              currency: "PKR",
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            }),
+          step: 1000,
+          sx: { width: "95%", marginLeft: "-8px" },
+          // valueLabelFormat: (value) =>
+          //   value.toLocaleString("en-US", {
+          //     style: "currency",
+          //     currency: "PKR",
+          //     minimumFractionDigits: 0,
+          //     maximumFractionDigits: 0,
+          //   }),
         },
       },
       {
         accessorKey: "date",
-        header: "Date Purchased",
+        header: "Date",
         // Cell: ({ cell }) =>
         //   cell
         //     .getValue()
@@ -183,7 +293,7 @@ const MyBirds = () => {
         //       year: "2-digit",
         //     })
         //     .replace(/,/g, ""),
-        Filter: ({ header }) => (
+        Filter: () => (
           <div className="d-flex flex-column justify-content-between align-items-center w-100">
             <Button
               variant="outlined"
@@ -201,6 +311,14 @@ const MyBirds = () => {
             filterValue.from &&
             parse(row.getValue("date"), "dd-MMM-yy", todayDate).getTime() <=
               filterValue.to),
+        sortingFn: (rowA, rowB, columnId) =>
+          parse(rowA.getValue(columnId), "dd-MMM-yy", todayDate).getTime() >
+          parse(rowB.getValue(columnId), "dd-MMM-yy", todayDate).getTime()
+            ? 1
+            : parse(rowA.getValue(columnId), "dd-MMM-yy", todayDate).getTime() <
+              parse(rowB.getValue(columnId), "dd-MMM-yy", todayDate).getTime()
+            ? -1
+            : 0,
       },
     ],
     []
@@ -246,7 +364,7 @@ const MyBirds = () => {
           enablePagination={false}
           enableStickyHeader={true}
           enableRowNumbers={true}
-          enableFullScreenToggle={false}
+          enableFullScreenToggle={true}
           enableColumnFilters={true}
           enableColumnResizing={true}
           enableGlobalFilterRankedResults={true}
@@ -273,16 +391,47 @@ const MyBirds = () => {
               }
               return result;
             };
+            const handleExportPDF = (rows) => {
+              const doc = new jsPDF();
+              const tableData = rows.map((row) => Object.values(row.original));
+              const tableHeaders = columns.map((c) => c.header);
+
+              autoTable(doc, {
+                head: [tableHeaders],
+                body: tableData,
+              });
+
+              doc.save("myBirds Record.pdf");
+            };
             const exportPDF = () => {
-              //Exporting logic here
+              handleExportPDF(
+                tableInstanceRef.current.getPrePaginationRowModel().rows
+              );
+              handleMenuClose();
+            };
+            const exportSelectedPDF = () => {
+              handleExportPDF(
+                tableInstanceRef.current.getSelectedRowModel().rows
+              );
               handleMenuClose();
             };
             const exportXLS = () => {
+              exportToExcel(data, "myBirds Record");
+              // console.log(JSON.stringify(data));
+              //Exporting logic here
+              handleMenuClose();
+            };
+            const exportSelectedXLS = () => {
               //Exporting logic here
               handleMenuClose();
             };
             const selectAll = () => {
-              setRowSelection(getTrueObject(data.length));
+              setRowSelection(
+                getTrueObject(
+                  tableInstanceRef.current.getPrePaginationRowModel().rows
+                    .length
+                )
+              );
               handleMenuClose();
             };
             const unselectAll = () => {
@@ -314,7 +463,7 @@ const MyBirds = () => {
                   onClose={handleMenuClose}
                   PaperProps={{
                     style: {
-                      width: "23ch",
+                      width: "25ch",
                     },
                   }}
                 >
@@ -350,6 +499,10 @@ const MyBirds = () => {
                   <MenuItem
                     sx={{ height: "4.55ch" }}
                     disableRipple
+                    disabled={
+                      tableInstanceRef.current.getPrePaginationRowModel().rows
+                        .length === 0
+                    }
                     // selected={option === "Pyxis"}
                     onClick={exportPDF}
                   >
@@ -361,12 +514,58 @@ const MyBirds = () => {
                   <MenuItem
                     sx={{ height: "4.55ch" }}
                     disableRipple
+                    disabled={
+                      !tableInstanceRef.current.getIsSomeRowsSelected() &&
+                      !tableInstanceRef.current.getIsAllRowsSelected()
+                    }
+                    // selected={option === "Pyxis"}
+                    onClick={exportSelectedPDF}
+                  >
+                    <FaFilePdf size={21} style={{ marginLeft: "3px" }} />
+                    <p
+                      style={{
+                        fontSize: "18px",
+                        margin: "0px 0px 2px 10px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      Export Selected
+                    </p>
+                  </MenuItem>
+                  <MenuItem
+                    sx={{ height: "4.55ch" }}
+                    disableRipple
+                    disabled={
+                      tableInstanceRef.current.getPrePaginationRowModel().rows
+                        .length === 0
+                    }
                     // selected={option === "Pyxis"}
                     onClick={exportXLS}
                   >
                     <GetAppIcon fontSize="medium" />
                     <p style={{ fontSize: "18px", margin: "0px 0px 2px 10px" }}>
                       Export Excel
+                    </p>
+                  </MenuItem>
+                  <MenuItem
+                    sx={{ height: "4.55ch" }}
+                    disableRipple
+                    disabled={
+                      tableInstanceRef.current.getPrePaginationRowModel().rows
+                        .length === 0
+                    }
+                    // selected={option === "Pyxis"}
+                    onClick={exportXLS}
+                  >
+                    <FaFileExcel size={21} style={{ marginLeft: "3px" }} />
+                    <p
+                      style={{
+                        fontSize: "18px",
+                        margin: "0px 0px 2px 10px",
+                        marginLeft: "10px",
+                      }}
+                    >
+                      Export Selected
                     </p>
                   </MenuItem>
                 </Menu>
@@ -377,6 +576,7 @@ const MyBirds = () => {
       </div>
 
       <Dialog
+        sx={{ zIndex: 1300 }}
         open={open}
         TransitionComponent={Transition}
         keepMounted
@@ -431,11 +631,10 @@ const MyBirds = () => {
                 label="Year"
                 sx={{ width: 120 }}
               >
-                <MenuItem sx={{ backgroundColor: "lightgrey" }} value="">
-                  <em>
-                    <b>Current Year</b>
-                  </em>
-                </MenuItem>
+                <MenuItem
+                  sx={{ backgroundColor: "lightgrey" }}
+                  value=""
+                ></MenuItem>
                 {yearsArray.map((value) => {
                   return (
                     <MenuItem key={value} value={value}>

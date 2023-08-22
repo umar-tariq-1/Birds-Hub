@@ -251,7 +251,7 @@ function delay(ms) {
             position:{md:"fixed"},
             background: "#1b854a",
             height: "66px",
-            zIndex: 9999 /* (theme) => theme.zIndex.drawer + 1 */,
+            zIndex: 1290 /* (theme) => theme.zIndex.drawer + 1 */,  
           }}
         >
           <Toolbar>
@@ -295,7 +295,7 @@ function delay(ms) {
             open={mobileOpen}
             onClose={handleDrawerToggle}
             sx={{
-              zIndex:9998,
+              zIndex:1289,
               display: { xs: "block", md: "none" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
