@@ -65,6 +65,14 @@ const MyBirds = () => {
         },
       },
       {
+        accessorKey: "gender",
+        header: "Gender",
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+      },
+      {
         accessorKey: "date",
         header: "Date",
         // Cell: ({ cell }) =>
@@ -89,6 +97,14 @@ const MyBirds = () => {
         ),
         filterFn,
         sortingFn,
+      },
+      {
+        accessorKey: "purchasedFrom",
+        header: "Purchased From",
+      },
+      {
+        accessorKey: "phone",
+        header: "Phone",
       },
     ],
     []
@@ -134,6 +150,7 @@ const MyBirds = () => {
             sx: {
               cursor: "pointer",
             },
+            onDoubleClick: (row) => alert(row),
           })}
           muiTableHeadCellProps={{
             sx: {
