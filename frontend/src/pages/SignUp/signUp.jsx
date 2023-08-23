@@ -13,8 +13,8 @@ import CustomToolTip from "../../components/Tooltip/tooltip";
 import CustomPasswordField from "../../components/Form/passwordfield";
 import CustomLoadingAnimation from "../../components/LoadingAnimation/loadingAnimation";
 import { FaLock, FaUserAlt } from "react-icons/fa";
-// import { TbMailFilled } from "react-icons/tb";
 import { FaPhone } from "react-icons/fa6";
+import{ validate, capitalize } from "./Validation";
 
 function SignUp() {
   const [userData, setuserData] = useState({
@@ -47,79 +47,6 @@ function SignUp() {
     setinputErrors({});
   };
 
-  function capitalize(Word) {
-    if (!Word) {
-      return;
-    }
-    return Word[0].toUpperCase() + Word.substring(1).toLowerCase();
-  }
-
-  function validate(Fname, Lname, Phone, Password, Confirmpassword) {
-    if (/\s/.test(Fname)) {
-      setError("Name must not contain blank space");
-      setinputErrors({ fname: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    }
-    // eslint-disable-next-line
-    else if (/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(Fname)) {
-      setError("First Name must contain only alphabet letters");
-      setinputErrors({ fname: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    } else if (/\d/.test(Fname)) {
-      setError("Name must not contain any number");
-      setinputErrors({ fname: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    }
-    // eslint-disable-next-line
-    else if (/[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/.test(Lname)) {
-      setError("Name must contain only alphabet letters");
-      setinputErrors({ lname: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    } else if (/\d/.test(Lname)) {
-      setError("Name must not contain any number");
-      setinputErrors({ lname: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    } else if (/\s/.test(Lname)) {
-      setError("Name must not contain blank space");
-      setinputErrors({ lname: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    }
-    // eslint-disable-next-line
-    else if (
-      /* !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(Email) */ !/^\+?\d{8,15}$/.test(
-        Phone
-      )
-    ) {
-      setError("Invalid Phone Number");
-      setinputErrors({ phone: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    } else if (/\s/.test(Password)) {
-      setError("Password must not contain blank space");
-      setinputErrors({ password: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    } else if (!Password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/)) {
-      setError("Incorrect Password");
-      setinputErrors({ password: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    } else if (Password !== Confirmpassword) {
-      setError("Passwords donot match");
-      setinputErrors({ confirmpassword: 1 });
-      enqueueSnackbar("Couldn't register", { variant: "error" });
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
@@ -129,7 +56,10 @@ function SignUp() {
         userData.lastName,
         userData.phone,
         userData.password,
-        userData.confirmpassword
+        userData.confirmpassword,
+        setError,
+        setinputErrors,
+        enqueueSnackbar
       )
     ) {
       setError("");
@@ -146,7 +76,6 @@ function SignUp() {
         ...userData,
         firstName: capitalize(userData.firstName),
         lastName: capitalize(userData.lastName),
-        phone: userData.phone.toLowerCase(),
       };
       await axios.post(url, newData);
       //console.log(res)
