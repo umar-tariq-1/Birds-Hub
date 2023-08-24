@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { authorize } = require("../middlewares/authorize");
+const { authorize, getAuthorizedUser } = require("../middlewares/authorize");
 const User = require("../models/user");
 const bird = require("../models/bird");
 
@@ -8,7 +8,11 @@ const getBirds = express.Router();
 
 getBirds.get("/", authorize, async (req, res) => {
   try {
-    const birds = await bird.find({}, { _id: 0, __v: 0 });
+    const authorizedUser = getAuthorizedUser();
+    const birds = await bird.find(
+      { creator: authorizedUser._id },
+      { _id: 0, __v: 0, creator: 0 }
+    );
     data = [...birds];
     if (data.length > 0) {
       return res

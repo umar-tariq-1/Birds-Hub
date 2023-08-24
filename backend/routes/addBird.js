@@ -36,7 +36,7 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
         const response = await imagekit.upload({
           file: req.file.buffer,
           fileName: Math.round(Math.random() * 1e9).toString(),
-          folder: "birdImage",
+          folder: "birdImages",
           useUniqueFileName: false,
         });
         image = response.name;
