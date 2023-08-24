@@ -56,7 +56,7 @@ register.post("/", async (req, res) => {
     lastName: userData.lastName,
     phone: userData.phone,
     password: userData.password,
-    products: [],
+    birds: [],
   });
 
   try {

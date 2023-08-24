@@ -274,7 +274,7 @@ function delay(ms) {
                 }}
                 className="h2 ms-3"
               >
-                KisaanApp Store
+                BirdsHub Inventory
               </h2>
             </div>
           </Toolbar>

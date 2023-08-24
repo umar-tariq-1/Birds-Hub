@@ -6,64 +6,36 @@ import CustomLoadingAnimation from "../../../components/LoadingAnimation/loading
 import { useSnackbar } from "notistack";
 
 function AddBird() {
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [address, setAddress] = useState("");
+  const [gender, setGender] = useState("");
+  const [status, setStatus] = useState("");
+  const [date, setDate] = useState("");
+  const [purchasedFrom, setPurchasedFrom] = useState("");
+  const [phone, setPhone] = useState("");
   const [price, setPrice] = useState("");
 
   const { enqueueSnackbar } = useSnackbar();
 
   const handleImageChange = (e) => {
-    const files = e.target.files;
-    const newSelectedImages = [];
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].type.startsWith("image/")) {
-        if (
-          !newSelectedImages.find((file) => {
-            return file.name === files[i].name;
-          })
-        ) {
-          newSelectedImages.push(files[i]);
-        }
-      } else {
-        alert(`File ${files[i].name} is not a valid image. Skipping.`);
-      }
-    }
-    e.target.value = null;
-    setSelectedImages([...newSelectedImages]);
-  };
+    const file = e.target.files[0]; // Select only the first image
 
-  const handleAddImages = (e) => {
-    const files = e.target.files;
-    const newSelectedImages = [];
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].type.startsWith("image/")) {
-        if (
-          !selectedImages.find((file) => {
-            return file.name === files[i].name;
-          })
-        ) {
-          newSelectedImages.push(files[i]);
-        }
-      } else {
-        alert(`File ${files[i].name} is not a valid image. Skipping.`);
-      }
+    if (file && file.type.startsWith("image/")) {
+      setSelectedImage([file]);
+    } else if (file) {
+      alert(`Selected file is not a valid image.`);
     }
+
     e.target.value = null;
-    setSelectedImages([...newSelectedImages, ...selectedImages]);
   };
 
   const handleImageUploadOptimized = async () => {
-    if (selectedImages.length > 0 && selectedImages.length < 5) {
+    if (selectedImage.length === 1) {
       setButtonDisabled(true);
-      var formData = new FormData();
-      for (let i = 0; i < selectedImages.length; i++) {
-        formData.append(`image`, selectedImages[i]);
-      }
+      const formData = new FormData();
+      formData.append(`image`, selectedImage[0]);
 
       const config = {
         onUploadProgress: (progressEvent) => {
@@ -78,12 +50,19 @@ function AddBird() {
 
       // Perform the image upload using Axios
       try {
-        var jsonData = { name, address, quantity, description, price };
+        const jsonData = {
+          name,
+          price,
+          gender,
+          status,
+          date,
+          purchasedFrom,
+          phone,
+        };
         formData.append("data", JSON.stringify(jsonData));
 
         const url = process.env.REACT_APP_BASE_URL + "/addBird";
-        const { data } = await axios.post(url, formData, config);
-        // console.log(data);
+        await axios.post(url, formData, config);
         enqueueSnackbar("Bird data uploaded successfully", {
           variant: "success",
         });
@@ -97,16 +76,12 @@ function AddBird() {
       }
 
       setTimeout(() => {
-        setSelectedImages([]);
+        setSelectedImage([]);
         setUploadProgress(0);
         setButtonDisabled(false);
       }, 700);
-    } else if (!(selectedImages.length > 0)) {
-      enqueueSnackbar("Select atleast 1 image before uploading", {
-        variant: "error",
-      });
-    } else if (selectedImages.length > 4) {
-      enqueueSnackbar("Select atmost 4 images before uploading", {
+    } else {
+      enqueueSnackbar("Select 1 image before uploading", {
         variant: "error",
       });
     }
@@ -116,35 +91,11 @@ function AddBird() {
       <div className="">
         <h1>Add Bird Form</h1>
         <div>
-          <label>Name:</label>
+          <label>Bird Name:</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Description:</label>
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Quantity:</label>
-          <input
-            type="text"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-          />
-        </div>
-        <div>
-          <label>Address:</label>
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
           />
         </div>
         <div>
@@ -155,61 +106,82 @@ function AddBird() {
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>
+        <div>
+          <label>Gender:</label>
+          <input
+            type="text"
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Status:</label>
+          <input
+            type="text"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Date of purchased:</label>
+          <input
+            type="text"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Purchased from:</label>
+          <input
+            type="text"
+            value={purchasedFrom}
+            onChange={(e) => setPurchasedFrom(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Phone number:</label>
+          <input
+            type="text"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </div>
       </div>
       <input
         id="imagesInputSelect"
         type="file"
         accept="image/*"
-        multiple
         onChange={handleImageChange}
         className="d-none"
       />
+      <div>
+        <p>Image: {selectedImage[0]?.name}</p>
+      </div>
+      {buttonDisabled && (
+        <LoadingBar value={Number(uploadProgress)} width="80%" />
+      )}
       <button
         className={`btn btn-primary ${buttonDisabled && "disabled"} mx-2 mb-4`}
         onClick={() => {
           document.getElementById("imagesInputSelect").click();
         }}
       >
-        Choose Images
+        Choose Image
       </button>
-      <input
-        id="imagesInputAdd"
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleAddImages}
-        className="d-none"
-      />
       <button
         className={`btn btn-primary ${buttonDisabled && "disabled"} mx-2 mb-4`}
         onClick={() => {
-          document.getElementById("imagesInputAdd").click();
+          setSelectedImage([]);
         }}
       >
-        Add Images
+        Clear Image
       </button>
       <button
         className={`btn btn-primary ${buttonDisabled && "disabled"} mx-2 mb-4`}
         onClick={handleImageUploadOptimized}
       >
-        Upload Product
+        Upload Bird data
       </button>
-      <button
-        className={`btn btn-primary ${buttonDisabled && "disabled"} mx-2 mb-4`}
-        onClick={() => {
-          setSelectedImages([]);
-        }}
-      >
-        Clear Images
-      </button>
-      <div>
-        {selectedImages.map((image, index) => (
-          <p key={Date.now().toString() + index.toString()}>{image.name}</p>
-        ))}
-      </div>
-      {buttonDisabled && (
-        <LoadingBar value={Number(uploadProgress)} width="80%" />
-      )}
     </>
   );
 }

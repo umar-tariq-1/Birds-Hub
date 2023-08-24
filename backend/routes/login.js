@@ -40,7 +40,7 @@ login.post("/", async (req, res) => {
 
     const foundUser = await User.findOne(
       { phone: loginData.phone },
-      { __v: 0, products: 0 }
+      { __v: 0, birds: 0 }
     );
 
     if (!foundUser) {
