@@ -13,6 +13,7 @@ const logout = require("./routes/User/logout");
 const addBird = require("./routes/Bird/addBird");
 const getBirds = require("./routes/Bird/getBirds");
 const deleteBird = require("./routes/Bird/deleteBird");
+const updateBird = require("./routes/Bird/updateBird");
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/logout", logout);
 app.use("/addBird", addBird);
 app.use("/getBirds", getBirds);
 app.use("/deleteBird", deleteBird);
+app.use("/updateBird", updateBird);
 
 const PORT = process.env.PORT || 3001;
 const CONN_URL = process.env.DB_CONN_URL;
