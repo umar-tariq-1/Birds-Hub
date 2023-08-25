@@ -1,5 +1,5 @@
 const express = require("express");
-const { authorize, getAuthorizedUser } = require("../middlewares/authorize");
+const { authorize, getAuthorizedUser } = require("../../middlewares/authorize");
 const logout = express.Router();
 
 logout.post("/", authorize, (req, res) => {

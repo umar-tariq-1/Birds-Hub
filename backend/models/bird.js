@@ -10,7 +10,10 @@ const birdSchema = new Schema({
   date: { type: String, required: true },
   purchasedFrom: { type: String, required: true },
   phone: { type: String, required: true },
-  image: { type: String, required: true },
+  image: {
+    name: { type: String, required: true },
+    id: { type: String, required: true },
+  },
   creator: { type: Schema.Types.ObjectId, required: true, ref: "User" },
 });
 

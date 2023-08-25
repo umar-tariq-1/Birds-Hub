@@ -1,8 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { authorize, getAuthorizedUser } = require("../middlewares/authorize");
-const User = require("../models/user");
-const bird = require("../models/bird");
+const { authorize, getAuthorizedUser } = require("../../middlewares/authorize");
+const User = require("../../models/user");
+const bird = require("../../models/bird");
 
 const getBirds = express.Router();
 
