@@ -3,24 +3,34 @@ const { validate } = require("../../utils/validate");
 const { capitalize } = require("../../utils/validate");
 const bcrypt = require("bcrypt");
 const User = require("../../models/user");
+const { findKeyWithEmptyStringValue } = require("../../utils/objectFunctions");
 
 const register = express.Router();
 
 register.post("/", async (req, res) => {
-  if (
-    req.body.firstName &&
-    req.body.lastName &&
-    req.body.phone &&
-    req.body.password &&
-    req.body.confirmpassword
+  var userData = {
+    firstName: capitalize(req.body?.firstName.trim()),
+    lastName: capitalize(req.body?.lastName.trim()),
+    phone: req.body?.phone.trim(),
+    password: req.body?.password,
+    confirmPassword: req.body?.confirmPassword,
+  };
+
+  const emptyKey = findKeyWithEmptyStringValue(userData);
+
+  if (emptyKey !== null) {
+    return res.status(422).send({
+      message: `${capitalize(
+        emptyKey.replace(/([A-Z])/g, " $1")
+      )} must not be empty`,
+    });
+  } else if (
+    userData.firstName &&
+    userData.lastName &&
+    userData.phone &&
+    userData.password &&
+    userData.confirmPassword
   ) {
-    userData = {
-      firstName: capitalize(req.body.firstName.trim()),
-      lastName: capitalize(req.body.lastName.trim()),
-      phone: req.body.phone.toLowerCase().trim(),
-      password: req.body.password,
-      confirmpassword: req.body.confirmpassword,
-    };
   } else {
     res.status(403).send({ message: "Incomplete info entered" }); //403 indicates validation error
     return;
@@ -31,7 +41,7 @@ register.post("/", async (req, res) => {
     userData.lastName,
     userData.phone,
     userData.password,
-    userData.confirmpassword
+    userData.confirmPassword
   );
 
   if (Error) {

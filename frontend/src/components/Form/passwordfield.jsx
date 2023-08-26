@@ -21,29 +21,31 @@ const CustomPasswordField = React.forwardRef(function CustomPasswordField(
     event.preventDefault();
   };
 
+  const{inputError,handleTooltipOpen,icon,label,id,showIcon,handleChange,style,name}=props
+  const restProps=(({ inputError,handleTooltipOpen,icon,label,id,showIcon,handleChange,style,name, ...rest }) => rest)({ ...props });
   return (
     <FormControl
-      {...(props.inputError && { error: true })}
+      {...(inputError && { error: true })}
       required
-      style={props.style}
+      style={style}
       variant="outlined"
-      {...props}
+      {...(restProps)}
       ref={ref}
-      onClick={props.handleTooltipOpen}
+      onClick={handleTooltipOpen}
     >
-      <InputLabel color="success" htmlFor="outlined-adornment-password">
+      <InputLabel color="success" htmlFor={id}>
         {
           <>
-            {props.icon}&nbsp;&nbsp;{props.label}
+            {icon}&nbsp;&nbsp;{label}
           </>
         }
       </InputLabel>
       <OutlinedInput
         color="success"
-        id={props.id}
+        id={id}
         type={showPassword ? "text" : "password"}
         endAdornment={
-          props.showIcon ? (
+          showIcon ? (
             <InputAdornment position="end">
               <IconButton
                 aria-label="toggle password visibility"
@@ -58,11 +60,11 @@ const CustomPasswordField = React.forwardRef(function CustomPasswordField(
         }
         label={
           <>
-            {props.icon}&nbsp;{props.label}
+            {icon}&nbsp;{label}
           </>
         }
-        name={props.name}
-        onChange={props.handleChange}
+        name={name}
+        onChange={handleChange}
       />
     </FormControl>
   );

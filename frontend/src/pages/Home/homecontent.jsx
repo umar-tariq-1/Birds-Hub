@@ -14,7 +14,6 @@ export default function HomeContent() {
   const { imagesPreloaded } = useImagePreloader(preloadSrcList);
 
    if (!imagesPreloaded) {
-    console.log(imagesPreloaded);
     return <CustomLoadingAnimation overlayColor={"rgba(0,0,0,0.1)"} />;
   }
   return (

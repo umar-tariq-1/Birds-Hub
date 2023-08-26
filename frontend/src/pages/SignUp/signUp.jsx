@@ -15,6 +15,8 @@ import CustomLoadingAnimation from "../../components/LoadingAnimation/loadingAni
 import { FaLock, FaUserAlt } from "react-icons/fa";
 import { FaPhone } from "react-icons/fa6";
 import{ validate, capitalize } from "./Validation";
+import { trimObject } from "../../utils/objectFunctiions/trimObject";
+import { findKeyWithEmptyStringValue } from "../../utils/objectFunctiions/findKeyWithEmptyStringValue";
 
 function SignUp() {
   const [userData, setuserData] = useState({
@@ -22,7 +24,7 @@ function SignUp() {
     lastName: "",
     phone: "",
     password: "",
-    confirmpassword: "",
+    confirmPassword: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -50,13 +52,25 @@ function SignUp() {
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
+    var trimmedData=trimObject((({ password, confirmPassword, ...rest }) => rest)({ ...userData }));
+    trimmedData={...trimmedData,password:userData.password,confirmPassword:userData.confirmPassword}
+    const emptyKey=findKeyWithEmptyStringValue(trimmedData);
+
+    if(emptyKey !== null){
+      setError(`${capitalize(
+        emptyKey.replace(/([A-Z])/g, " $1")
+      )} must not be empty`);
+      enqueueSnackbar("Couldn't register", { variant: "error" });
+      return;
+    }
+
     if (
       validate(
-        userData.firstName,
-        userData.lastName,
-        userData.phone,
-        userData.password,
-        userData.confirmpassword,
+        trimmedData.firstName,
+        trimmedData.lastName,
+        trimmedData.phone,
+        trimmedData.password,
+        trimmedData.confirmPassword,
         setError,
         setinputErrors,
         enqueueSnackbar
@@ -72,12 +86,8 @@ function SignUp() {
       setLoading(true);
       // console.log("clicked")
       const url = process.env.REACT_APP_BASE_URL + "/register";
-      const newData = {
-        ...userData,
-        firstName: capitalize(userData.firstName),
-        lastName: capitalize(userData.lastName),
-      };
-      await axios.post(url, newData);
+      
+      await axios.post(url, trimmedData);
       //console.log(res)
       setLoading(false);
       enqueueSnackbar("Successfully registered", { variant: "success" });
@@ -210,13 +220,13 @@ function SignUp() {
                 </CustomToolTip>
 
                 <CustomPasswordField
-                  inputError={inputErrors.confirmpassword}
+                  inputError={inputErrors.confirmPassword}
                   style={styleFull}
                   showIcon={false}
-                  id="confirmpassword"
+                  id="confirmPassword"
                   label="Confirm Password"
                   icon={<FaLock size={17} />}
-                  name="confirmpassword"
+                  name="confirmPassword"
                   handleChange={handleChange}
                 />
 

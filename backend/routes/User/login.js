@@ -22,7 +22,7 @@ login.post("/", async (req, res) => {
   try {
     if (req.body.phone && req.body.password) {
       loginData = {
-        phone: req.body.phone.toLowerCase().trim(),
+        phone: req.body.phone.trim(),
         password: req.body.password,
       };
     } else {

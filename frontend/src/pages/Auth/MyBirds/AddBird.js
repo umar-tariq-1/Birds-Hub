@@ -4,6 +4,9 @@ import axios from "axios";
 import LoadingBar from "../../../components/LoadingBar/LoadingBar";
 import CustomLoadingAnimation from "../../../components/LoadingAnimation/loadingAnimation";
 import { useSnackbar } from "notistack";
+import { trimObject } from "../../../utils/objectFunctiions/trimObject";
+import { findKeyWithEmptyStringValue } from "../../../utils/objectFunctiions/findKeyWithEmptyStringValue";
+import { capitalize } from "../../SignUp/Validation";
 
 function AddBird() {
   const [selectedImage, setSelectedImage] = useState([]);
@@ -16,6 +19,8 @@ function AddBird() {
   const [purchasedFrom, setPurchasedFrom] = useState("");
   const [phone, setPhone] = useState("");
   const [price, setPrice] = useState("");
+  const [ringNo, setRingNo] = useState("");
+  const [error, setError] = useState("");
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -32,6 +37,26 @@ function AddBird() {
   };
 
   const handleImageUploadOptimized = async () => {
+    const jsonData = trimObject({
+      name,
+      price,
+      gender,
+      status,
+      ringNo,
+      date,
+      purchasedFrom,
+      phone,
+    });
+
+    const emptyKey = findKeyWithEmptyStringValue(jsonData);
+    if (emptyKey !== null) {
+      setError(
+        `${capitalize(emptyKey.replace(/([A-Z])/g, " $1"))} must not be empty`
+      );
+      console.log(error);
+      return;
+    }
+
     if (selectedImage.length === 1) {
       setButtonDisabled(true);
       const formData = new FormData();
@@ -50,15 +75,6 @@ function AddBird() {
 
       // Perform the image upload using Axios
       try {
-        const jsonData = {
-          name,
-          price,
-          gender,
-          status,
-          date,
-          purchasedFrom,
-          phone,
-        };
         formData.append("data", JSON.stringify(jsonData));
 
         const url = process.env.REACT_APP_BASE_URL + "/addBird";
@@ -120,6 +136,14 @@ function AddBird() {
             type="text"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Ring Number:</label>
+          <input
+            type="text"
+            value={ringNo}
+            onChange={(e) => setRingNo(e.target.value)}
           />
         </div>
         <div>

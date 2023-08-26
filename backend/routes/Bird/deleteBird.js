@@ -46,7 +46,7 @@ deleteBird.delete("/:id", authorize, async (req, res) => {
     } catch (error) {
       await sess.abortTransaction();
       await sess.endSession();
-      console.log(error);
+      console.log(error?.message);
       return res.status(500).send({ message: error?.message });
     }
 

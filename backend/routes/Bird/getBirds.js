@@ -11,7 +11,7 @@ getBirds.get("/", authorize, async (req, res) => {
     const authorizedUser = getAuthorizedUser();
     const birds = await bird.find(
       { creator: authorizedUser._id },
-      { _id: 0, __v: 0, creator: 0 }
+      { __v: 0, creator: 0 }
     );
     data = [...birds];
     if (data.length > 0) {

@@ -1,14 +1,29 @@
+const {
+  findKeyWithEmptyStringValue,
+  trimObject,
+} = require("../utils/objectFunctions");
+const { capitalize } = require("../utils/validate");
+
 module.exports.addBirdValidation = (req, res, next) => {
   const file = req.file; // Use req.file instead of req.files for a single image upload
-  const jsonData = JSON.parse(req.body.data);
-  const { name, price, gender, status, date, purchasedFrom, phone } = jsonData;
+  const jsonData = trimObject(JSON.parse(req.body.data));
+  const { name, price, gender, status, ringNo, date, purchasedFrom, phone } =
+    jsonData;
+  const emptyKey = findKeyWithEmptyStringValue(jsonData);
 
-  if (
+  if (emptyKey !== null) {
+    return res.status(422).send({
+      message: `${capitalize(
+        emptyKey.replace(/([A-Z])/g, " $1")
+      )} must not be empty`,
+    });
+  } else if (
     !(
       name &&
       price &&
       gender &&
       status &&
+      ringNo &&
       date &&
       purchasedFrom &&
       phone &&
@@ -16,15 +31,6 @@ module.exports.addBirdValidation = (req, res, next) => {
     )
   ) {
     return res.status(422).send({ message: "Incomplete details entered" });
-  } else if (
-    name.trim() === "" ||
-    gender.trim() === "" ||
-    status.trim() === "" ||
-    date.trim() === "" ||
-    purchasedFrom.trim() === "" ||
-    phone.trim() === ""
-  ) {
-    return res.status(422).send({ message: "There must be no empty field" });
   } else if (Number(price) < 1) {
     return res.status(422).send({ message: "Price cannot be 0 or negative" });
   } else if (gender !== "M" && gender !== "F") {

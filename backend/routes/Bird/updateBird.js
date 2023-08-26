@@ -1,9 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const { authorize, getAuthorizedUser } = require("../../middlewares/authorize");
+const { capitalize } = require("../../utils/validate");
 const {
   trimObject,
   isEmptyNullOrUndefined,
+  findKeyWithEmptyStringValue,
 } = require("../../utils/objectFunctions");
 const multer = require("multer");
 const ImageKit = require("imagekit");
@@ -28,8 +30,19 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
   const birdId = req.params.id;
   const authorizedUser = getAuthorizedUser();
   var image;
-  var imageKitError;
   var updatedData;
+
+  const jsonData = JSON.parse(req?.body?.data);
+  updatedData = trimObject(jsonData);
+  const emptyKey = findKeyWithEmptyStringValue(updatedData);
+
+  if (emptyKey !== null) {
+    return res.status(400).send({
+      message: `${capitalize(
+        emptyKey.replace(/([A-Z])/g, " $1")
+      )} must not be empty`,
+    });
+  }
 
   try {
     const birdData = await Bird.findById(birdId);
@@ -43,9 +56,6 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
         .send({ message: "You are not authorized to update this bird" });
     }
 
-    const jsonData = JSON.parse(req?.body?.data);
-    updatedData = trimObject(jsonData);
-
     const sess = await mongoose.startSession();
     sess.startTransaction();
 
@@ -56,7 +66,7 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
         } catch (error) {
           await sess.abortTransaction();
           await sess.endSession();
-          console.log(error);
+          console.log(error?.message);
           return res.status(500).send({ message: error?.message });
         }
         const response = await imagekit.upload({
@@ -67,11 +77,10 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
         });
         image = { name: response.name, id: response.fileId };
       } catch (error) {
-        imageKitError = error;
         await sess.abortTransaction();
         await sess.endSession();
-        console.log(error);
-        return res.status(409).send({ message: error.message });
+        console.log(error?.message);
+        return res.status(409).send({ message: error?.message });
       }
     }
     if (!isEmptyNullOrUndefined(updatedData)) {

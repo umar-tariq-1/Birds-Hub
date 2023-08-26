@@ -2,15 +2,16 @@ import { TextField } from "@mui/material";
 import React from "react";
 
 const CustomTextField = (props) => {
+  const{inputError,style,icon,label,name,onChange}=props
   return (
     <TextField
-      {...(props.inputError && { error: true })}
-      style={props.style}
+      {...(inputError && { error: true })}
+      style={style}
       color="success"
       type="text"
-      label={<>{props.icon}&nbsp;&nbsp;{props.label}</>}
-      name={props.name}
-      onChange={props.onChange}
+      label={<>{icon}&nbsp;&nbsp;{label}</>}
+      name={name}
+      onChange={onChange}
       required
     />
   );

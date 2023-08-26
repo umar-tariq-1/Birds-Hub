@@ -4,16 +4,25 @@ function trimObject(obj) {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => trimObject(item));
+    return obj.map(trimObject);
   }
 
   const trimmedObj = {};
+
   for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const value = obj[key];
-      trimmedObj[key.trim()] = trimObject(value);
+
+      if (typeof value === "string") {
+        trimmedObj[key] = value.trim();
+      } else if (typeof value === "object") {
+        trimmedObj[key] = trimObject(value);
+      } else {
+        trimmedObj[key] = value;
+      }
     }
   }
+
   return trimmedObj;
 }
 
@@ -29,4 +38,21 @@ function isEmptyNullOrUndefined(variable) {
   return false;
 }
 
-module.exports = { trimObject, isEmptyNullOrUndefined };
+function findKeyWithEmptyStringValue(obj) {
+  for (const key in obj) {
+    if (
+      obj.hasOwnProperty(key) &&
+      typeof obj[key] === "string" &&
+      obj[key] === ""
+    ) {
+      return key;
+    }
+  }
+  return null;
+}
+
+module.exports = {
+  trimObject,
+  isEmptyNullOrUndefined,
+  findKeyWithEmptyStringValue,
+};

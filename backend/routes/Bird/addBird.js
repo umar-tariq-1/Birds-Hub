@@ -6,6 +6,7 @@ const multer = require("multer");
 const ImageKit = require("imagekit");
 const User = require("../../models/user");
 const Bird = require("../../models/bird");
+const { trimObject } = require("../../utils/objectFunctions");
 
 const addBird = express.Router();
 
@@ -26,76 +27,66 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
 
   var image;
   var imageKitError;
-  const jsonData = JSON.parse(req.body.data);
-  const { name, price, gender, status, date, purchasedFrom, phone } = jsonData;
+  const jsonData = trimObject(JSON.parse(req.body.data));
+  const { name, price, gender, status, ringNo, date, purchasedFrom, phone } =
+    jsonData;
 
-  if (
-    name &&
-    price &&
-    gender &&
-    status &&
-    date &&
-    purchasedFrom &&
-    phone &&
-    (status === "A" || status === "D") &&
-    (gender === "M" || gender === "F")
-  ) {
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+
     try {
-      const sess = await mongoose.startSession();
-      sess.startTransaction();
-
-      try {
-        const response = await imagekit.upload({
-          file: req.file.buffer,
-          fileName: Math.round(Math.random() * 1e9).toString(),
-          folder: "birdImages",
-          useUniqueFileName: false,
-        });
-        image = { name: response.name, id: response.fileId };
-      } catch (error) {
-        imageKitError = error;
-        await sess.abortTransaction();
-        await sess.endSession();
-        console.log(error);
-        return res.status(409).send({ message: error.message });
-      }
-
-      const createdBird = new Bird({
-        name,
-        price,
-        gender,
-        status,
-        date,
-        purchasedFrom,
-        phone,
-        image,
-        creator: authorizedUser._id,
+      const response = await imagekit.upload({
+        file: req.file.buffer,
+        fileName: Math.round(Math.random() * 1e9).toString(),
+        folder: "birdImages",
+        useUniqueFileName: false,
       });
-
-      await createdBird.save({ session: sess });
-      await User.findByIdAndUpdate(
-        authorizedUser._id,
-        {
-          $push: { birds: createdBird },
-        },
-        { session: sess }
-      );
-
-      await sess.commitTransaction();
-      await sess.endSession();
-
-      const data = { ...createdBird._doc };
-      delete data._id;
-      delete data.creator;
-      delete data.__v;
-      res.status(201).send({ message: "Bird added successfully", data }); //201 indicates successful creation
+      image = { name: response.name, id: response.fileId };
     } catch (error) {
+      imageKitError = error;
       await sess.abortTransaction();
       await sess.endSession();
-      console.log(error);
-      res.send({ message: "Internal server error" }).status(500); //500 indicates server side error
-      return;
+      console.log(error?.message);
+      return res.status(409).send({ message: error?.message });
     }
+
+    const createdBird = new Bird({
+      name,
+      price,
+      gender,
+      status,
+      ringNo,
+      date,
+      purchasedFrom,
+      phone,
+      image,
+      creator: authorizedUser._id,
+    });
+
+    await createdBird.save({ session: sess });
+    await User.findByIdAndUpdate(
+      authorizedUser._id,
+      {
+        $push: { birds: createdBird },
+      },
+      { session: sess }
+    );
+
+    await sess.commitTransaction();
+    await sess.endSession();
+
+    const data = { ...createdBird._doc };
+    delete data._id;
+    delete data.creator;
+    delete data.__v;
+    res.status(201).send({ message: "Bird added successfully", data }); //201 indicates successful creation
+  } catch (error) {
+    await sess.abortTransaction();
+    await sess.endSession();
+    console.log(error?.message);
+    res.send({ message: "Internal server error" }).status(500); //500 indicates server side error
+    return;
   }
 });
 
