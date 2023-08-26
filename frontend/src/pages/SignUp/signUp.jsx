@@ -60,6 +60,7 @@ function SignUp() {
       setError(`${capitalize(
         emptyKey.replace(/([A-Z])/g, " $1")
       )} must not be empty`);
+      setinputErrors({[emptyKey]:1});
       enqueueSnackbar("Couldn't register", { variant: "error" });
       return;
     }

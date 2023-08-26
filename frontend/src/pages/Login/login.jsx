@@ -62,6 +62,13 @@ function Login() {
   const handleSubmit = async (ev) => {
     ev.preventDefault();
 
+    if(userData.phone===""){
+        setError("Phone must not be empty");
+        setinputErrors({ phone: 1 });
+        enqueueSnackbar("Couldn't login", { variant: "error" });
+        return;
+    }
+
     if (validate(userData.phone, userData.password)) {
       setError("");
       setinputErrors({});
@@ -75,7 +82,7 @@ function Login() {
       const url = process.env.REACT_APP_BASE_URL + "/login";
       const newData = {
         ...userData,
-        phone: userData.phone.toLowerCase(),
+        phone: userData.phone,
       };
       const config = {
         headers: { "Content-Type": "application/json" },
