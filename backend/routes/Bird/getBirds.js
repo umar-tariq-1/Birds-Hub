@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { authorize, getAuthorizedUser } = require("../../middlewares/authorize");
 const User = require("../../models/user");
 const bird = require("../../models/bird");
+const { reorderKeys } = require("../../utils/objectFunctions");
 
 const getBirds = express.Router();
 
@@ -13,11 +14,25 @@ getBirds.get("/", authorize, async (req, res) => {
       { creator: authorizedUser._id },
       { __v: 0, creator: 0 }
     );
-    data = [...birds];
+    const data = [...birds];
     if (data.length > 0) {
+      const order = [
+        "_id",
+        "image",
+        "name",
+        "price",
+        "gender",
+        "status",
+        "ringNo",
+        "date",
+        "purchasedFrom",
+        "phone",
+      ];
+      const orderedData = data.map((item) => reorderKeys(item, order));
+
       return res
         .status(200)
-        .send({ message: "All birds fetched successfully", data });
+        .send({ message: "All birds fetched successfully", orderedData });
     } else {
       return res.status(200).send({ message: "Sorry, No birds found" });
     }

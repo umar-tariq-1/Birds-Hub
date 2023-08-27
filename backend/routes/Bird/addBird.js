@@ -6,7 +6,7 @@ const multer = require("multer");
 const ImageKit = require("imagekit");
 const User = require("../../models/user");
 const Bird = require("../../models/bird");
-const { trimObject } = require("../../utils/objectFunctions");
+const { trimObject, reorderKeys } = require("../../utils/objectFunctions");
 
 const addBird = express.Router();
 
@@ -26,15 +26,14 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
   const authorizedUser = getAuthorizedUser();
 
   var image;
-  var imageKitError;
   const jsonData = trimObject(JSON.parse(req.body.data));
   const { name, price, gender, status, ringNo, date, purchasedFrom, phone } =
     jsonData;
 
-  try {
-    const sess = await mongoose.startSession();
-    sess.startTransaction();
+  const sess = await mongoose.startSession();
+  sess.startTransaction();
 
+  try {
     try {
       const response = await imagekit.upload({
         file: req.file.buffer,
@@ -44,7 +43,6 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
       });
       image = { name: response.name, id: response.fileId };
     } catch (error) {
-      imageKitError = error;
       await sess.abortTransaction();
       await sess.endSession();
       console.log(error?.message);
@@ -56,8 +54,8 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
       price,
       gender,
       status,
-      ringNo,
       date,
+      ringNo: ringNo ? ringNo : "",
       purchasedFrom,
       phone,
       image,
@@ -73,15 +71,31 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
       { session: sess }
     );
 
-    await sess.commitTransaction();
-    await sess.endSession();
-
     const data = { ...createdBird._doc };
-    delete data._id;
     delete data.creator;
     delete data.__v;
-    res.status(201).send({ message: "Bird added successfully", data }); //201 indicates successful creation
+    const order = [
+      "_id",
+      "image",
+      "name",
+      "price",
+      "gender",
+      "status",
+      "ringNo",
+      "date",
+      "purchasedFrom",
+      "phone",
+    ];
+    const orderedData = reorderKeys(data, order);
+    await sess.commitTransaction();
+    await sess.endSession();
+    res.status(201).send({ message: "Bird added successfully", orderedData }); //201 indicates successful creation
   } catch (error) {
+    try {
+      await imagekit.deleteFile(image.id);
+    } catch (error) {
+      console.log(error?.message);
+    }
     await sess.abortTransaction();
     await sess.endSession();
     console.log(error?.message);

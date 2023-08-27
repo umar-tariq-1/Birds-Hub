@@ -6,6 +6,7 @@ const {
   trimObject,
   isEmptyNullOrUndefined,
   findKeyWithEmptyStringValue,
+  reorderKeys,
 } = require("../../utils/objectFunctions");
 const multer = require("multer");
 const ImageKit = require("imagekit");
@@ -36,12 +37,22 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
   updatedData = trimObject(jsonData);
   const emptyKey = findKeyWithEmptyStringValue(updatedData);
 
-  if (emptyKey !== null) {
+  const price = updatedData.price ? updatedData.price : 9999;
+  const gender = updatedData.gender ? updatedData.gender : "M";
+  const status = updatedData.status ? updatedData.status : "A";
+
+  if (emptyKey !== null && emptyKey !== "ringNo") {
     return res.status(400).send({
       message: `${capitalize(
         emptyKey.replace(/([A-Z])/g, " $1")
       )} must not be empty`,
     });
+  } else if (Number(price) < 0) {
+    return res.status(422).send({ message: "Price cannot be negative" });
+  } else if (gender !== "M" && gender !== "F") {
+    return res.status(422).send({ message: "Incorrect gender entered" });
+  } else if (status !== "A" && status !== "D") {
+    return res.status(422).send({ message: "Incorrect status entered" });
   }
 
   try {
@@ -97,9 +108,25 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
       await sess.commitTransaction();
       await sess.endSession();
 
+      const data = { ...updatedBird._doc };
+      delete data.creator;
+      delete data.__v;
+      const order = [
+        "_id",
+        "image",
+        "name",
+        "price",
+        "gender",
+        "status",
+        "ringNo",
+        "date",
+        "purchasedFrom",
+        "phone",
+      ];
+      const orderedData = reorderKeys(data, order);
       return res
         .status(200)
-        .send({ message: "Bird updated successfully", updatedBird });
+        .send({ message: "Bird updated successfully", orderedData });
     } catch (error) {
       await sess.abortTransaction();
       await sess.endSession();

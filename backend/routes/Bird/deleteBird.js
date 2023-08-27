@@ -29,7 +29,7 @@ deleteBird.delete("/:id", authorize, async (req, res) => {
         .send({ message: "You are not authorized to delete this bird" });
     }
 
-    const sess = await mongoose.startSession();
+    var sess = await mongoose.startSession();
     sess.startTransaction();
 
     await User.findByIdAndUpdate(

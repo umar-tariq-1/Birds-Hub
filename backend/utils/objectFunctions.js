@@ -51,8 +51,28 @@ function findKeyWithEmptyStringValue(obj) {
   return null;
 }
 
+function reorderKeys(obj, order) {
+  const orderedObj = {};
+
+  order.forEach((key) => {
+    if (obj.hasOwnProperty(key)) {
+      orderedObj[key] = obj[key];
+    }
+  });
+
+  // Add any remaining properties not in the order array
+  for (const key in obj) {
+    if (!orderedObj.hasOwnProperty(key)) {
+      orderedObj[key] = obj[key];
+    }
+  }
+
+  return orderedObj;
+}
+
 module.exports = {
   trimObject,
   isEmptyNullOrUndefined,
   findKeyWithEmptyStringValue,
+  reorderKeys,
 };

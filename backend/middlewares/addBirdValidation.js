@@ -7,23 +7,26 @@ const { capitalize } = require("../utils/validate");
 module.exports.addBirdValidation = (req, res, next) => {
   const file = req.file; // Use req.file instead of req.files for a single image upload
   const jsonData = trimObject(JSON.parse(req.body.data));
-  const { name, price, gender, status, ringNo, date, purchasedFrom, phone } =
-    jsonData;
+  if (jsonData.ringNo === "") {
+    delete jsonData.ringNo;
+  }
+  const { name, price, gender, status, date, purchasedFrom, phone } = jsonData;
   const emptyKey = findKeyWithEmptyStringValue(jsonData);
 
-  if (emptyKey !== null) {
+  if (emptyKey !== null && emptyKey !== "ringNo") {
     return res.status(422).send({
       message: `${capitalize(
         emptyKey.replace(/([A-Z])/g, " $1")
       )} must not be empty`,
     });
+  } else if (price && Number(price) < 0) {
+    return res.status(422).send({ message: "Price cannot be negative" });
   } else if (
     !(
       name &&
-      price &&
+      price >= 0 &&
       gender &&
       status &&
-      ringNo &&
       date &&
       purchasedFrom &&
       phone &&
@@ -31,8 +34,6 @@ module.exports.addBirdValidation = (req, res, next) => {
     )
   ) {
     return res.status(422).send({ message: "Incomplete details entered" });
-  } else if (Number(price) < 1) {
-    return res.status(422).send({ message: "Price cannot be 0 or negative" });
   } else if (gender !== "M" && gender !== "F") {
     return res.status(422).send({ message: "Incorrect gender entered" });
   } else if (status !== "A" && status !== "D") {

@@ -49,7 +49,7 @@ function AddBird() {
     });
 
     const emptyKey = findKeyWithEmptyStringValue(jsonData);
-    if (emptyKey !== null) {
+    if (emptyKey !== null && emptyKey !== "ringNo") {
       setError(
         `${capitalize(emptyKey.replace(/([A-Z])/g, " $1"))} must not be empty`
       );
