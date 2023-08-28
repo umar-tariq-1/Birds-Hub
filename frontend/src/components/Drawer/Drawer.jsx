@@ -283,7 +283,7 @@ function delay(ms) {
               <div className="justify-content-center mt-2">
             <div
           className={`menu-icon shadow align-items-center justify-content-center ${mobileOpen && "pressed"}`}
-          style={{width:"48px",marginTop:"2px"}}
+          style={{width:"48px",marginTop:"1px"}}
         >
             <HamburgerButton handleShowNavbar={handleDrawerToggle} showNavbar={mobileOpen} />
             </div>
