@@ -18,6 +18,8 @@ import { TbLogout } from "react-icons/tb";
 import { BsBasketFill } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa6";
 import CustomLoadingAnimation from "../LoadingAnimation/loadingAnimation";
+import "./Drawer.css";
+import HamburgerButton from "../HamburgerButton/HamburgerButton";
 import { useSnackbar } from "notistack";
 
 import { useNavigate } from "react-router-dom";
@@ -255,7 +257,8 @@ function delay(ms) {
           }}
         >
           <Toolbar>
-            <IconButton
+            
+            {/* <IconButton
               color="rgb(33, 37, 41)"
               aria-label="open drawer"
               edge="start"
@@ -263,19 +266,28 @@ function delay(ms) {
               sx={{ ml: "2px", mr: 2, display: { md: "none" } }}
             >
               <FiMenu size={48} />
-            </IconButton>
-
-            <div className="d-none d-lg-flex mt-2 ms-5">
+            </IconButton> */}
+            <div style={{height:"66px"}} className="d-flex justify-content-between w-100">
+            <div className="d-flex mt-3 ms-md-5">
               <IoStorefrontOutline color="rgb(33, 37, 41)" size={40} />
               <h2
                 style={{
                   fontFamily: "Titillium Web, sans-serif",
                   color: "rgb(33, 37, 41)",
                 }}
-                className="h2 ms-3"
+                className="h2 ms-2 ms-md-3"
               >
                 BirdsHub Inventory
               </h2>
+              </div>
+              <div className="justify-content-center mt-2">
+            <div
+          className={`menu-icon shadow align-items-center justify-content-center ${mobileOpen && "pressed"}`}
+          style={{width:"48px",marginTop:"2px"}}
+        >
+            <HamburgerButton handleShowNavbar={handleDrawerToggle} showNavbar={mobileOpen} />
+            </div>
+            </div>
             </div>
           </Toolbar>
         </AppBar>
