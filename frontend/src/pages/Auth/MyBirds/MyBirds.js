@@ -147,8 +147,9 @@ const MyBirds = () => {
 
   return (
     <ResponsiveDrawer MyBirds={1}>
-      <AddBird />
-
+      <div className="mt-0">
+        <AddBird />
+      </div>
       {/* <CustomLoadingAnimation /> */}
       <div className="py-2 px-1">
         <MaterialReactTable

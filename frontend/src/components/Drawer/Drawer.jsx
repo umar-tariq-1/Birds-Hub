@@ -343,7 +343,8 @@ function delay(ms) {
           component="main"
           sx={{
             flexGrow: 1,
-            p:{md:3},
+            px:{md:3},
+            py:{xs:4,md:3},
             width: { xs:"100%", md: `calc(100% - ${drawerWidth}px)` },
             background: "rgba(182,251,203,0.1)",
           }}
