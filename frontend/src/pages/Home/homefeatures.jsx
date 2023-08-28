@@ -92,8 +92,8 @@ export default function HomeFeatures() {
                   Also ensure the fair prices of all crops.
                 </p>
               </div>
-              </div>
             </div>
+          </div>
           <div className="col">
             <div className="text-center d-flex flex-column align-items-center align-items-xl-center">
               <div className="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon">
@@ -116,8 +116,8 @@ export default function HomeFeatures() {
               </div>
             </div>
           </div>
-              </div>
         </div>
+      </div>
 
       <div style={{ marginTop: "20px" }}>
         <footer
@@ -170,17 +170,19 @@ export default function HomeFeatures() {
               <div className="row mt-3">
                 <div className="col-md-4 col-lg-4 col-xl-4 mx-auto mb-0 mb-md-4">
                   <hr />
-                  <h5 className="text-uppercase fw-bold">Kisaan App</h5>
+                  <h5 className="text-uppercase fw-bold">Birds Hub</h5>
                   <hr
                     className="mx-auto"
                     style={{ backgroundColor: "#7c4dff" }}
                     // "width: 60px; background-color: #7c4dff; height: 2px"
                   />
                   <p style={{ textAlign: "justify" }}>
-                    We provide a platform for farmers and vendors, through which
-                    they are being connected to avoid shortness of crops caused
-                    because of middlemen and to ensure the fair prices of crops
-                    due to which farmers, vendors and buyers would be happy.
+                    Empowering Avian Enthusiasts and Entrepreneurs With our
+                    Birds Inventory, we're offering a comprehensive solution for
+                    birdkeepers, breeders, and enthusiasts. This platform has
+                    been meticulously designed to streamline the management of
+                    your avian companions and facilitate the smooth operation of
+                    your bird-related business endeavors.
                   </p>
                 </div>
                 <div className="col-md-3 col-lg-3 col-xl-3 mx-auto mb-0 mb-md-4">
@@ -227,22 +229,24 @@ export default function HomeFeatures() {
                     // "width: 60px; background-color: #7c4dff; height: 2px"
                   />
                   <p style={{ textAlign: "justify" }}>
-                    We are a team of passionate individuals who believe in the
-                    hardwork of farmers and are committed to bridge the gap
-                    between farmers and merket, empowering them to reach wider
-                    audience and ensure fair prices.
+                    We are a team passionate about connecting bird enthusiasts,
+                    breeders, and vendors through our innovative Birds Inventory
+                    App. With a deep appreciation for the avian world, we
+                    recognized the need for a comprehensive solution that
+                    simplifies the management of birds, breeding history and
+                    handling expenses etc.
                   </p>
                 </div>
               </div>
             </div>
           </section>
           <div
-            className="text-center text-light p-3 p-md-2"
+            className="text-center text-white-50 p-3 p-md-2"
             style={{ backgroundColor: "black" }}
           >
             © 2023 Copyright:&nbsp;
-            <a className="text-light" href="/">
-              KisaanApp.com
+            <a className="text-white-50" href="/">
+              BirdsHub.com
             </a>
           </div>
         </footer>

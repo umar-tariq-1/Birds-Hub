@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, { useState, useMemo, useRef } from "react";
 
 import AddBird from "./AddBird";
 import { MaterialReactTable } from "material-react-table";
@@ -6,6 +6,8 @@ import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 import "react-day-picker/dist/style.css";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Button } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
+import RefreshIcon from "@mui/icons-material/Refresh";
 import CustomMenu from "./CustomMenu";
 import { filterFn, sortingFn } from "./helperFunctions";
 import DateFilterModal from "./DateFilterModal";
@@ -32,13 +34,12 @@ const MyBirds = () => {
   const tableInstanceRef = useRef(null);
   const [showColumnFilters, setShowColumnFilters] = useState(false);
   const [parent] = useAutoAnimate({ duration: 500 });
-  const [settled, setSettled] = useState(false);
 
   const {
     isFetching,
     isLoading,
     data: responseData,
-    isError,
+    refetch,
   } = useQuery({
     queryKey: ["birds"],
     queryFn: async () => {
@@ -54,10 +55,6 @@ const MyBirds = () => {
     onError: (error) => {
       console.log(error?.response?.data?.message);
     },
-    onSettled: () => {
-      setSettled(false);
-    },
-    enabled: settled,
     keepPreviousData: true,
   });
 
@@ -151,9 +148,6 @@ const MyBirds = () => {
   return (
     <ResponsiveDrawer MyBirds={1}>
       <AddBird />
-      <div onClick={() => setSettled(true)} className="btn btn-outline-success">
-        Fetch
-      </div>
 
       {/* <CustomLoadingAnimation /> */}
       <div className="py-2 px-1">
@@ -222,11 +216,18 @@ const MyBirds = () => {
           }}
           renderTopToolbarCustomActions={({ table }) => {
             return (
-              <CustomMenu
-                table={table}
-                setRowSelection={setRowSelection}
-                columns={columns}
-              />
+              <div className="d-flex flex-row">
+                <CustomMenu
+                  table={table}
+                  setRowSelection={setRowSelection}
+                  columns={columns}
+                />
+                <Tooltip arrow title="Refresh Data">
+                  <IconButton onClick={() => refetch()}>
+                    <RefreshIcon fontSize="medium" />
+                  </IconButton>
+                </Tooltip>
+              </div>
             );
           }}
         />

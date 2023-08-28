@@ -6,14 +6,12 @@ import useImagePreloader from "../../hooks/useImagePreloader/useImagePreloader";
 import CustomLoadingAnimation from "../../components/LoadingAnimation/loadingAnimation";
 // import Navbar from "../../components/Navbar/navbar";
 
-
-const preloadSrcList=[main];
-
+const preloadSrcList = [main];
 
 export default function HomeContent() {
   const { imagesPreloaded } = useImagePreloader(preloadSrcList);
 
-   if (!imagesPreloaded) {
+  if (!imagesPreloaded) {
     return <CustomLoadingAnimation overlayColor={"rgba(0,0,0,0.1)"} />;
   }
   return (
@@ -25,7 +23,7 @@ export default function HomeContent() {
           backgroundImage: `url(${preloadSrcList[0]})`,
           backgroundPosition: "81%",
           backgroundSize: "cover",
-          letterSpacing:"1px"
+          letterSpacing: "1px",
         }}
       >
         <div className="container h-100 d-flex justify-content-center justify-content-md-start">
@@ -35,22 +33,36 @@ export default function HomeContent() {
                 <div className={`${styles.ani1} ${styles.animatedParagraph}`}>
                   <h1
                     className="text-uppercase text-center fw-bold"
-                    style={{ color: "aliceblue" ,fontFamily:'Titillium Web, sans-serif',fontSize: "285%" }}
+                    style={{
+                      color: "aliceblue",
+                      fontFamily: "Titillium Web, sans-serif",
+                      fontSize: "285%",
+                    }}
                   >
                     Empowering
                   </h1>
                 </div>
                 <div className={`${styles.ani2} ${styles.animatedParagraph}`}>
-                  <h1 style={{ color: "aliceblue",fontFamily:'Titillium Web, sans-serif' ,fontSize: "200%" }}>
+                  <h1
+                    style={{
+                      color: "aliceblue",
+                      fontFamily: "Titillium Web, sans-serif",
+                      fontSize: "200%",
+                    }}
+                  >
                     Bird Entrepreneurs
                   </h1>
                 </div>
                 <div className={`${styles.ani3} ${styles.animatedParagraph}`}>
                   <h1
                     className="text-capitalize mb-5"
-                    style={{ color: "aliceblue",fontFamily:'Titillium Web, sans-serif', fontSize: "190%" }}
+                    style={{
+                      color: "aliceblue",
+                      fontFamily: "Titillium Web, sans-serif",
+                      fontSize: "190%",
+                    }}
                   >
-                     with Avian Inventory
+                    with Avian Inventory
                   </h1>
                 </div>
                 <div className={`${styles.ani4} ${styles.animatedParagraph}`}>
@@ -60,7 +72,10 @@ export default function HomeContent() {
                       textDecoration: "none",
                     }}
                   >
-                    <button className="btn btn-success btn-lg shadow-lg mt-4 me-2" style={{fontSize:"20px"}}>
+                    <button
+                      className="btn btn-success btn-lg shadow-lg mt-4 me-2"
+                      style={{ fontSize: "20px" }}
+                    >
                       Get Started
                     </button>
                   </Link>
@@ -70,6 +85,6 @@ export default function HomeContent() {
           </div>
         </div>
       </div>
-      </>
+    </>
   );
 }

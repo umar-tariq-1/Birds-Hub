@@ -1,5 +1,6 @@
 import React,{ useState } from "react";
 import { NavLink } from "react-router-dom";
+import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { useNavigate } from "react-router-dom";
 
 import "./navbar.css";
@@ -28,6 +29,7 @@ const Navbar = (props) => {
   const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
 
   return (
+    <ClickAwayListener onClickAway={()=>setShowNavbar(false)}>
     <nav className="navbar shadow-custom">
       <div className="container">
         <div style={{ display: "flex",marginLeft:4 }} className="logo">
@@ -152,6 +154,7 @@ const Navbar = (props) => {
         </div>
       </div>
     </nav>
+    </ClickAwayListener>
   );
 };
 
