@@ -252,7 +252,7 @@ function delay(ms) {
           sx={{
             position:{md:"fixed"},
             background: "#1b854a",
-            height: "66px",
+            height: "70px",
             zIndex: 1290 /* (theme) => theme.zIndex.drawer + 1 */,  
           }}
         >
@@ -267,7 +267,7 @@ function delay(ms) {
             >
               <FiMenu size={48} />
             </IconButton> */}
-            <div style={{height:"66px"}} className="d-flex justify-content-between w-100">
+            <div style={{height:"70px"}} className="d-flex justify-content-between w-100">
             <div className="d-flex mt-3 ms-md-5">
               <IoStorefrontOutline color="rgb(33, 37, 41)" size={40} />
               <h2
@@ -283,7 +283,7 @@ function delay(ms) {
               <div className="justify-content-center mt-2">
             <div
           className={`menu-icon shadow align-items-center justify-content-center ${mobileOpen && "pressed"}`}
-          style={{width:"48px",marginTop:"1px"}}
+          style={{width:"52px",marginTop:"0px"}}
         >
             <HamburgerButton handleShowNavbar={handleDrawerToggle} showNavbar={mobileOpen} />
             </div>
@@ -313,8 +313,8 @@ function delay(ms) {
                 boxSizing: "border-box",
                 width: drawerWidth,
                 backgroundColor:"white",
-                marginTop: { xs: "8px", sm: "0px" },
-                height: { xs: "calc(100% - 8px)", sm: "calc(100% - 0px)" },
+                marginTop: { xs: "12px", sm: "0px" },
+                height: { xs: "calc(100% - 12px)", sm: "calc(100% - 0px)" },
               },
             }}
           >
@@ -329,7 +329,7 @@ function delay(ms) {
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
                 width: drawerWidth,
-                marginTop: "2px",
+                marginTop: "6px",
                 background: "white",
               },
             }}
