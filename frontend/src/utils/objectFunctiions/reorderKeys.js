@@ -19,8 +19,13 @@ function reorderObject(obj, order) {
 
 export const reorderKeys = (arr, order) => {
   if (arr === null || arr === undefined || arr === []) {
-    return arr;
+    return [];
   }
+
+  if (arr[0] === null || arr[0] === undefined) {
+    return [];
+  }
+
   const reorderedArray = arr.map((obj) => {
     return reorderObject(obj, order);
   });

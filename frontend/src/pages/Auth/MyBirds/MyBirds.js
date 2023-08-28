@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 
 import AddBird from "./AddBird";
 import { MaterialReactTable } from "material-react-table";
@@ -35,6 +35,21 @@ const MyBirds = () => {
   const [showColumnFilters, setShowColumnFilters] = useState(false);
   const [parent] = useAutoAnimate({ duration: 500 });
 
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
   const {
     isFetching,
     isLoading,
@@ -50,6 +65,10 @@ const MyBirds = () => {
     },
     refetchOnWindowFocus: false,
     onSuccess: (responseData) => {
+      localStorage.setItem(
+        "birds",
+        JSON.stringify(reorderKeys(responseData?.data?.orderedData, order))
+      );
       console.log(responseData.data.orderedData);
     },
     onError: (error) => {
@@ -154,7 +173,11 @@ const MyBirds = () => {
       <div className="py-2 px-1">
         <MaterialReactTable
           columns={columns}
-          data={reorderKeys(responseData?.data?.orderedData, order) ?? []}
+          data={
+            reorderKeys(responseData?.data?.orderedData, order) === []
+              ? reorderKeys(responseData?.data?.orderedData, order)
+              : reorderKeys(JSON.parse(localStorage.getItem("birds")), order)
+          }
           tableInstanceRef={tableInstanceRef}
           enablePinning={true}
           positionGlobalFilter="right"

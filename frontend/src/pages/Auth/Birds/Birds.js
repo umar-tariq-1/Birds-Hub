@@ -11,7 +11,8 @@ const AllProducts = () => {
   const { isFetching, isLoading, data } = useQuery({
     queryKey: ["birds"],
     queryFn: async () => {
-      return await axios.get("http://localhost:3001/getBirds", {
+      const url = process.env.REACT_APP_BASE_URL + "/getBirds";
+      return await axios.get(url, {
         withCredentials: true,
       });
     },
