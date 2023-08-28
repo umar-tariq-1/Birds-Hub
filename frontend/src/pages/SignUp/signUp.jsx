@@ -17,6 +17,7 @@ import { FaPhone } from "react-icons/fa6";
 import{ validate, capitalize } from "./Validation";
 import { trimObject } from "../../utils/objectFunctiions/trimObject";
 import { findKeyWithEmptyStringValue } from "../../utils/objectFunctiions/findKeyWithEmptyStringValue";
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 
 function SignUp() {
   const [userData, setuserData] = useState({
@@ -31,6 +32,7 @@ function SignUp() {
   const [error, setError] = useState();
   const [inputErrors, setinputErrors] = useState({});
   const [open, setOpen] = useState(false);
+  const [parent] = useAutoAnimate();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleTooltipClose = () => {
@@ -238,6 +240,7 @@ function SignUp() {
                     marginLeft: "-8%",
                     marginRight: "-8%",
                   }}
+                  ref={parent}
                 >
                   {error}
                 </p>

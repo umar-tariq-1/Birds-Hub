@@ -12,7 +12,7 @@ import CustomTextField from "../../components/Form/textfield";
 import CustomPasswordField from "../../components/Form/passwordfield";
 import CustomLoadingAnimation from "../../components/LoadingAnimation/loadingAnimation";
 import { FaLock } from "react-icons/fa";
-// import { TbMailFilled } from "react-icons/tb";
+import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { FaPhone } from "react-icons/fa6";
 
 function Login() {
@@ -24,6 +24,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
   const [inputErrors, setinputErrors] = useState({});
+  const [parent] = useAutoAnimate();
   const { enqueueSnackbar } = useSnackbar();
 
   // eslint-disable-next-line
@@ -176,6 +177,7 @@ function Login() {
                     marginLeft: "-8%",
                     marginRight: "-8%",
                   }}
+                  ref={parent}
                 >
                   {error}
                 </p>
