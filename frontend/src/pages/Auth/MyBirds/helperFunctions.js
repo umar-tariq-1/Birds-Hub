@@ -27,7 +27,10 @@ const exportToExcel = async (rowModels, fileName) => {
 
   const excelData = [];
   rowModels.map((row, index) => {
-    return (excelData[index] = { ID: index + 1, ...row?.original });
+    return (excelData[index] = {
+      ID: index + 1,
+      ...(({ _id, image, ...rest }) => rest)(row?.original),
+    });
   });
 
   excelData.forEach((item) => {
@@ -56,13 +59,18 @@ const exportToExcel = async (rowModels, fileName) => {
           spaces++;
         }
       }
-      console.log(spaces);
       if (
         !maxColumnWidths[key] ||
         cellValue.length - spaces > maxColumnWidths[key]
       ) {
         maxColumnWidths[key] = cellValue.length - spaces;
       }
+    }
+    if (maxColumnWidths.gender <= 6) {
+      maxColumnWidths.gender = 6;
+    }
+    if (maxColumnWidths.purchasedFrom <= 15) {
+      maxColumnWidths.purchasedFrom = 15;
     }
   });
 

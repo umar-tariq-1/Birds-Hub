@@ -70,9 +70,35 @@ function reorderKeys(obj, order) {
   return orderedObj;
 }
 
+function convertAbbreviations(dataArray) {
+  const genderMapping = {
+    M: "Male",
+    F: "Female",
+  };
+
+  const statusMapping = {
+    A: "Alive",
+    D: "Dead",
+  };
+
+  const convertedArray = dataArray.map((item) => ({
+    ...item,
+    gender: genderMapping[item.gender] || item.gender,
+    status: statusMapping[item.status] || item.status,
+  }));
+
+  return convertedArray;
+}
+
+function sortByName(dataArray) {
+  return dataArray.slice().sort((a, b) => a.name.localeCompare(b.name));
+}
+
 module.exports = {
   trimObject,
   isEmptyNullOrUndefined,
   findKeyWithEmptyStringValue,
   reorderKeys,
+  convertAbbreviations,
+  sortByName,
 };

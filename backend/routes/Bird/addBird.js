@@ -52,8 +52,8 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
     const createdBird = new Bird({
       name,
       price,
-      gender,
-      status,
+      gender: gender[0],
+      status: status[0],
       date,
       ringNo: ringNo ? ringNo : "",
       purchasedFrom,

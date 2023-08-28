@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef, useCallback } from "react";
 
 import AddBird from "./AddBird";
 import { MaterialReactTable } from "material-react-table";
@@ -9,16 +9,21 @@ import { Button } from "@mui/material";
 import CustomMenu from "./CustomMenu";
 import { filterFn, sortingFn } from "./helperFunctions";
 import DateFilterModal from "./DateFilterModal";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { reorderKeys } from "../../../utils/objectFunctiions/reorderKeys";
 
-const data = [
-  {
-    name: "Parblue",
-    price: 25000,
-    date: "5-Aug-23",
-  },
-  { name: "Arif", price: 20000, date: "15-Aug-23" },
-  { name: "Arif", price: 19000, date: "10-Aug-23" },
-  { name: "Arif", price: 25000, date: "19-Aug-23" },
+const order = [
+  "name",
+  "price",
+  "gender",
+  "status",
+  "ringNo",
+  "date",
+  "purchasedFrom",
+  "phone",
+  "_id",
+  "image",
 ];
 
 const MyBirds = () => {
@@ -27,6 +32,34 @@ const MyBirds = () => {
   const tableInstanceRef = useRef(null);
   const [showColumnFilters, setShowColumnFilters] = useState(false);
   const [parent] = useAutoAnimate({ duration: 500 });
+  const [settled, setSettled] = useState(false);
+
+  const {
+    isFetching,
+    isLoading,
+    data: responseData,
+    isError,
+  } = useQuery({
+    queryKey: ["birds"],
+    queryFn: async () => {
+      const url = process.env.REACT_APP_BASE_URL + "/getBirds";
+      return await axios.get(url, {
+        withCredentials: true,
+      });
+    },
+    refetchOnWindowFocus: false,
+    onSuccess: (responseData) => {
+      console.log(responseData.data.orderedData);
+    },
+    onError: (error) => {
+      console.log(error?.response?.data?.message);
+    },
+    onSettled: () => {
+      setSettled(false);
+    },
+    enabled: settled,
+    keepPreviousData: true,
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -35,6 +68,7 @@ const MyBirds = () => {
     setOpen(false);
   };
 
+  console.log();
   const columns = useMemo(
     () => [
       {
@@ -46,16 +80,16 @@ const MyBirds = () => {
         accessorKey: "price",
         header: "Price",
         size: 131,
-        Cell: ({ cell }) =>
-          cell.getValue().toLocaleString("en-US", {
-            style: "currency",
-            currency: "PKR",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          }),
+        // Cell: ({ cell }) =>
+        //   cell.getValue().toLocaleString("en-US", {
+        //     style: "currency",
+        //     currency: "PKR",
+        //     minimumFractionDigits: 0,
+        //     maximumFractionDigits: 0,
+        //   }),
         filterVariant: "range-slider",
         filterFn: "betweenInclusive", // default (or between)
-        enableGlobalFilter: true,
+        // enableGlobalFilter: true,
         muiTableHeadCellFilterSliderProps: {
           min: 3000,
           max: 30000,
@@ -71,6 +105,10 @@ const MyBirds = () => {
       {
         accessorKey: "status",
         header: "Status",
+      },
+      {
+        accessorKey: "ringNo",
+        header: "Ring No.",
       },
       {
         accessorKey: "date",
@@ -113,11 +151,15 @@ const MyBirds = () => {
   return (
     <ResponsiveDrawer MyBirds={1}>
       <AddBird />
+      <div onClick={() => setSettled(true)} className="btn btn-outline-success">
+        Fetch
+      </div>
+
       {/* <CustomLoadingAnimation /> */}
       <div className="py-2 px-1">
         <MaterialReactTable
           columns={columns}
-          data={data}
+          data={reorderKeys(responseData?.data?.orderedData, order) ?? []}
           tableInstanceRef={tableInstanceRef}
           enablePinning={true}
           positionGlobalFilter="right"
@@ -150,7 +192,10 @@ const MyBirds = () => {
             sx: {
               cursor: "pointer",
             },
-            onDoubleClick: (row) => alert(row),
+            onDoubleClick: (rowDblClicked) => {
+              tableInstanceRef.current.setEditingRow(row);
+              setRowSelection({});
+            },
           })}
           muiTableHeadCellProps={{
             sx: {
@@ -172,6 +217,8 @@ const MyBirds = () => {
           state={{
             showColumnFilters,
             rowSelection,
+            isLoading: isLoading,
+            showProgressBars: isFetching,
           }}
           renderTopToolbarCustomActions={({ table }) => {
             return (

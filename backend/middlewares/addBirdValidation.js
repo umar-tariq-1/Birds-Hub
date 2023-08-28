@@ -25,8 +25,8 @@ module.exports.addBirdValidation = (req, res, next) => {
     !(
       name &&
       price >= 0 &&
-      gender &&
-      status &&
+      gender[0] &&
+      status[0] &&
       date &&
       purchasedFrom &&
       phone &&
@@ -34,9 +34,9 @@ module.exports.addBirdValidation = (req, res, next) => {
     )
   ) {
     return res.status(422).send({ message: "Incomplete details entered" });
-  } else if (gender !== "M" && gender !== "F") {
+  } else if (gender[0] !== "M" && gender[0] !== "F") {
     return res.status(422).send({ message: "Incorrect gender entered" });
-  } else if (status !== "A" && status !== "D") {
+  } else if (status[0] !== "A" && status[0] !== "D") {
     return res.status(422).send({ message: "Incorrect status entered" });
   } else if (!file) {
     return res.status(400).send({ message: "Please upload 1 image file" });
