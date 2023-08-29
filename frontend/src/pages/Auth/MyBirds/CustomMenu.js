@@ -58,7 +58,7 @@ const CustomMenu = (props) => {
           },
         }}
       >
-        {table.getIsAllRowsSelected() ? (
+        {!table.getSelectedRowModel().rows.length === 0 ? (
           <MenuItem
             sx={{ height: "4.55ch" }}
             disableRipple
@@ -104,9 +104,7 @@ const CustomMenu = (props) => {
         <MenuItem
           sx={{ height: "4.55ch" }}
           disableRipple
-          disabled={
-            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-          }
+          disabled={table.getSelectedRowModel().rows.length === 0}
           // selected={option === "Pyxis"}
           onClick={() => {
             exportSelectedPDF(table, columns, handleMenuClose);
@@ -140,9 +138,7 @@ const CustomMenu = (props) => {
         <MenuItem
           sx={{ height: "4.55ch" }}
           disableRipple
-          disabled={
-            !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
-          }
+          disabled={table.getSelectedRowModel().rows.length === 0}
           // selected={option === "Pyxis"}
           onClick={() => {
             exportSelectedXLS(table, handleMenuClose);
