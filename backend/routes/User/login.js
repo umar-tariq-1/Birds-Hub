@@ -67,6 +67,7 @@ login.post("/", async (req, res) => {
     res.cookie("token", token, {
       withCredentials: true,
       secure: true,
+      sameSite: "none",
       httpOnly: true,
       maxAge: 50 * 365 * 24 * 60 * 60 * 1000,
     });

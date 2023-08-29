@@ -111,14 +111,14 @@ function SignUp() {
   }, []);
 
   const styleFirstHalf = {
-    width: "49.5%",
+    width: "49%",
     marginTop: "1%",
     marginBottom: "3%",
   };
   const styleSecondHalf = {
-    width: "49.5%",
+    width: "49%",
     marginBottom: "3%",
-    marginLeft: "1%",
+    marginLeft: "2%",
     marginTop: "1%",
   };
   const styleFull = {
