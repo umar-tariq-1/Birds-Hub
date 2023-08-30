@@ -68,24 +68,6 @@ export default function HomeFeatures() {
             </div>
           </div>
           <div className="col">
-            <div className="text-center d-flex flex-column align-items-center">
-              <div className="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon">
-                <img
-                  style={{ height: "96px", width: "96px" }}
-                  src={xlsPic}
-                  alt=" Loading..."
-                  data-aos="zoom-in-up"
-                />
-              </div>
-              <div className="px-3">
-                <h4 data-aos="zoom-in-up">Data Exportation</h4>
-                <p data-aos="zoom-in-up">
-                  Elevate your inventory management experience with the convenience of swift data export. Instantly generate PDF and Excel reports from your maintained records. Say goodbye to complexity and hello to efficiency as you effortlessly compile, share, and analyze your birds data with just one easy click. 
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="col">
             <div className="text-center d-flex flex-column align-items-center align-items-xl-center">
               <div className="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon">
                 <img
@@ -103,6 +85,24 @@ export default function HomeFeatures() {
                   price range, purchasing date, and more. Additionally, use descriptive
                   and concise labels for navigation buttons and grouping to
                   minimize confusion and improve the overall user experience.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="text-center d-flex flex-column align-items-center">
+              <div className="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon">
+                <img
+                  style={{ height: "94px", width: "94px" }}
+                  src={xlsPic}
+                  alt=" Loading..."
+                  data-aos="zoom-in-up"
+                />
+              </div>
+              <div className="px-3">
+                <h4 data-aos="zoom-in-up">Data Exportation</h4>
+                <p data-aos="zoom-in-up">
+                  Elevate your inventory management experience with the convenience of swift data export. Instantly generate PDF and Excel reports from your maintained records. Say goodbye to complexity and hello to efficiency as you effortlessly compile, share, and analyze your birds data with just one easy click. 
                 </p>
               </div>
             </div>
