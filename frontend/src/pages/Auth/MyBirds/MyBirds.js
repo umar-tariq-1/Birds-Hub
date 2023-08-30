@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { reorderKeys } from "../../../utils/objectFunctiions/reorderKeys";
 import { enqueueSnackbar } from "notistack";
+import UpdateBird from "./UpdateBird";
 
 const order = [
   "name",
@@ -34,6 +35,7 @@ const order = [
 const MyBirds = () => {
   const [open, setOpen] = useState(false);
   const [addBirdOpen, setAddBirdOpen] = useState(false);
+  const [updateBirdOpen, setUpdateBirdOpen] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const tableInstanceRef = useRef(null);
   const [showColumnFilters, setShowColumnFilters] = useState(false);
@@ -262,6 +264,32 @@ const MyBirds = () => {
         open={open}
         handleClose={handleClose}
       />
+      <UpdateBird
+        setUpdateBirdOpen={setUpdateBirdOpen}
+        updateBirdOpen={updateBirdOpen}
+        refetch={refetch}
+        data={{
+          name: "Albino / red eye",
+          price: 6000,
+          gender: "Male",
+          status: "Alive",
+          dna: true,
+          ringNo: "190A23",
+          date: "10-Aug-23",
+          purchasedFrom: "Mian Aviary",
+          phone: "03099074437",
+          image: { name: "", id: "" },
+          _id: "64eefa4f76e756fab8ee7137",
+        }}
+      />
+      <div
+        className="btn btn-primary"
+        onClick={() => {
+          setUpdateBirdOpen(true);
+        }}
+      >
+        Update
+      </div>
     </ResponsiveDrawer>
   );
 };

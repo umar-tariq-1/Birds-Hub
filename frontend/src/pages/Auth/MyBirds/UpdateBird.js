@@ -40,22 +40,24 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function AddBird(props) {
+function UpdateBird(props) {
+  const { data } = props;
+
   const [selectedImage, setSelectedImage] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState("");
-  const [status, setStatus] = useState("");
-  const [purchasedFrom, setPurchasedFrom] = useState("");
-  const [phone, setPhone] = useState("");
-  const [price, setPrice] = useState("");
-  const [ringNo, setRingNo] = useState("");
-  const [dna, setDna] = useState("");
+  const [name, setName] = useState(data.name);
+  const [gender, setGender] = useState(data.gender);
+  const [status, setStatus] = useState(data.status);
+  const [purchasedFrom, setPurchasedFrom] = useState(data.purchasedFrom);
+  const [phone, setPhone] = useState(data.phone);
+  const [price, setPrice] = useState(data.price);
+  const [ringNo, setRingNo] = useState(data.ringNo);
+  const [dna, setDna] = useState(data.dna);
   const [error, setError] = useState({});
   const [datePickerOpen, setDatePickerOpen] = useState(false);
-  const [range, setRange] = useState(new Date()); //Date selected on date selector
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(data.date);
+  const [range, setRange] = useState(parse(data.date, "dd-MMM-yy", new Date())); //Date selected on date selector
   const [showLoadingAnimation, setShowLoadingAnimation] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -72,10 +74,23 @@ function AddBird(props) {
     }
   }, [uploadProgress]);
 
-  const { addBirdOpen, setAddBirdOpen, refetch } = props;
+  useEffect(() => {
+    setName(data.name);
+    setGender(data.gender);
+    setStatus(data.status);
+    setPurchasedFrom(data.purchasedFrom);
+    setPhone(data.phone);
+    setPrice(data.price);
+    setDna(data.dna);
+    setDate(data.date);
+    setRingNo(data.ringNo);
+    setRange(parse(data.date, "dd-MMM-yy", new Date()));
+  }, [data]);
 
-  const closeAddBird = () => {
-    setAddBirdOpen(false);
+  const { updateBirdOpen, setUpdateBirdOpen, refetch } = props;
+
+  const closeUpdateBird = () => {
+    setUpdateBirdOpen(false);
   };
   const openDatePicker = () => {
     setDatePickerOpen(true);
@@ -122,7 +137,7 @@ function AddBird(props) {
   };
 
   const handleKeyPress = (e) => {
-    if (addBirdOpen && e.key === "Enter") {
+    if (updateBirdOpen && e.key === "Enter") {
       handleImageUploadOptimized();
     }
   };
@@ -185,20 +200,39 @@ function AddBird(props) {
 
       // Perform the image upload using Axios
       try {
-        formData.append("data", JSON.stringify(jsonData));
+        var deletedSomething = false;
+        var deletedKey = [];
+        console.log(data.name === jsonData.name);
+        for (const key in data) {
+          if (data.hasOwnProperty(key)) {
+            if (data[key] === jsonData[key]) {
+              delete jsonData[key];
+              deletedKey.push(key);
+              deletedSomething = true;
+            }
+          }
+        }
+        console.log(deletedKey, deletedSomething);
 
-        const url = process.env.REACT_APP_BASE_URL + "/addBird";
-        await axios.post(url, formData, config);
-        setShowLoadingAnimation(false);
-        setIsLoading(false);
-        setAddBirdOpen(false);
-        enqueueSnackbar("Bird data uploaded successfully", {
-          variant: "success",
-        });
-        setUploadProgress(0);
-        resetValues();
-        refetch();
-        return;
+        if (deletedSomething) {
+          formData.append("data", JSON.stringify(jsonData));
+          const url =
+            process.env.REACT_APP_BASE_URL + `/updateBird/${data._id}`;
+          await axios.post(url, formData, config);
+          setShowLoadingAnimation(false);
+          setIsLoading(false);
+          setUpdateBirdOpen(false);
+          enqueueSnackbar("Bird data updated successfully", {
+            variant: "success",
+          });
+          setUploadProgress(0);
+          resetValues();
+          refetch();
+          return;
+        } else {
+          enqueueSnackbar("Nothing was updated", { variant: "info" });
+          return;
+        }
       } catch (error) {
         setShowLoadingAnimation(false);
         setIsLoading(false);
@@ -221,14 +255,14 @@ function AddBird(props) {
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
     }; // eslint-disable-next-line
-  }, [addBirdOpen]);
+  }, [updateBirdOpen]);
 
   return (
     <>
       {showLoadingAnimation && <CustomLoadingAnimation />}
 
       <input
-        id="imagesInputSelect"
+        id="imageUpdateSelect"
         type="file"
         accept="image/*"
         onChange={handleImageChange}
@@ -237,9 +271,9 @@ function AddBird(props) {
       <div>
         <BootstrapDialog
           sx={{ zIndex: 1299 }}
-          onClose={closeAddBird}
+          onClose={closeUpdateBird}
           aria-labelledby="customized-dialog-title"
-          open={addBirdOpen}
+          open={updateBirdOpen}
         >
           <DialogTitle
             sx={{
@@ -258,7 +292,7 @@ function AddBird(props) {
           </DialogTitle>
           <IconButton
             aria-label="close"
-            onClick={closeAddBird}
+            onClick={closeUpdateBird}
             sx={{
               position: "absolute",
               right: 8,
@@ -498,7 +532,7 @@ function AddBird(props) {
                     <button
                       className={`btn btn-outline-success btn-sm mx-2`}
                       onClick={() => {
-                        document.getElementById("imagesInputSelect").click();
+                        document.getElementById("imageUpdateSelect").click();
                       }}
                     >
                       Choose Image
@@ -533,7 +567,7 @@ function AddBird(props) {
               size="medium"
               onClick={() => {
                 resetValues();
-                closeAddBird();
+                closeUpdateBird();
               }}
             >
               Discard
@@ -585,4 +619,4 @@ function AddBird(props) {
   );
 }
 
-export default AddBird;
+export default UpdateBird;
