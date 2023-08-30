@@ -271,8 +271,8 @@ const MyBirds = () => {
         data={{
           name: "Albino / red eye",
           price: 6000,
-          gender: "Male",
-          status: "Alive",
+          gender: "M",
+          status: "A",
           dna: true,
           ringNo: "190A23",
           date: "10-Aug-23",

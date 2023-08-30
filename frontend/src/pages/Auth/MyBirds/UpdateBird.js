@@ -47,8 +47,12 @@ function UpdateBird(props) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState(data.name);
-  const [gender, setGender] = useState(data.gender);
-  const [status, setStatus] = useState(data.status);
+  const [gender, setGender] = useState(
+    data.gender[0] === "M" ? "Male" : "Female"
+  );
+  const [status, setStatus] = useState(
+    data.status[0] === "A" ? "Alive" : "Dead"
+  );
   const [purchasedFrom, setPurchasedFrom] = useState(data.purchasedFrom);
   const [phone, setPhone] = useState(data.phone);
   const [price, setPrice] = useState(data.price);
@@ -76,8 +80,8 @@ function UpdateBird(props) {
 
   useEffect(() => {
     setName(data.name);
-    setGender(data.gender);
-    setStatus(data.status);
+    setGender(data.gender[0] === "M" ? "Male" : "Female");
+    setStatus(data.status[0] === "A" ? "Alive" : "Dead");
     setPurchasedFrom(data.purchasedFrom);
     setPhone(data.phone);
     setPrice(data.price);
@@ -183,7 +187,6 @@ function UpdateBird(props) {
     }
 
     if (selectedImage.length === 1) {
-      setIsLoading(true);
       const formData = new FormData();
       formData.append(`image`, selectedImage[0]);
 
@@ -201,19 +204,23 @@ function UpdateBird(props) {
       // Perform the image upload using Axios
       try {
         var deletedSomething = false;
-        var deletedKey = [];
 
         for (const key in data) {
           if (data.hasOwnProperty(key)) {
-            if (data[key] === jsonData[key]) {
+            if (key === "status" || key === "gender") {
+              if (data[key][0] === jsonData[key][0]) {
+                delete jsonData[key];
+                deletedSomething = true;
+              }
+            } else if (data[key] === jsonData[key]) {
               delete jsonData[key];
-              deletedKey.push(key);
               deletedSomething = true;
             }
           }
         }
 
         if (deletedSomething && Object.keys(jsonData).length >= 1) {
+          setIsLoading(true);
           formData.append("data", JSON.stringify(jsonData));
           const url =
             process.env.REACT_APP_BASE_URL + `/updateBird/${data._id}`;
@@ -229,7 +236,7 @@ function UpdateBird(props) {
           refetch();
           return;
         } else {
-          enqueueSnackbar("Nothing was updated", { variant: "info" });
+          enqueueSnackbar("No field was updated", { variant: "warning" });
           return;
         }
       } catch (error) {
