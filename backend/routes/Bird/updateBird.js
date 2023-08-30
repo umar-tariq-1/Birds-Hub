@@ -40,6 +40,7 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
   const price = updatedData.price ? updatedData.price : 9999;
   const gender = updatedData.gender ? updatedData.gender : "M";
   const status = updatedData.status ? updatedData.status : "A";
+  const dna = updatedData.dna ? updatedData.status : true;
 
   if (emptyKey !== null && emptyKey !== "ringNo") {
     return res.status(400).send({
@@ -53,6 +54,8 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
     return res.status(422).send({ message: "Incorrect gender entered" });
   } else if (status !== "A" && status !== "D") {
     return res.status(422).send({ message: "Incorrect status entered" });
+  } else if (dna !== true && dna !== false) {
+    return res.status(422).send({ message: "Invalid DNA entered" });
   }
 
   try {

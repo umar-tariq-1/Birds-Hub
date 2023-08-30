@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 
 import axios from "axios";
 import LoadingBar from "../../../components/LoadingBar/LoadingBar";
@@ -7,23 +7,29 @@ import { useSnackbar } from "notistack";
 import { trimObject } from "../../../utils/objectFunctiions/trimObject";
 import { findKeyWithEmptyStringValue } from "../../../utils/objectFunctiions/findKeyWithEmptyStringValue";
 import { capitalize } from "../../SignUp/Validation";
-import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import {
   Dialog,
+  TextField,
   MenuItem,
   Select,
+  Button,
+  Slide,
+  FormGroup,
+  FormControlLabel,
   InputLabel,
+  Checkbox,
   FormControl,
+  IconButton,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  Box,
 } from "@mui/material";
 import CustomTextField from "../../../components/Form/textfield";
 import DatePicker from "../../../components/DatePicker/DatePicker";
-import { format } from "date-fns";
+import { format, parse, isValid } from "date-fns";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -34,21 +40,26 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-function AddBird() {
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+function AddBird(props) {
   const [selectedImage, setSelectedImage] = useState([]);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [status, setStatus] = useState("");
-  const [date, setDate] = useState("");
   const [purchasedFrom, setPurchasedFrom] = useState("");
   const [phone, setPhone] = useState("");
   const [price, setPrice] = useState("");
   const [ringNo, setRingNo] = useState("");
+  const [dna, setDna] = useState("");
   const [error, setError] = useState("");
-  const [addBirdOpen, setAddBirdOpen] = useState(false);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [range, setRange] = useState(new Date()); //Date selected on date selector
+  const [date, setDate] = useState("");
   const [showLoadingAnimation, setShowLoadingAnimation] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -65,11 +76,24 @@ function AddBird() {
     }
   }, [uploadProgress]);
 
-  const openAddBird = () => {
-    setAddBirdOpen(true);
-  };
+  const { addBirdOpen, setAddBirdOpen, refetch } = props;
+
   const closeAddBird = () => {
     setAddBirdOpen(false);
+  };
+  const openDatePicker = () => {
+    setDatePickerOpen(true);
+  };
+  const closeDatePicker = () => {
+    setDatePickerOpen(false);
+  };
+
+  const handleDatePickerChange = (date) => {
+    if (date === undefined || date === null) {
+      return;
+    } else {
+      setRange(date);
+    }
   };
 
   const resetValues = () => {
@@ -78,6 +102,7 @@ function AddBird() {
     setGender("");
     setStatus("");
     setRange(new Date());
+    setDate("");
     setError("");
     setRingNo("");
     setPrice("");
@@ -91,15 +116,19 @@ function AddBird() {
     if (file && file.type.startsWith("image/")) {
       setSelectedImage([file]);
     } else if (file) {
-      alert(`Selected file is not a valid image.`);
+      enqueueSnackbar("Selected file is not a valid image", {
+        variant: "error",
+      });
     }
 
     e.target.value = null;
   };
 
-  useEffect(() => {
-    setDate(format(range, "dd-MMM-yy"));
-  }, [range]);
+  const handleKeyPress = (e) => {
+    if (addBirdOpen && e.key === "Enter") {
+      handleImageUploadOptimized();
+    }
+  };
 
   const handleImageUploadOptimized = async () => {
     const jsonData = trimObject({
@@ -108,6 +137,7 @@ function AddBird() {
       gender,
       status,
       ringNo,
+      dna,
       date,
       purchasedFrom,
       phone: phone.toString(),
@@ -115,10 +145,28 @@ function AddBird() {
 
     const emptyKey = findKeyWithEmptyStringValue(jsonData);
     if (emptyKey !== null && emptyKey !== "ringNo") {
-      setError(
-        `${capitalize(emptyKey.replace(/([A-Z])/g, " $1"))} must not be empty`
-      );
-      console.log(error);
+      const newError = `${capitalize(
+        emptyKey.replace(/([A-Z])/g, " $1")
+      )} must not be empty`;
+      setError(newError);
+      enqueueSnackbar(newError, {
+        variant: "error",
+      });
+      return;
+    }
+
+    if (dna !== true && dna !== false) {
+      console.log(dna);
+      enqueueSnackbar("Please select DNA before uploading", {
+        variant: "error",
+      });
+      return;
+    }
+
+    const parsedDate = parse(date, "dd-MMM-yy", new Date());
+    if (!isValid(parsedDate)) {
+      setError("Invalid Date format");
+      enqueueSnackbar("Invalid Date format", { variant: "error" });
       return;
     }
 
@@ -146,12 +194,13 @@ function AddBird() {
         await axios.post(url, formData, config);
         setShowLoadingAnimation(false);
         setIsLoading(false);
+        setAddBirdOpen(false);
         enqueueSnackbar("Bird data uploaded successfully", {
           variant: "success",
         });
         setUploadProgress(0);
-        closeAddBird();
         resetValues();
+        refetch();
         return;
       } catch (error) {
         setShowLoadingAnimation(false);
@@ -170,9 +219,17 @@ function AddBird() {
     }
   };
 
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [addBirdOpen]);
+
   return (
     <>
       {showLoadingAnimation && <CustomLoadingAnimation />}
+
       <input
         id="imagesInputSelect"
         type="file"
@@ -181,11 +238,8 @@ function AddBird() {
         className="d-none"
       />
       <div>
-        <Button variant="outlined" onClick={openAddBird}>
-          Open dialog
-        </Button>
-
         <BootstrapDialog
+          sx={{ zIndex: 1299 }}
           onClose={closeAddBird}
           aria-labelledby="customized-dialog-title"
           open={addBirdOpen}
@@ -241,17 +295,18 @@ function AddBird() {
               required={true}
               size="medium"
               style={{
-                width: "46.25%",
+                width: "33.35%",
                 marginBottom: "12px",
                 marginLeft: "3%",
               }}
             >
-              <InputLabel required={true} id="genderLabel">
+              <InputLabel color="success" required={true} id="genderLabel">
                 Gender
               </InputLabel>
               <Select
                 labelId="genderLabel"
                 id="genderSelect"
+                color="success"
                 value={gender}
                 onChange={(e) => {
                   setGender(e.target.value);
@@ -267,17 +322,18 @@ function AddBird() {
               required={true}
               size="medium"
               style={{
-                width: "46.25%",
+                width: "31.65%",
                 marginBottom: "12px",
-                marginLeft: "1.5%",
+                marginLeft: "1%",
               }}
             >
-              <InputLabel required={true} id="statusLabel">
+              <InputLabel color="success" required={true} id="statusLabel">
                 Status
               </InputLabel>
               <Select
                 labelId="statusLabel"
                 id="statusSelect"
+                color="success"
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value);
@@ -289,6 +345,34 @@ function AddBird() {
                 <MenuItem value="Dead">Dead</MenuItem>
               </Select>
             </FormControl>
+            <FormControl
+              required={true}
+              size="medium"
+              style={{
+                width: "27%",
+                marginBottom: "12px",
+                marginLeft: "1%",
+              }}
+            >
+              <InputLabel color="success" required={true} id="dnaLabel">
+                DNA
+              </InputLabel>
+              <Select
+                labelId="dnaLabel"
+                id="dnaSelect"
+                color="success"
+                value={dna}
+                onChange={(e) => {
+                  setDna(e.target.value);
+                }}
+                label="DNA"
+                required={true}
+              >
+                <MenuItem value={true}>Yes</MenuItem>
+                <MenuItem value={false}>No</MenuItem>
+              </Select>
+            </FormControl>
+
             <CustomTextField
               onChange={(e) => setRingNo(e.target.value)}
               label="Ring number"
@@ -335,7 +419,10 @@ function AddBird() {
               value={phone}
               required={true}
             />
-            <CustomTextField
+            <TextField
+              readOnly={true}
+              color="success"
+              onClick={openDatePicker}
               onChange={(e) => setDate(e.target.value)}
               label="Date"
               value={date}
@@ -344,8 +431,10 @@ function AddBird() {
                 marginBottom: "12px",
                 marginLeft: "1.5%",
               }}
+              inputProps={{ readOnly: true }}
               required={true}
-              inputError={false}
+              error={false}
+              type="text"
             />
             <div className="d-flex flex-column align-items-center justify-content-center">
               <div
@@ -426,7 +515,46 @@ function AddBird() {
           </DialogActions>
         </BootstrapDialog>
       </div>
-      <DatePicker mode="date" range={range} handleSelect={setRange} />
+      <Dialog
+        sx={{ zIndex: 1300 }}
+        open={datePickerOpen}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={closeDatePicker}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogContent>
+          <DatePicker
+            mode="date"
+            range={range}
+            handleSelect={handleDatePickerChange}
+          />
+        </DialogContent>
+        <DialogActions>
+          <div
+            className="btn btn-primary"
+            onClick={() => {
+              setDate(format(range, "dd-MMM-yy"));
+              setDatePickerOpen(false);
+            }}
+          >
+            Select
+          </div>
+          <div
+            className="btn btn-outline-danger"
+            onClick={() => {
+              if (date !== "" && date !== null && date !== undefined) {
+                handleDatePickerChange(parse(date, "dd-MMM-yy", new Date()));
+              } else {
+                handleDatePickerChange(new Date());
+              }
+              setDatePickerOpen(false);
+            }}
+          >
+            Cancel
+          </div>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

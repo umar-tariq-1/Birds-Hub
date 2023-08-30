@@ -10,7 +10,8 @@ module.exports.addBirdValidation = (req, res, next) => {
   if (jsonData.ringNo === "") {
     delete jsonData.ringNo;
   }
-  const { name, price, gender, status, date, purchasedFrom, phone } = jsonData;
+  const { name, price, gender, status, dna, date, purchasedFrom, phone } =
+    jsonData;
   const emptyKey = findKeyWithEmptyStringValue(jsonData);
 
   if (emptyKey !== null && emptyKey !== "ringNo") {
@@ -38,6 +39,8 @@ module.exports.addBirdValidation = (req, res, next) => {
     return res.status(422).send({ message: "Incorrect gender entered" });
   } else if (status[0] !== "A" && status[0] !== "D") {
     return res.status(422).send({ message: "Incorrect status entered" });
+  } else if (dna !== true && dna !== false) {
+    return res.status(422).send({ message: "Invalid DNA entered" });
   } else if (!file) {
     return res.status(400).send({ message: "Please upload 1 image file" });
   } else if (!file.mimetype.startsWith("image/")) {

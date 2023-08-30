@@ -10,7 +10,19 @@ const DateFilterModal = (props) => {
   const [range, setRange] = useState({});
 
   const handleSelect = (selectedRange) => {
-    if (!selectedRange?.to) {
+    if (range.to !== range.from) {
+      if (
+        selectedRange?.to !== undefined &&
+        selectedRange?.from !== undefined
+      ) {
+        if (selectedRange.from && selectedRange.from !== range.from) {
+          setRange({ from: selectedRange.from, to: selectedRange.from });
+        }
+        if (selectedRange.to && selectedRange?.to !== range.to) {
+          setRange({ from: selectedRange.to, to: selectedRange.to });
+        }
+      }
+    } else if (!selectedRange?.to) {
       setRange({ from: selectedRange?.from, to: selectedRange?.from });
     } else {
       setRange(selectedRange);

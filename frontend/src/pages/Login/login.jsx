@@ -96,6 +96,7 @@ function Login() {
         enqueueSnackbar("Logged in successfully", { variant: "success" });
         localStorage.setItem("isLoggedIn", JSON.stringify(data.isLoggedIn));
         localStorage.setItem("tokenExpirationTime", JSON.stringify(data.tokenExpirationTime));
+        localStorage.setItem("birds","[]");
         navigate("/dashboard");
       }
     } catch (error) {

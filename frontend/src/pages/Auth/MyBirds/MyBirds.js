@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef } from "react";
 
 import AddBird from "./AddBird";
 import { MaterialReactTable } from "material-react-table";
@@ -9,6 +9,7 @@ import { Button } from "@mui/material";
 import { IconButton, Tooltip } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CustomMenu from "./CustomMenu";
+import AddIcon from "@mui/icons-material/Add";
 import { filterFn, sortingFn } from "./helperFunctions";
 import DateFilterModal from "./DateFilterModal";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +21,7 @@ const order = [
   "price",
   "gender",
   "status",
+  "dna",
   "ringNo",
   "date",
   "purchasedFrom",
@@ -30,25 +32,11 @@ const order = [
 
 const MyBirds = () => {
   const [open, setOpen] = useState(false);
+  const [addBirdOpen, setAddBirdOpen] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
   const tableInstanceRef = useRef(null);
   const [showColumnFilters, setShowColumnFilters] = useState(false);
   const [parent] = useAutoAnimate({ duration: 500 });
-
-  // const [isOnline, setIsOnline] = useState(navigator.onLine);
-
-  // useEffect(() => {
-  //   const handleOnline = () => setIsOnline(true);
-  //   const handleOffline = () => setIsOnline(false);
-
-  //   window.addEventListener("online", handleOnline);
-  //   window.addEventListener("offline", handleOffline);
-
-  //   return () => {
-  //     window.removeEventListener("online", handleOnline);
-  //     window.removeEventListener("offline", handleOffline);
-  //   };
-  // }, []);
 
   const {
     isFetching,
@@ -96,16 +84,8 @@ const MyBirds = () => {
         accessorKey: "price",
         header: "Price",
         size: 131,
-        // Cell: ({ cell }) =>
-        //   cell.getValue().toLocaleString("en-US", {
-        //     style: "currency",
-        //     currency: "PKR",
-        //     minimumFractionDigits: 0,
-        //     maximumFractionDigits: 0,
-        //   }),
         filterVariant: "range-slider",
         filterFn: "betweenInclusive", // default (or between)
-        // enableGlobalFilter: true,
         muiTableHeadCellFilterSliderProps: {
           min: 3000,
           max: 30000,
@@ -117,31 +97,34 @@ const MyBirds = () => {
       {
         accessorKey: "gender",
         header: "Gender",
+        size: 160,
       },
       {
         accessorKey: "status",
         header: "Status",
+        size: 150,
+      },
+      {
+        accessorKey: "dna",
+        header: "DNA",
+        size: 140,
+        Cell: ({ cell }) =>
+          cell.getValue() ? <span>Yes</span> : <span>No</span>,
       },
       {
         accessorKey: "ringNo",
         header: "Ring No.",
+        size: 170,
       },
       {
         accessorKey: "date",
         header: "Date",
-        // Cell: ({ cell }) =>
-        //   cell
-        //     .getValue()
-        //     .toLocaleString("en", {
-        //       day: "2-digit",
-        //       month: "short",
-        //       year: "2-digit",
-        //     })
-        //     .replace(/,/g, ""),
+        size: 140,
         Filter: () => (
           <div className="d-flex flex-column justify-content-between align-items-center w-100">
             <Button
               variant="outlined"
+              size="small"
               onClick={handleClickOpen}
               className="mt-2"
             >
@@ -155,10 +138,12 @@ const MyBirds = () => {
       {
         accessorKey: "purchasedFrom",
         header: "Purchased From",
+        size: 245,
       },
       {
         accessorKey: "phone",
         header: "Phone",
+        size: 180,
       },
     ],
     []
@@ -166,10 +151,12 @@ const MyBirds = () => {
 
   return (
     <ResponsiveDrawer MyBirds={1}>
-      <div className="mt-0">
-        <AddBird />
-      </div>
-      {/* <CustomLoadingAnimation /> */}
+      <AddBird
+        addBirdOpen={addBirdOpen}
+        setAddBirdOpen={setAddBirdOpen}
+        refetch={refetch}
+      />
+
       <div className="py-2 px-1">
         <MaterialReactTable
           columns={columns}
@@ -249,6 +236,11 @@ const MyBirds = () => {
                 <Tooltip arrow title="Refresh Data">
                   <IconButton onClick={() => refetch()}>
                     <RefreshIcon fontSize="medium" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip arrow title="Add Bird">
+                  <IconButton onClick={() => setAddBirdOpen(true)}>
+                    <AddIcon color="primary" fontSize="medium" />
                   </IconButton>
                 </Tooltip>
               </div>

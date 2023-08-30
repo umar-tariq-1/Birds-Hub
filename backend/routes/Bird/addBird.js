@@ -27,8 +27,17 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
 
   var image;
   const jsonData = trimObject(JSON.parse(req.body.data));
-  const { name, price, gender, status, ringNo, date, purchasedFrom, phone } =
-    jsonData;
+  const {
+    name,
+    price,
+    gender,
+    status,
+    dna,
+    ringNo,
+    date,
+    purchasedFrom,
+    phone,
+  } = jsonData;
 
   const sess = await mongoose.startSession();
   sess.startTransaction();
@@ -54,6 +63,7 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
       price,
       gender: gender[0],
       status: status[0],
+      dna,
       date,
       ringNo: ringNo ? ringNo : "",
       purchasedFrom,

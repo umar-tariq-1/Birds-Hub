@@ -7,6 +7,7 @@ const birdSchema = new Schema({
   price: { type: Number, required: true },
   gender: { type: String, required: true },
   status: { type: String, required: true },
+  dna: { type: Boolean, required: true },
   ringNo: { type: String, default: "" },
   date: { type: String, required: true },
   purchasedFrom: { type: String, required: true },
