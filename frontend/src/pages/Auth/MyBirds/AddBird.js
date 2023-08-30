@@ -272,7 +272,7 @@ function AddBird(props) {
           <DialogContent
             className="hide-scrollbar"
             sx={{
-              height: "443px",
+              height: "441px",
             }}
             dividers
           >
