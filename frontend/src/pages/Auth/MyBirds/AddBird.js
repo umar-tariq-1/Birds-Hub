@@ -16,16 +16,12 @@ import {
   Select,
   Button,
   Slide,
-  FormGroup,
-  FormControlLabel,
   InputLabel,
-  Checkbox,
   FormControl,
   IconButton,
   DialogContent,
   DialogTitle,
   DialogActions,
-  Box,
 } from "@mui/material";
 import CustomTextField from "../../../components/Form/textfield";
 import DatePicker from "../../../components/DatePicker/DatePicker";
@@ -56,7 +52,7 @@ function AddBird(props) {
   const [price, setPrice] = useState("");
   const [ringNo, setRingNo] = useState("");
   const [dna, setDna] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState({});
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [range, setRange] = useState(new Date()); //Date selected on date selector
   const [date, setDate] = useState("");
@@ -101,9 +97,10 @@ function AddBird(props) {
     setName("");
     setGender("");
     setStatus("");
+    setDna("");
     setRange(new Date());
     setDate("");
-    setError("");
+    setError({});
     setRingNo("");
     setPrice("");
     setPurchasedFrom("");
@@ -131,16 +128,17 @@ function AddBird(props) {
   };
 
   const handleImageUploadOptimized = async () => {
+    console.log(purchasedFrom);
     const jsonData = trimObject({
       name,
-      price,
       gender,
       status,
-      ringNo,
       dna,
-      date,
+      price,
       purchasedFrom,
       phone: phone.toString(),
+      date,
+      ringNo,
     });
 
     const emptyKey = findKeyWithEmptyStringValue(jsonData);
@@ -148,7 +146,7 @@ function AddBird(props) {
       const newError = `${capitalize(
         emptyKey.replace(/([A-Z])/g, " $1")
       )} must not be empty`;
-      setError(newError);
+      setError({ [emptyKey]: true });
       enqueueSnackbar(newError, {
         variant: "error",
       });
@@ -156,7 +154,7 @@ function AddBird(props) {
     }
 
     if (dna !== true && dna !== false) {
-      console.log(dna);
+      setError({ dna: true });
       enqueueSnackbar("Please select DNA before uploading", {
         variant: "error",
       });
@@ -165,8 +163,8 @@ function AddBird(props) {
 
     const parsedDate = parse(date, "dd-MMM-yy", new Date());
     if (!isValid(parsedDate)) {
-      setError("Invalid Date format");
-      enqueueSnackbar("Invalid Date format", { variant: "error" });
+      setError({ date: true });
+      enqueueSnackbar("Select valid date", { variant: "error" });
       return;
     }
 
@@ -223,7 +221,7 @@ function AddBird(props) {
     document.addEventListener("keydown", handleKeyPress);
     return () => {
       document.removeEventListener("keydown", handleKeyPress);
-    };
+    }; // eslint-disable-next-line
   }, [addBirdOpen]);
 
   return (
@@ -274,17 +272,20 @@ function AddBird(props) {
           <DialogContent
             className="hide-scrollbar"
             sx={{
-              height: "445px",
+              height: "443px",
             }}
             dividers
           >
             <div className="mt-md-1 px-md-3">
               <CustomTextField
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setError({});
+                }}
                 label="Bird Name"
                 value={name}
                 required={true}
-                inputError={false}
+                inputError={error.name}
                 style={{
                   width: "95%",
                   marginBottom: "12px",
@@ -295,6 +296,7 @@ function AddBird(props) {
               <FormControl
                 required={true}
                 size="medium"
+                error={error.gender}
                 style={{
                   width: "33.69%",
                   marginBottom: "12px",
@@ -309,6 +311,7 @@ function AddBird(props) {
                   id="genderSelect"
                   color="success"
                   value={gender}
+                  onClick={() => setError({})}
                   onChange={(e) => {
                     setGender(e.target.value);
                   }}
@@ -322,6 +325,7 @@ function AddBird(props) {
               <FormControl
                 required={true}
                 size="medium"
+                error={error.status}
                 style={{
                   width: "31.98%",
                   marginBottom: "12px",
@@ -336,6 +340,7 @@ function AddBird(props) {
                   id="statusSelect"
                   color="success"
                   value={status}
+                  onClick={() => setError({})}
                   onChange={(e) => {
                     setStatus(e.target.value);
                   }}
@@ -349,6 +354,7 @@ function AddBird(props) {
               <FormControl
                 required={true}
                 size="medium"
+                error={error.dna}
                 style={{
                   width: "27.33%",
                   marginBottom: "12px",
@@ -363,6 +369,7 @@ function AddBird(props) {
                   id="dnaSelect"
                   color="success"
                   value={dna}
+                  onClick={() => setError({})}
                   onChange={(e) => {
                     setDna(e.target.value);
                   }}
@@ -375,10 +382,13 @@ function AddBird(props) {
               </FormControl>
 
               <CustomTextField
-                onChange={(e) => setRingNo(e.target.value)}
+                onChange={(e) => {
+                  setRingNo(e.target.value);
+                  setError({});
+                }}
                 label="Ring number"
                 value={ringNo}
-                inputError={false}
+                inputError={error.ringNo}
                 style={{
                   width: "46.75%",
                   marginBottom: "12px",
@@ -387,7 +397,10 @@ function AddBird(props) {
                 required={false}
               />
               <CustomTextField
-                onChange={(e) => setPrice(e.target.value)}
+                onChange={(e) => {
+                  setPrice(e.target.value);
+                  setError({});
+                }}
                 label="Price"
                 type="number"
                 value={price}
@@ -397,22 +410,28 @@ function AddBird(props) {
                   marginLeft: "1.5%",
                 }}
                 required={true}
-                inputError={false}
+                inputError={error.price}
               />
               <CustomTextField
-                onChange={(e) => setPurchasedFrom(e.target.value)}
+                onChange={(e) => {
+                  setPurchasedFrom(e.target.value);
+                  setError({});
+                }}
                 label="Purchased from"
                 style={{
                   width: "95%",
                   marginBottom: "12px",
                   marginLeft: "2.5%",
                 }}
-                inputError={false}
+                inputError={error.purchasedFrom}
                 required={true}
                 value={purchasedFrom}
               />
               <CustomTextField
-                onChange={(e) => setPhone(e.target.value)}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  setError({});
+                }}
                 label="Phone number"
                 style={{
                   width: "49.75%",
@@ -420,15 +439,17 @@ function AddBird(props) {
                   marginLeft: "2.5%",
                 }}
                 type="number"
-                inputError={false}
+                inputError={error.phone}
                 value={phone}
                 required={true}
               />
               <TextField
                 readOnly={true}
                 color="success"
-                onClick={openDatePicker}
-                onChange={(e) => setDate(e.target.value)}
+                onClick={() => {
+                  openDatePicker();
+                  setError({});
+                }}
                 label="Date"
                 value={date}
                 style={{
@@ -438,7 +459,7 @@ function AddBird(props) {
                 }}
                 inputProps={{ readOnly: true }}
                 required={true}
-                error={false}
+                error={error.date}
                 type="text"
               />
               <div className="d-flex flex-column align-items-center justify-content-center">
@@ -448,7 +469,7 @@ function AddBird(props) {
                 >
                   <h5
                     className="text-muted"
-                    style={{ fontFamily: "Titillium Web" }}
+                    style={{ fontFamily: "Titillium Web", fontSize: "20px" }}
                   >
                     Image:&nbsp;
                   </h5>
@@ -458,12 +479,12 @@ function AddBird(props) {
                       selectedImage[0]?.name
                         ? {
                             color: "Darkgreen",
-                            marginTop: "1px",
+                            marginTop: "2px",
                             fontFamily: "Titillium Web",
                           }
                         : {
                             color: "red",
-                            marginTop: "1px",
+                            marginTop: "2px",
                             fontFamily: "Titillium Web",
                           }
                     }
@@ -474,9 +495,9 @@ function AddBird(props) {
                 {isLoading ? (
                   <LoadingBar value={Number(uploadProgress)} width="80%" />
                 ) : (
-                  <div style={{ height: "34px" }}>
+                  <div>
                     <button
-                      className={`btn btn-outline-success mx-2 mb-4`}
+                      className={`btn btn-outline-success btn-sm mx-2`}
                       onClick={() => {
                         document.getElementById("imagesInputSelect").click();
                       }}
@@ -484,7 +505,7 @@ function AddBird(props) {
                       Choose Image
                     </button>
                     <button
-                      className={`btn btn-outline-danger mx-2 mb-4`}
+                      className={`btn btn-outline-danger btn-sm mx-2`}
                       onClick={() => {
                         setSelectedImage([]);
                       }}
