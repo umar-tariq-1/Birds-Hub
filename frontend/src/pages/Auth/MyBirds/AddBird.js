@@ -1,5 +1,5 @@
 import React, { useEffect, useState, forwardRef } from "react";
-
+import "./AddBird.css";
 import axios from "axios";
 import LoadingBar from "../../../components/LoadingBar/LoadingBar";
 import CustomLoadingAnimation from "../../../components/LoadingAnimation/loadingAnimation";
@@ -272,227 +272,233 @@ function AddBird(props) {
             <CloseIcon fontSize="medium" />
           </IconButton>
           <DialogContent
+            className="hide-scrollbar"
             sx={{
-              overflow: { xs: "hidden", md: "auto" },
               height: "445px",
             }}
             dividers
           >
-            <CustomTextField
-              onChange={(e) => setName(e.target.value)}
-              label="Bird Name"
-              value={name}
-              required={true}
-              inputError={false}
-              style={{
-                width: "94%",
-                marginBottom: "12px",
-                marginLeft: "3%",
-                marginTop: "1px",
-              }}
-            />
-            <FormControl
-              required={true}
-              size="medium"
-              style={{
-                width: "33.35%",
-                marginBottom: "12px",
-                marginLeft: "3%",
-              }}
-            >
-              <InputLabel color="success" required={true} id="genderLabel">
-                Gender
-              </InputLabel>
-              <Select
-                labelId="genderLabel"
-                id="genderSelect"
-                color="success"
-                value={gender}
-                onChange={(e) => {
-                  setGender(e.target.value);
-                }}
-                label="Gender"
+            <div className="mt-md-1 px-md-3">
+              <CustomTextField
+                onChange={(e) => setName(e.target.value)}
+                label="Bird Name"
+                value={name}
                 required={true}
-              >
-                <MenuItem value="Male">Male</MenuItem>
-                <MenuItem value="Female">Female</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl
-              required={true}
-              size="medium"
-              style={{
-                width: "31.65%",
-                marginBottom: "12px",
-                marginLeft: "1%",
-              }}
-            >
-              <InputLabel color="success" required={true} id="statusLabel">
-                Status
-              </InputLabel>
-              <Select
-                labelId="statusLabel"
-                id="statusSelect"
-                color="success"
-                value={status}
-                onChange={(e) => {
-                  setStatus(e.target.value);
+                inputError={false}
+                style={{
+                  width: "95%",
+                  marginBottom: "12px",
+                  marginLeft: "2.5%",
+                  marginTop: "1px",
                 }}
-                label="Status"
+              />
+              <FormControl
                 required={true}
-              >
-                <MenuItem value="Alive">Alive</MenuItem>
-                <MenuItem value="Dead">Dead</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl
-              required={true}
-              size="medium"
-              style={{
-                width: "27%",
-                marginBottom: "12px",
-                marginLeft: "1%",
-              }}
-            >
-              <InputLabel color="success" required={true} id="dnaLabel">
-                DNA
-              </InputLabel>
-              <Select
-                labelId="dnaLabel"
-                id="dnaSelect"
-                color="success"
-                value={dna}
-                onChange={(e) => {
-                  setDna(e.target.value);
+                size="medium"
+                style={{
+                  width: "33.69%",
+                  marginBottom: "12px",
+                  marginLeft: "2.5%",
                 }}
-                label="DNA"
-                required={true}
               >
-                <MenuItem value={true}>Yes</MenuItem>
-                <MenuItem value={false}>No</MenuItem>
-              </Select>
-            </FormControl>
+                <InputLabel color="success" required={true} id="genderLabel">
+                  Gender
+                </InputLabel>
+                <Select
+                  labelId="genderLabel"
+                  id="genderSelect"
+                  color="success"
+                  value={gender}
+                  onChange={(e) => {
+                    setGender(e.target.value);
+                  }}
+                  label="Gender"
+                  required={true}
+                >
+                  <MenuItem value="Male">Male</MenuItem>
+                  <MenuItem value="Female">Female</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                required={true}
+                size="medium"
+                style={{
+                  width: "31.98%",
+                  marginBottom: "12px",
+                  marginLeft: "1%",
+                }}
+              >
+                <InputLabel color="success" required={true} id="statusLabel">
+                  Status
+                </InputLabel>
+                <Select
+                  labelId="statusLabel"
+                  id="statusSelect"
+                  color="success"
+                  value={status}
+                  onChange={(e) => {
+                    setStatus(e.target.value);
+                  }}
+                  label="Status"
+                  required={true}
+                >
+                  <MenuItem value="Alive">Alive</MenuItem>
+                  <MenuItem value="Dead">Dead</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl
+                required={true}
+                size="medium"
+                style={{
+                  width: "27.33%",
+                  marginBottom: "12px",
+                  marginLeft: "1%",
+                }}
+              >
+                <InputLabel color="success" required={true} id="dnaLabel">
+                  DNA
+                </InputLabel>
+                <Select
+                  labelId="dnaLabel"
+                  id="dnaSelect"
+                  color="success"
+                  value={dna}
+                  onChange={(e) => {
+                    setDna(e.target.value);
+                  }}
+                  label="DNA"
+                  required={true}
+                >
+                  <MenuItem value={true}>Yes</MenuItem>
+                  <MenuItem value={false}>No</MenuItem>
+                </Select>
+              </FormControl>
 
-            <CustomTextField
-              onChange={(e) => setRingNo(e.target.value)}
-              label="Ring number"
-              value={ringNo}
-              inputError={false}
-              style={{
-                width: "46.25%",
-                marginBottom: "12px",
-                marginLeft: "3%",
-              }}
-              required={false}
-            />
-            <CustomTextField
-              onChange={(e) => setPrice(e.target.value)}
-              label="Price"
-              type="number"
-              value={price}
-              style={{
-                width: "46.25%",
-                marginBottom: "12px",
-                marginLeft: "1.5%",
-              }}
-              required={true}
-              inputError={false}
-            />
-            <CustomTextField
-              onChange={(e) => setPurchasedFrom(e.target.value)}
-              label="Purchased from"
-              style={{ width: "94%", marginBottom: "12px", marginLeft: "3%" }}
-              inputError={false}
-              required={true}
-              value={purchasedFrom}
-            />
-            <CustomTextField
-              onChange={(e) => setPhone(e.target.value)}
-              label="Phone number"
-              style={{
-                width: "49.25%",
-                marginBottom: "12px",
-                marginLeft: "3%",
-              }}
-              type="number"
-              inputError={false}
-              value={phone}
-              required={true}
-            />
-            <TextField
-              readOnly={true}
-              color="success"
-              onClick={openDatePicker}
-              onChange={(e) => setDate(e.target.value)}
-              label="Date"
-              value={date}
-              style={{
-                width: "43.25%",
-                marginBottom: "12px",
-                marginLeft: "1.5%",
-              }}
-              inputProps={{ readOnly: true }}
-              required={true}
-              error={false}
-              type="text"
-            />
-            <div className="d-flex flex-column align-items-center justify-content-center">
-              <div
-                style={{ width: "93%", marginBottom: "4px" }}
-                className="d-flex justify-content-center"
-              >
-                <h5
-                  className="text-muted"
-                  style={{ fontFamily: "Titillium Web" }}
+              <CustomTextField
+                onChange={(e) => setRingNo(e.target.value)}
+                label="Ring number"
+                value={ringNo}
+                inputError={false}
+                style={{
+                  width: "46.75%",
+                  marginBottom: "12px",
+                  marginLeft: "2.5%",
+                }}
+                required={false}
+              />
+              <CustomTextField
+                onChange={(e) => setPrice(e.target.value)}
+                label="Price"
+                type="number"
+                value={price}
+                style={{
+                  width: "46.75%",
+                  marginBottom: "12px",
+                  marginLeft: "1.5%",
+                }}
+                required={true}
+                inputError={false}
+              />
+              <CustomTextField
+                onChange={(e) => setPurchasedFrom(e.target.value)}
+                label="Purchased from"
+                style={{
+                  width: "95%",
+                  marginBottom: "12px",
+                  marginLeft: "2.5%",
+                }}
+                inputError={false}
+                required={true}
+                value={purchasedFrom}
+              />
+              <CustomTextField
+                onChange={(e) => setPhone(e.target.value)}
+                label="Phone number"
+                style={{
+                  width: "49.75%",
+                  marginBottom: "12px",
+                  marginLeft: "2.5%",
+                }}
+                type="number"
+                inputError={false}
+                value={phone}
+                required={true}
+              />
+              <TextField
+                readOnly={true}
+                color="success"
+                onClick={openDatePicker}
+                onChange={(e) => setDate(e.target.value)}
+                label="Date"
+                value={date}
+                style={{
+                  width: "43.75%",
+                  marginBottom: "12px",
+                  marginLeft: "1.5%",
+                }}
+                inputProps={{ readOnly: true }}
+                required={true}
+                error={false}
+                type="text"
+              />
+              <div className="d-flex flex-column align-items-center justify-content-center">
+                <div
+                  style={{ width: "93%", marginBottom: "4px" }}
+                  className="d-flex justify-content-center"
                 >
-                  Image:&nbsp;
-                </h5>
-                <span
-                  className="text-truncate"
-                  style={
-                    selectedImage[0]?.name
-                      ? {
-                          color: "Darkgreen",
-                          marginTop: "1px",
-                          fontFamily: "Titillium Web",
-                        }
-                      : {
-                          color: "red",
-                          marginTop: "1px",
-                          fontFamily: "Titillium Web",
-                        }
-                  }
-                >
-                  {selectedImage[0]?.name ?? "not selected"}
-                </span>
-              </div>
-              {isLoading ? (
-                <LoadingBar value={Number(uploadProgress)} width="80%" />
-              ) : (
-                <div style={{ height: "34px" }}>
-                  <button
-                    className={`btn btn-outline-success mx-2 mb-4`}
-                    onClick={() => {
-                      document.getElementById("imagesInputSelect").click();
-                    }}
+                  <h5
+                    className="text-muted"
+                    style={{ fontFamily: "Titillium Web" }}
                   >
-                    Choose Image
-                  </button>
-                  <button
-                    className={`btn btn-outline-danger mx-2 mb-4`}
-                    onClick={() => {
-                      setSelectedImage([]);
-                    }}
+                    Image:&nbsp;
+                  </h5>
+                  <span
+                    className="text-truncate"
+                    style={
+                      selectedImage[0]?.name
+                        ? {
+                            color: "Darkgreen",
+                            marginTop: "1px",
+                            fontFamily: "Titillium Web",
+                          }
+                        : {
+                            color: "red",
+                            marginTop: "1px",
+                            fontFamily: "Titillium Web",
+                          }
+                    }
                   >
-                    Clear Image
-                  </button>
+                    {selectedImage[0]?.name ?? "not selected"}
+                  </span>
                 </div>
-              )}
+                {isLoading ? (
+                  <LoadingBar value={Number(uploadProgress)} width="80%" />
+                ) : (
+                  <div style={{ height: "34px" }}>
+                    <button
+                      className={`btn btn-outline-success mx-2 mb-4`}
+                      onClick={() => {
+                        document.getElementById("imagesInputSelect").click();
+                      }}
+                    >
+                      Choose Image
+                    </button>
+                    <button
+                      className={`btn btn-outline-danger mx-2 mb-4`}
+                      onClick={() => {
+                        setSelectedImage([]);
+                      }}
+                    >
+                      Clear Image
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </DialogContent>
           <DialogActions sx={{ height: "65px" }}>
             <Button
-              sx={{ fontSize: "16px" }}
+              sx={{ fontSize: "15px" }}
               autoFocus
               variant="outlined"
               size="medium"
@@ -501,7 +507,7 @@ function AddBird(props) {
               Upload
             </Button>
             <Button
-              sx={{ marginRight: "3.5%", fontSize: "16px" }}
+              sx={{ marginRight: "3.5%", fontSize: "15px" }}
               color="error"
               variant="outlined"
               size="medium"
