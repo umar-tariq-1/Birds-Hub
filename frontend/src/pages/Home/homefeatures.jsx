@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import moneyPic from "../../utils/pictures/money.png";
+import xlsPic from "../../utils/pictures/xls.png";
 import checkPic from "../../utils/pictures/check.png";
 import searchPic from "../../utils/pictures/search.png";
 import AOS from "aos";
@@ -11,7 +11,7 @@ import { FaGithub, FaLinkedinIn, FaTwitter, FaEnvelope } from "react-icons/fa";
 
 import { GrInstagram } from "react-icons/gr";
 
-const preloadSrcList = [moneyPic, checkPic, searchPic];
+const preloadSrcList = [xlsPic, checkPic, searchPic];
 
 export default function HomeFeatures() {
   const { imagesPreloaded } = useImagePreloader(preloadSrcList);
@@ -60,14 +60,9 @@ export default function HomeFeatures() {
                 />
               </div>
               <div className="px-3">
-                <h4 data-aos="zoom-in-up">Featured Birds</h4>
+                <h4 data-aos="zoom-in-up">Maintained Data</h4>
                 <p data-aos="zoom-in-up">
-                  Showcase a selection of the freshest and most in-demand crops
-                  from local farmers and highlights unique qualities and
-                  benefits in their product with brief description. This section
-                  can rotate or be regularly updated to highlight different
-                  crops, promoting diversity and attracting the attention of
-                  potential buyers.
+                  Neatly structured table empowers you to monitor avian stock. Experience the convenience of meticulously designed tables that elegantly organizes and presents your inventory data. With its user-friendly interface, you can effortlessly track, manage, and update your stock and data.
                 </p>
               </div>
             </div>
@@ -76,20 +71,16 @@ export default function HomeFeatures() {
             <div className="text-center d-flex flex-column align-items-center">
               <div className="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon">
                 <img
-                  style={{ height: "93px", width: "107px" }}
-                  src={moneyPic}
+                  style={{ height: "96px", width: "96px" }}
+                  src={xlsPic}
                   alt=" Loading..."
                   data-aos="zoom-in-up"
                 />
               </div>
               <div className="px-3">
-                <h4 data-aos="zoom-in-up">Real-time Market Prices</h4>
+                <h4 data-aos="zoom-in-up">Data Exportation</h4>
                 <p data-aos="zoom-in-up">
-                  Provide a real-time or regularly updated section that displays
-                  the current market prices of various crops. This information
-                  is crucial for both farmers and buyers as it helps them make
-                  informed decisions about when to sell or buy specific crops.
-                  Also ensure the fair prices of all crops.
+                  Elevate your inventory management experience with the convenience of swift data export. Instantly generate PDF and Excel reports from your maintained records. Say goodbye to complexity and hello to efficiency as you effortlessly compile, share, and analyze your birds data with just one easy click. 
                 </p>
               </div>
             </div>
@@ -108,9 +99,9 @@ export default function HomeFeatures() {
                 <h4 data-aos="zoom-in">Intuitive Search</h4>
                 <p data-aos="zoom-in">
                   Implement filters and sorting options to help users refine
-                  their search results based on criteria such as crop type,
-                  price range, location, and more. Additionally, use descriptive
-                  and concise labels for navigation buttons and categories to
+                  their search results based on criteria such as bird name,
+                  price range, purchasing date, and more. Additionally, use descriptive
+                  and concise labels for navigation buttons and grouping to
                   minimize confusion and improve the overall user experience.
                 </p>
               </div>
