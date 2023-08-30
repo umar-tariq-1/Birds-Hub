@@ -202,7 +202,7 @@ function UpdateBird(props) {
       try {
         var deletedSomething = false;
         var deletedKey = [];
-        console.log(data.name === jsonData.name);
+
         for (const key in data) {
           if (data.hasOwnProperty(key)) {
             if (data[key] === jsonData[key]) {
@@ -212,9 +212,8 @@ function UpdateBird(props) {
             }
           }
         }
-        console.log(deletedKey, deletedSomething);
 
-        if (deletedSomething) {
+        if (deletedSomething && Object.keys(jsonData).length >= 1) {
           formData.append("data", JSON.stringify(jsonData));
           const url =
             process.env.REACT_APP_BASE_URL + `/updateBird/${data._id}`;
