@@ -15,6 +15,7 @@ import DateFilterModal from "./DateFilterModal";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { reorderKeys } from "../../../utils/objectFunctiions/reorderKeys";
+import { enqueueSnackbar } from "notistack";
 
 const order = [
   "name",
@@ -57,10 +58,17 @@ const MyBirds = () => {
         "birds",
         JSON.stringify(reorderKeys(responseData?.data?.orderedData, order))
       );
-      console.log(responseData.data.orderedData);
+      enqueueSnackbar("Data fetched successfully", {
+        variant: "success",
+        autoHideDuration: 1750,
+      });
     },
     onError: (error) => {
-      console.log(error?.response?.data?.message);
+      enqueueSnackbar(error?.response?.data?.message || "Coulnot fetch data", {
+        variant: "error",
+        autoHideDuration: 1750,
+      });
+      // if(error?.response?.data?.message===)
     },
     keepPreviousData: true,
   });

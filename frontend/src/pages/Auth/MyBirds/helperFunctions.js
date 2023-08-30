@@ -9,6 +9,15 @@ const todayDate = new Date();
 const exportToPDF = (rows, columns) => {
   const doc = new jsPDF();
   const tableData = rows.map((row) => Object.values(row.original));
+
+  for (let i = 0; i < tableData.length; i++) {
+    if (tableData[i][4] === true) {
+      tableData[i][4] = "Yes";
+    } else if (tableData[i][4] === false) {
+      tableData[i][4] = "No";
+    }
+  }
+
   const tableHeaders = columns.map((c) => c.header);
 
   autoTable(doc, {
@@ -41,9 +50,21 @@ const exportToExcel = async (rowModels, fileName) => {
 
   const capitalizedData = excelData.map((item) => {
     const capitalizedItem = {};
+    var capitalizedKey;
     for (const key in item) {
-      const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-      capitalizedItem[capitalizedKey] = item[key];
+      if (key === "dna") {
+        capitalizedKey = "DNA";
+        if (item[key] === true) {
+          capitalizedItem[capitalizedKey] = "Yes";
+        } else if (item[key] === false) {
+          capitalizedItem[capitalizedKey] = "No";
+        } else {
+          capitalizedItem[capitalizedKey] = item[key];
+        }
+      } else {
+        capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
+        capitalizedItem[capitalizedKey] = item[key];
+      }
     }
     return capitalizedItem;
   });
@@ -105,7 +126,12 @@ const exportToExcel = async (rowModels, fileName) => {
     if (
       cellAddress.startsWith("A") ||
       cellAddress.startsWith("C") ||
-      cellAddress.startsWith("D")
+      cellAddress.startsWith("D") ||
+      cellAddress.startsWith("E") ||
+      cellAddress.startsWith("F") ||
+      cellAddress.startsWith("G") ||
+      cellAddress.startsWith("H") ||
+      cellAddress.startsWith("J")
     ) {
       // Adjust the column letter if needed
       if (cellAddress[1] === "1") {
