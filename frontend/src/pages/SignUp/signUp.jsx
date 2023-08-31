@@ -46,7 +46,7 @@ function SignUp() {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setuserData({ ...userData, [e.target.name]: e.target.value.trim() });
+    setuserData({ ...userData, [e.target.name]: e.target.value.toString().trim() });
     setError("");
     setinputErrors({});
   };
@@ -198,6 +198,7 @@ function SignUp() {
                   inputError={inputErrors.phone}
                   style={styleFull}
                   label="Phone Number"
+                  type="number"
                   icon={<FaPhone size={19} />}
                   name="phone"
                   onChange={handleChange}

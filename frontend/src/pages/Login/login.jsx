@@ -31,7 +31,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setuserData({ ...userData, [e.target.name]: e.target.value.trim() });
+    setuserData({ ...userData, [e.target.name]: e.target.value.toString().trim() });
     setError("");
     setinputErrors({});
   };
@@ -157,6 +157,7 @@ function Login() {
                   label="Phone"
                   icon={<FaPhone size={19} />}
                   name="phone"
+                  type="number"
                   onChange={handleChange}
                 />
 

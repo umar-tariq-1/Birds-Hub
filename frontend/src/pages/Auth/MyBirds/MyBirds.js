@@ -82,7 +82,7 @@ const MyBirds = () => {
     },
     onError: (error) => {
       enqueueSnackbar(
-        error?.response?.data?.message || "Coulnot refreshed data",
+        error?.response?.data?.message || "Coulnot refresh data",
         {
           variant: "error",
           autoHideDuration: 1750,

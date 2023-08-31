@@ -9,6 +9,8 @@ import { findKeyWithEmptyStringValue } from "../../../utils/objectFunctiions/fin
 import { capitalize } from "../../SignUp/Validation";
 import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
+import UploadIcon from "@mui/icons-material/Upload";
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Dialog,
   TextField,
@@ -23,7 +25,6 @@ import {
   DialogTitle,
   DialogActions,
 } from "@mui/material";
-import CustomTextField from "../../../components/Form/textfield";
 import DatePicker from "../../../components/DatePicker/DatePicker";
 import { format, parse, isValid } from "date-fns";
 import { Link } from "react-router-dom";
@@ -48,12 +49,8 @@ function UpdateBird(props) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState(data.name);
-  const [gender, setGender] = useState(
-    data.gender /* [0] === "M" ? "Male" : "Female" */
-  );
-  const [status, setStatus] = useState(
-    data.status /* [0] === "A" ? "Alive" : "Dead" */
-  );
+  const [gender, setGender] = useState(data.gender);
+  const [status, setStatus] = useState(data.status);
   const [purchasedFrom, setPurchasedFrom] = useState(data.purchasedFrom);
   const [phone, setPhone] = useState(data.phone);
   const [price, setPrice] = useState(data.price);
@@ -63,6 +60,7 @@ function UpdateBird(props) {
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [date, setDate] = useState(data.date);
   const [range, setRange] = useState(new Date());
+  const [edit, setEdit] = useState(false);
   const [showLoadingAnimation, setShowLoadingAnimation] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
@@ -245,10 +243,12 @@ function UpdateBird(props) {
           variant: "success",
         });
         setUploadProgress(0);
+        setEdit(false);
         refetch();
         return;
       } else {
         enqueueSnackbar("No field was updated", { variant: "warning" });
+        setEdit(false);
         setUpdateBirdOpen(false);
         return;
       }
@@ -256,17 +256,13 @@ function UpdateBird(props) {
       setUploadProgress(0);
       setShowLoadingAnimation(false);
       setIsLoading(false);
+      setEdit(false);
       enqueueSnackbar(
         error?.response?.data?.message || "Server not working. Try again later",
         { variant: "error" }
       );
       return;
     }
-    // } else {
-    //   enqueueSnackbar("Select 1 image before uploading", {
-    //     variant: "error",
-    //   });
-    // }
   };
 
   useEffect(() => {
@@ -331,7 +327,7 @@ function UpdateBird(props) {
               dividers
             >
               <div className="mt-md-1 px-md-3">
-                <CustomTextField
+                <TextField
                   onChange={(e) => {
                     setName(e.target.value);
                     setError({});
@@ -339,7 +335,10 @@ function UpdateBird(props) {
                   label="Bird Name"
                   value={name}
                   required={true}
-                  inputError={error.name}
+                  type="text"
+                  inputProps={{ readOnly: !edit }}
+                  color="success"
+                  error={error.name}
                   style={{
                     width: "95%",
                     marginBottom: "12px",
@@ -363,6 +362,7 @@ function UpdateBird(props) {
                   <Select
                     labelId="genderLabel"
                     id="genderSelect"
+                    inputProps={{ readOnly: !edit }}
                     color="success"
                     value={gender}
                     onClick={() => setError({})}
@@ -392,6 +392,7 @@ function UpdateBird(props) {
                   <Select
                     labelId="statusLabel"
                     id="statusSelect"
+                    inputProps={{ readOnly: !edit }}
                     color="success"
                     value={status}
                     onClick={() => setError({})}
@@ -421,6 +422,7 @@ function UpdateBird(props) {
                   <Select
                     labelId="dnaLabel"
                     id="dnaSelect"
+                    inputProps={{ readOnly: !edit }}
                     color="success"
                     value={dna}
                     onClick={() => setError({})}
@@ -435,14 +437,17 @@ function UpdateBird(props) {
                   </Select>
                 </FormControl>
 
-                <CustomTextField
+                <TextField
                   onChange={(e) => {
                     setRingNo(e.target.value);
                     setError({});
                   }}
                   label="Ring number"
                   value={ringNo}
-                  inputError={error.ringNo}
+                  type="text"
+                  color="success"
+                  inputProps={{ readOnly: !edit }}
+                  error={error.ringNo}
                   style={{
                     width: "46.75%",
                     marginBottom: "12px",
@@ -450,13 +455,15 @@ function UpdateBird(props) {
                   }}
                   required={false}
                 />
-                <CustomTextField
+                <TextField
                   onChange={(e) => {
                     setPrice(e.target.value);
                     setError({});
                   }}
                   label="Price"
                   type="number"
+                  inputProps={{ readOnly: !edit }}
+                  color="success"
                   value={price}
                   style={{
                     width: "46.75%",
@@ -464,45 +471,51 @@ function UpdateBird(props) {
                     marginLeft: "1.5%",
                   }}
                   required={true}
-                  inputError={error.price}
+                  error={error.price}
                 />
-                <CustomTextField
+                <TextField
                   onChange={(e) => {
                     setPurchasedFrom(e.target.value);
                     setError({});
                   }}
                   label="Purchased from"
+                  type="text"
+                  color="success"
                   style={{
                     width: "95%",
                     marginBottom: "12px",
                     marginLeft: "2.5%",
                   }}
-                  inputError={error.purchasedFrom}
+                  inputProps={{ readOnly: !edit }}
+                  error={error.purchasedFrom}
                   required={true}
                   value={purchasedFrom}
                 />
-                <CustomTextField
+                <TextField
                   onChange={(e) => {
                     setPhone(e.target.value);
                     setError({});
                   }}
                   label="Phone number"
+                  color="success"
                   style={{
                     width: "49.75%",
                     marginBottom: "12px",
                     marginLeft: "2.5%",
                   }}
+                  inputProps={{ readOnly: !edit }}
                   type="number"
-                  inputError={error.phone}
+                  error={error.phone}
                   value={phone}
                   required={true}
                 />
                 <TextField
-                  readOnly={true}
                   color="success"
                   onClick={() => {
-                    openDatePicker();
-                    setError({});
+                    if (edit) {
+                      openDatePicker();
+                      setError({});
+                    }
                   }}
                   label="Date"
                   value={date}
@@ -563,7 +576,9 @@ function UpdateBird(props) {
                   ) : (
                     <div>
                       <button
-                        className={`btn btn-outline-success btn-sm mx-2`}
+                        className={`btn btn-outline-success btn-sm mx-2 ${
+                          !edit && "disabled"
+                        }`}
                         onClick={() => {
                           document.getElementById("imageUpdateSelect").click();
                         }}
@@ -571,7 +586,9 @@ function UpdateBird(props) {
                         Choose Image
                       </button>
                       <button
-                        className={`btn btn-outline-danger btn-sm mx-2`}
+                        className={`btn btn-outline-danger btn-sm mx-2 ${
+                          !edit && "disabled"
+                        }`}
                         onClick={() => {
                           setSelectedImage([]);
                         }}
@@ -585,7 +602,8 @@ function UpdateBird(props) {
             </DialogContent>
             <DialogActions sx={{ height: "65px" }}>
               <Button
-                sx={{ fontSize: "15px" }}
+                startIcon={<UploadIcon />}
+                sx={{ fontSize: "14px" }}
                 autoFocus
                 variant="outlined"
                 size="medium"
@@ -594,7 +612,17 @@ function UpdateBird(props) {
                 Update
               </Button>
               <Button
-                sx={{ marginRight: "3.5%", fontSize: "15px" }}
+                startIcon={<EditIcon />}
+                sx={{ fontSize: "14px" }}
+                color="warning"
+                variant="outlined"
+                size="medium"
+                onClick={() => setEdit(!edit)}
+              >
+                Edit
+              </Button>
+              <Button
+                sx={{ marginRight: "3.5%", fontSize: "14px" }}
                 color="error"
                 variant="outlined"
                 size="medium"

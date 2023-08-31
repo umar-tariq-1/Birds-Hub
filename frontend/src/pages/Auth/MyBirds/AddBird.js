@@ -9,6 +9,7 @@ import { findKeyWithEmptyStringValue } from "../../../utils/objectFunctiions/fin
 import { capitalize } from "../../SignUp/Validation";
 import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
+import UploadIcon from "@mui/icons-material/Upload";
 import {
   Dialog,
   TextField,
@@ -276,7 +277,7 @@ function AddBird(props) {
             dividers
           >
             <div className="mt-md-1 px-md-3">
-              <CustomTextField
+              <TextField
                 onChange={(e) => {
                   setName(e.target.value);
                   setError({});
@@ -284,7 +285,9 @@ function AddBird(props) {
                 label="Bird Name"
                 value={name}
                 required={true}
-                inputError={error.name}
+                type="text"
+                color="success"
+                error={error.name}
                 style={{
                   width: "95%",
                   marginBottom: "12px",
@@ -380,14 +383,16 @@ function AddBird(props) {
                 </Select>
               </FormControl>
 
-              <CustomTextField
+              <TextField
                 onChange={(e) => {
                   setRingNo(e.target.value);
                   setError({});
                 }}
                 label="Ring number"
                 value={ringNo}
-                inputError={error.ringNo}
+                type="text"
+                color="success"
+                error={error.ringNo}
                 style={{
                   width: "46.75%",
                   marginBottom: "12px",
@@ -395,13 +400,14 @@ function AddBird(props) {
                 }}
                 required={false}
               />
-              <CustomTextField
+              <TextField
                 onChange={(e) => {
                   setPrice(e.target.value);
                   setError({});
                 }}
                 label="Price"
                 type="number"
+                color="success"
                 value={price}
                 style={{
                   width: "46.75%",
@@ -411,11 +417,13 @@ function AddBird(props) {
                 required={true}
                 inputError={error.price}
               />
-              <CustomTextField
+              <TextField
                 onChange={(e) => {
                   setPurchasedFrom(e.target.value);
                   setError({});
                 }}
+                type="text"
+                color="success"
                 label="Purchased from"
                 style={{
                   width: "95%",
@@ -426,11 +434,12 @@ function AddBird(props) {
                 required={true}
                 value={purchasedFrom}
               />
-              <CustomTextField
+              <TextField
                 onChange={(e) => {
                   setPhone(e.target.value);
                   setError({});
                 }}
+                color="success"
                 label="Phone number"
                 style={{
                   width: "49.75%",
@@ -520,7 +529,8 @@ function AddBird(props) {
           </DialogContent>
           <DialogActions sx={{ height: "65px" }}>
             <Button
-              sx={{ fontSize: "15px" }}
+              startIcon={<UploadIcon />}
+              sx={{ fontSize: "14px" }}
               autoFocus
               variant="outlined"
               size="medium"
@@ -529,7 +539,7 @@ function AddBird(props) {
               Upload
             </Button>
             <Button
-              sx={{ marginRight: "3.5%", fontSize: "15px" }}
+              sx={{ marginRight: "3.5%", fontSize: "14px" }}
               color="error"
               variant="outlined"
               size="medium"
