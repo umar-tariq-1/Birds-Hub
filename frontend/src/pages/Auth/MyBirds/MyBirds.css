@@ -1,0 +1,13 @@
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.imgLink {
+  cursor: pointer;
+  color: #0067ff;
+  text-decoration: underline;
+}
+
+.imgLink:hover {
+  color: #004fc2;
+}

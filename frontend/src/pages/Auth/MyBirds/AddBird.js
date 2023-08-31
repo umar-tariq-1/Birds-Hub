@@ -1,5 +1,5 @@
 import React, { useEffect, useState, forwardRef } from "react";
-import "./AddBird.css";
+import "./MyBirds.css";
 import axios from "axios";
 import LoadingBar from "../../../components/LoadingBar/LoadingBar";
 import CustomLoadingAnimation from "../../../components/LoadingAnimation/loadingAnimation";
@@ -24,7 +24,6 @@ import {
   DialogTitle,
   DialogActions,
 } from "@mui/material";
-import CustomTextField from "../../../components/Form/textfield";
 import DatePicker from "../../../components/DatePicker/DatePicker";
 import { format, parse, isValid } from "date-fns";
 

@@ -1,11 +1,12 @@
 import React, { useEffect, useState, forwardRef } from "react";
-import "./AddBird.css";
+import "./MyBirds.css";
 import axios from "axios";
 import LoadingBar from "../../../components/LoadingBar/LoadingBar";
 import CustomLoadingAnimation from "../../../components/LoadingAnimation/loadingAnimation";
 import { useSnackbar } from "notistack";
 import { trimObject } from "../../../utils/objectFunctiions/trimObject";
 import { findKeyWithEmptyStringValue } from "../../../utils/objectFunctiions/findKeyWithEmptyStringValue";
+import { ImageViewer } from "../../../components/ImageViewer/ImageViewer";
 import { capitalize } from "../../SignUp/Validation";
 import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
@@ -27,7 +28,6 @@ import {
 } from "@mui/material";
 import DatePicker from "../../../components/DatePicker/DatePicker";
 import { format, parse, isValid } from "date-fns";
-import { Link } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -37,6 +37,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
+
+var selectedImgURL = "";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -96,6 +98,18 @@ function UpdateBird(props) {
     setRange(parse(date, "dd-MMM-yy", new Date())); // eslint-disable-next-line
   }, [datePickerOpen]);
 
+  useEffect(() => {
+    fetch(`https://ik.imagekit.io/umartariq/birdImages/${data?.image?.name}`)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const imageUrl = URL.createObjectURL(blob);
+        localStorage.setItem(
+          "cachedImgURL",
+          imageUrl /* .slice(process.env.REACT_APP_FRONTEND_BASE_URL.length + 5) */
+        );
+      }); //eslint-disable-next-line
+  }, []);
+
   const { updateBirdOpen, setUpdateBirdOpen, refetch } = props;
 
   const closeUpdateBird = () => {
@@ -136,10 +150,12 @@ function UpdateBird(props) {
 
     if (file && file.type.startsWith("image/")) {
       setSelectedImage([file]);
+      selectedImgURL = URL.createObjectURL(file);
     } else if (file) {
       enqueueSnackbar("Selected file is not a valid image", {
         variant: "error",
       });
+      selectedImgURL = "";
     }
 
     e.target.value = null;
@@ -559,13 +575,23 @@ function UpdateBird(props) {
                       }
                     >
                       {selectedImage[0]?.name ? (
-                        selectedImage[0]?.name
-                      ) : data?.image?.name !== "" ? (
-                        <Link
-                          to={`https://ik.imagekit.io/umartariq/birdImages/${data?.image?.name}`}
+                        <span
+                          className="imgLink"
+                          onClick={() => {
+                            document.getElementById("birdImage")?.click();
+                          }}
                         >
-                          {data?.image?.name + ".jpg"}
-                        </Link>
+                          {selectedImage[0]?.name}
+                        </span>
+                      ) : data?.image?.name !== "" ? (
+                        <span
+                          className="imgLink"
+                          onClick={() => {
+                            document.getElementById("birdImage")?.click();
+                          }}
+                        >
+                          {data?.name + ".jpg"}
+                        </span>
                       ) : (
                         "not selected"
                       )}
@@ -590,6 +616,7 @@ function UpdateBird(props) {
                           !edit && "disabled"
                         }`}
                         onClick={() => {
+                          selectedImgURL = "";
                           setSelectedImage([]);
                         }}
                       >
@@ -598,6 +625,20 @@ function UpdateBird(props) {
                     </div>
                   )}
                 </div>
+              </div>
+              <div>
+                <ImageViewer ID="birdImage" showChildren={false}>
+                  <img
+                    src={
+                      selectedImgURL !== ""
+                        ? selectedImgURL
+                        : /* "blob:" +
+                          process.env.REACT_APP_FRONTEND_BASE_URL + */
+                          localStorage.getItem("cachedImgURL")
+                    }
+                    alt=" Loading..."
+                  />
+                </ImageViewer>
               </div>
             </DialogContent>
             <DialogActions sx={{ height: "65px" }}>
