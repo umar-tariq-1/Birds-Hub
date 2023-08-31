@@ -17,7 +17,10 @@ getBirds.get("/", authorize, async (req, res) => {
       { creator: authorizedUser._id },
       { __v: 0, creator: 0 }
     );
-    var birdsData = birds.map((item) => item?._doc);
+    var birdsData = birds.map((item) => {
+      delete item?._doc.image.id;
+      return item?._doc;
+    });
     if (birdsData.length > 0) {
       birdsData = sortByName(birdsData);
       const orderedData = convertAbbreviations(birdsData);

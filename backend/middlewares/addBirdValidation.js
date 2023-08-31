@@ -5,7 +5,7 @@ const {
 const { capitalize } = require("../utils/validate");
 
 module.exports.addBirdValidation = (req, res, next) => {
-  const file = req.file; // Use req.file instead of req.files for a single image upload
+  const file = req?.file; // Use req.file instead of req.files for a single image upload
   const jsonData = trimObject(JSON.parse(req.body.data));
   if (jsonData.ringNo === "") {
     delete jsonData.ringNo;
@@ -14,7 +14,7 @@ module.exports.addBirdValidation = (req, res, next) => {
     jsonData;
   const emptyKey = findKeyWithEmptyStringValue(jsonData);
 
-  if (emptyKey !== null && emptyKey !== "ringNo") {
+  if (emptyKey !== null /*  && emptyKey !== "ringNo" */) {
     return res.status(422).send({
       message: `${capitalize(
         emptyKey.replace(/([A-Z])/g, " $1")
@@ -30,8 +30,7 @@ module.exports.addBirdValidation = (req, res, next) => {
       status[0] &&
       date &&
       purchasedFrom &&
-      phone &&
-      file
+      phone
     )
   ) {
     return res.status(422).send({ message: "Incomplete details entered" });
@@ -41,9 +40,7 @@ module.exports.addBirdValidation = (req, res, next) => {
     return res.status(422).send({ message: "Incorrect status entered" });
   } else if (dna !== true && dna !== false) {
     return res.status(422).send({ message: "Invalid DNA entered" });
-  } else if (!file) {
-    return res.status(400).send({ message: "Please upload 1 image file" });
-  } else if (!file.mimetype.startsWith("image/")) {
+  } else if (file && !file.mimetype.startsWith("image/")) {
     return res
       .status(400)
       .send({ message: "Please upload a valid image file" });

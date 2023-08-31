@@ -25,7 +25,7 @@ const upload = multer({ storage }).single("image");
 addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
   const authorizedUser = getAuthorizedUser();
 
-  var image;
+  var image = { name: "", id: "" };
   const jsonData = trimObject(JSON.parse(req.body.data));
   const {
     name,
@@ -44,13 +44,15 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
 
   try {
     try {
-      const response = await imagekit.upload({
-        file: req.file.buffer,
-        fileName: Math.round(Math.random() * 1e9).toString(),
-        folder: "birdImages",
-        useUniqueFileName: false,
-      });
-      image = { name: response.name, id: response.fileId };
+      if (req?.file) {
+        const response = await imagekit.upload({
+          file: req.file.buffer,
+          fileName: Math.round(Math.random() * 1e9).toString(),
+          folder: "birdImages",
+          useUniqueFileName: false,
+        });
+        image = { name: response.name, id: response.fileId };
+      }
     } catch (error) {
       await sess.abortTransaction();
       await sess.endSession();
@@ -84,25 +86,30 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
     const data = { ...createdBird._doc };
     delete data.creator;
     delete data.__v;
-    const order = [
-      "_id",
-      "image",
-      "name",
-      "price",
-      "gender",
-      "status",
-      "ringNo",
-      "date",
-      "purchasedFrom",
-      "phone",
-    ];
-    const orderedData = reorderKeys(data, order);
+    delete data.image.id;
+    // const order = [
+    //   "_id",
+    //   "image",
+    //   "name",
+    //   "price",
+    //   "gender",
+    //   "status",
+    //   "ringNo",
+    //   "date",
+    //   "purchasedFrom",
+    //   "phone",
+    // ];
+    // const orderedData = reorderKeys(data, order);
     await sess.commitTransaction();
     await sess.endSession();
-    res.status(201).send({ message: "Bird added successfully", orderedData }); //201 indicates successful creation
+    res
+      .status(201)
+      .send({ message: "Bird added successfully", orderedData: data }); //201 indicates successful creation
   } catch (error) {
     try {
-      await imagekit.deleteFile(image.id);
+      if (req?.file) {
+        await imagekit.deleteFile(image.id);
+      }
     } catch (error) {
       console.log(error?.message);
     }

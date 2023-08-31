@@ -26,6 +26,7 @@ import {
 import CustomTextField from "../../../components/Form/textfield";
 import DatePicker from "../../../components/DatePicker/DatePicker";
 import { format, parse, isValid } from "date-fns";
+import { Link } from "react-router-dom";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -48,10 +49,10 @@ function UpdateBird(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState(data.name);
   const [gender, setGender] = useState(
-    data.gender[0] === "M" ? "Male" : "Female"
+    data.gender /* [0] === "M" ? "Male" : "Female" */
   );
   const [status, setStatus] = useState(
-    data.status[0] === "A" ? "Alive" : "Dead"
+    data.status /* [0] === "A" ? "Alive" : "Dead" */
   );
   const [purchasedFrom, setPurchasedFrom] = useState(data.purchasedFrom);
   const [phone, setPhone] = useState(data.phone);
@@ -61,35 +62,41 @@ function UpdateBird(props) {
   const [error, setError] = useState({});
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [date, setDate] = useState(data.date);
-  const [range, setRange] = useState(parse(data.date, "dd-MMM-yy", new Date())); //Date selected on date selector
+  const [range, setRange] = useState(new Date());
   const [showLoadingAnimation, setShowLoadingAnimation] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (Number(uploadProgress) === 100) {
-      const timeout = setTimeout(() => {
-        setShowLoadingAnimation(true);
-      }, 600);
+      if (selectedImage.length >= 1) {
+        const timeout = setTimeout(() => {
+          setShowLoadingAnimation(true);
+        }, 600);
 
-      return () => clearTimeout(timeout); // Clear the timeout if the component unmounts
+        return () => clearTimeout(timeout); // Clear the timeout if the component unmounts
+      }
     } else {
       setShowLoadingAnimation(false);
-    }
+    } // eslint-disable-next-line
   }, [uploadProgress]);
 
   useEffect(() => {
     setName(data.name);
-    setGender(data.gender[0] === "M" ? "Male" : "Female");
-    setStatus(data.status[0] === "A" ? "Alive" : "Dead");
+    setGender(data.gender);
+    setStatus(data.status);
     setPurchasedFrom(data.purchasedFrom);
     setPhone(data.phone);
     setPrice(data.price);
     setDna(data.dna);
     setDate(data.date);
     setRingNo(data.ringNo);
-    setRange(parse(data.date, "dd-MMM-yy", new Date()));
+    setRange(new Date());
   }, [data]);
+
+  useEffect(() => {
+    setRange(parse(date, "dd-MMM-yy", new Date())); // eslint-disable-next-line
+  }, [datePickerOpen]);
 
   const { updateBirdOpen, setUpdateBirdOpen, refetch } = props;
 
@@ -186,74 +193,80 @@ function UpdateBird(props) {
       return;
     }
 
-    if (selectedImage.length === 1) {
-      const formData = new FormData();
-      formData.append(`image`, selectedImage[0]);
+    var deletedSomething = false;
 
-      const config = {
-        onUploadProgress: (progressEvent) => {
-          const progress = (progressEvent.loaded / progressEvent.total) * 100;
-          setUploadProgress(progress.toFixed(0));
-        },
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-
-      // Perform the image upload using Axios
-      try {
-        var deletedSomething = false;
-
-        for (const key in data) {
-          if (data.hasOwnProperty(key)) {
-            if (key === "status" || key === "gender") {
-              if (data[key][0] === jsonData[key][0]) {
-                delete jsonData[key];
-                deletedSomething = true;
-              }
-            } else if (data[key] === jsonData[key]) {
-              delete jsonData[key];
-              deletedSomething = true;
-            }
+    for (const key in data) {
+      if (data.hasOwnProperty(key)) {
+        if (key === "status" || key === "gender") {
+          if (data[key][0] === jsonData[key][0]) {
+            delete jsonData[key];
+            deletedSomething = true;
           }
+        } else if (data[key] === jsonData[key]) {
+          delete jsonData[key];
+          deletedSomething = true;
+        }
+      }
+    }
+
+    // if (selectedImage.length === 1) {
+
+    try {
+      if (
+        (deletedSomething && Object.keys(jsonData).length >= 1) ||
+        selectedImage.length >= 1
+      ) {
+        setIsLoading(true);
+        if (selectedImage.length === 0) {
+          setShowLoadingAnimation(true);
         }
 
-        if (deletedSomething && Object.keys(jsonData).length >= 1) {
-          setIsLoading(true);
-          formData.append("data", JSON.stringify(jsonData));
-          const url =
-            process.env.REACT_APP_BASE_URL + `/updateBird/${data._id}`;
-          await axios.post(url, formData, config);
-          setShowLoadingAnimation(false);
-          setIsLoading(false);
-          setUpdateBirdOpen(false);
-          enqueueSnackbar("Bird data updated successfully", {
-            variant: "success",
-          });
-          setUploadProgress(0);
-          resetValues();
-          refetch();
-          return;
-        } else {
-          enqueueSnackbar("No field was updated", { variant: "warning" });
-          return;
-        }
-      } catch (error) {
+        const formData = new FormData();
+        formData.append(`image`, selectedImage[0]);
+
+        const config = {
+          onUploadProgress: (progressEvent) => {
+            const progress = (progressEvent.loaded / progressEvent.total) * 100;
+            setUploadProgress(progress.toFixed(0));
+          },
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        };
+
+        formData.append("data", JSON.stringify(jsonData));
+        const url = process.env.REACT_APP_BASE_URL + `/updateBird/${data._id}`;
+        await axios.put(url, formData, config);
         setShowLoadingAnimation(false);
         setIsLoading(false);
-        enqueueSnackbar(
-          error?.response?.data?.message ||
-            "Server not working. Try again later",
-          { variant: "error" }
-        );
+        setUpdateBirdOpen(false);
+        enqueueSnackbar("Bird data updated successfully", {
+          variant: "success",
+        });
+        setUploadProgress(0);
+        refetch();
+        return;
+      } else {
+        enqueueSnackbar("No field was updated", { variant: "warning" });
+        setUpdateBirdOpen(false);
         return;
       }
-    } else {
-      enqueueSnackbar("Select 1 image before uploading", {
-        variant: "error",
-      });
+    } catch (error) {
+      setUploadProgress(0);
+      setShowLoadingAnimation(false);
+      setIsLoading(false);
+      enqueueSnackbar(
+        error?.response?.data?.message || "Server not working. Try again later",
+        { variant: "error" }
+      );
+      return;
     }
+    // } else {
+    //   enqueueSnackbar("Select 1 image before uploading", {
+    //     variant: "error",
+    //   });
+    // }
   };
 
   useEffect(() => {
@@ -274,353 +287,371 @@ function UpdateBird(props) {
         onChange={handleImageChange}
         className="d-none"
       />
-      <div>
-        <BootstrapDialog
-          sx={{ zIndex: 1299 }}
-          onClose={closeUpdateBird}
-          aria-labelledby="customized-dialog-title"
-          open={updateBirdOpen}
-        >
-          <DialogTitle
-            sx={{
-              m: 0,
-              px: 2,
-              pt: "12px",
-              pb: "8px",
-              fontSize: "26px",
-              fontFamily: "Titillium Web, sans-serif",
-              fontWeight: "Bolder",
-              letterSpacing: "1px",
-            }}
-            id="customized-dialog-title"
-          >
-            &nbsp;&nbsp;Add Bird
-          </DialogTitle>
-          <IconButton
-            aria-label="close"
-            onClick={closeUpdateBird}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
-          >
-            <CloseIcon fontSize="medium" />
-          </IconButton>
-          <DialogContent
-            className="hide-scrollbar"
-            sx={{
-              height: "441px",
-            }}
-            dividers
-          >
-            <div className="mt-md-1 px-md-3">
-              <CustomTextField
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setError({});
-                }}
-                label="Bird Name"
-                value={name}
-                required={true}
-                inputError={error.name}
-                style={{
-                  width: "95%",
-                  marginBottom: "12px",
-                  marginLeft: "2.5%",
-                  marginTop: "1px",
-                }}
-              />
-              <FormControl
-                required={true}
-                size="medium"
-                error={error.gender}
-                style={{
-                  width: "33.69%",
-                  marginBottom: "12px",
-                  marginLeft: "2.5%",
-                }}
-              >
-                <InputLabel color="success" required={true} id="genderLabel">
-                  Gender
-                </InputLabel>
-                <Select
-                  labelId="genderLabel"
-                  id="genderSelect"
-                  color="success"
-                  value={gender}
-                  onClick={() => setError({})}
-                  onChange={(e) => {
-                    setGender(e.target.value);
-                  }}
-                  label="Gender"
-                  required={true}
-                >
-                  <MenuItem value="Male">Male</MenuItem>
-                  <MenuItem value="Female">Female</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl
-                required={true}
-                size="medium"
-                error={error.status}
-                style={{
-                  width: "31.98%",
-                  marginBottom: "12px",
-                  marginLeft: "1%",
-                }}
-              >
-                <InputLabel color="success" required={true} id="statusLabel">
-                  Status
-                </InputLabel>
-                <Select
-                  labelId="statusLabel"
-                  id="statusSelect"
-                  color="success"
-                  value={status}
-                  onClick={() => setError({})}
-                  onChange={(e) => {
-                    setStatus(e.target.value);
-                  }}
-                  label="Status"
-                  required={true}
-                >
-                  <MenuItem value="Alive">Alive</MenuItem>
-                  <MenuItem value="Dead">Dead</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl
-                required={true}
-                size="medium"
-                error={error.dna}
-                style={{
-                  width: "27.33%",
-                  marginBottom: "12px",
-                  marginLeft: "1%",
-                }}
-              >
-                <InputLabel color="success" required={true} id="dnaLabel">
-                  DNA
-                </InputLabel>
-                <Select
-                  labelId="dnaLabel"
-                  id="dnaSelect"
-                  color="success"
-                  value={dna}
-                  onClick={() => setError({})}
-                  onChange={(e) => {
-                    setDna(e.target.value);
-                  }}
-                  label="DNA"
-                  required={true}
-                >
-                  <MenuItem value={true}>Yes</MenuItem>
-                  <MenuItem value={false}>No</MenuItem>
-                </Select>
-              </FormControl>
 
-              <CustomTextField
-                onChange={(e) => {
-                  setRingNo(e.target.value);
-                  setError({});
-                }}
-                label="Ring number"
-                value={ringNo}
-                inputError={error.ringNo}
-                style={{
-                  width: "46.75%",
-                  marginBottom: "12px",
-                  marginLeft: "2.5%",
-                }}
-                required={false}
-              />
-              <CustomTextField
-                onChange={(e) => {
-                  setPrice(e.target.value);
-                  setError({});
-                }}
-                label="Price"
-                type="number"
-                value={price}
-                style={{
-                  width: "46.75%",
-                  marginBottom: "12px",
-                  marginLeft: "1.5%",
-                }}
-                required={true}
-                inputError={error.price}
-              />
-              <CustomTextField
-                onChange={(e) => {
-                  setPurchasedFrom(e.target.value);
-                  setError({});
-                }}
-                label="Purchased from"
-                style={{
-                  width: "95%",
-                  marginBottom: "12px",
-                  marginLeft: "2.5%",
-                }}
-                inputError={error.purchasedFrom}
-                required={true}
-                value={purchasedFrom}
-              />
-              <CustomTextField
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  setError({});
-                }}
-                label="Phone number"
-                style={{
-                  width: "49.75%",
-                  marginBottom: "12px",
-                  marginLeft: "2.5%",
-                }}
-                type="number"
-                inputError={error.phone}
-                value={phone}
-                required={true}
-              />
-              <TextField
-                readOnly={true}
-                color="success"
-                onClick={() => {
-                  openDatePicker();
-                  setError({});
-                }}
-                label="Date"
-                value={date}
-                style={{
-                  width: "43.75%",
-                  marginBottom: "12px",
-                  marginLeft: "1.5%",
-                }}
-                inputProps={{ readOnly: true }}
-                required={true}
-                error={error.date}
-                type="text"
-              />
-              <div className="d-flex flex-column align-items-center justify-content-center">
-                <div
-                  style={{ width: "93%", marginBottom: "4px" }}
-                  className="d-flex justify-content-center"
-                >
-                  <h5
-                    className="text-muted"
-                    style={{ fontFamily: "Titillium Web", fontSize: "20px" }}
-                  >
-                    Image:&nbsp;
-                  </h5>
-                  <span
-                    className="text-truncate"
-                    style={
-                      selectedImage[0]?.name
-                        ? {
-                            color: "Darkgreen",
-                            marginTop: "2px",
-                            fontFamily: "Titillium Web",
-                          }
-                        : {
-                            color: "red",
-                            marginTop: "2px",
-                            fontFamily: "Titillium Web",
-                          }
-                    }
-                  >
-                    {selectedImage[0]?.name ?? "not selected"}
-                  </span>
-                </div>
-                {isLoading ? (
-                  <LoadingBar value={Number(uploadProgress)} width="80%" />
-                ) : (
-                  <div>
-                    <button
-                      className={`btn btn-outline-success btn-sm mx-2`}
-                      onClick={() => {
-                        document.getElementById("imageUpdateSelect").click();
-                      }}
-                    >
-                      Choose Image
-                    </button>
-                    <button
-                      className={`btn btn-outline-danger btn-sm mx-2`}
-                      onClick={() => {
-                        setSelectedImage([]);
-                      }}
-                    >
-                      Clear Image
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </DialogContent>
-          <DialogActions sx={{ height: "65px" }}>
-            <Button
-              sx={{ fontSize: "15px" }}
-              autoFocus
-              variant="outlined"
-              size="medium"
-              onClick={handleImageUploadOptimized}
+      <div>
+        {updateBirdOpen && (
+          <BootstrapDialog
+            sx={{ zIndex: 1299 }}
+            onClose={closeUpdateBird}
+            aria-labelledby="customized-dialog-title"
+            open={updateBirdOpen}
+          >
+            <DialogTitle
+              sx={{
+                m: 0,
+                px: 2,
+                pt: "12px",
+                pb: "8px",
+                fontSize: "26px",
+                fontFamily: "Titillium Web, sans-serif",
+                fontWeight: "Bolder",
+                letterSpacing: "1px",
+              }}
+              id="customized-dialog-title"
             >
-              Upload
-            </Button>
-            <Button
-              sx={{ marginRight: "3.5%", fontSize: "15px" }}
-              color="error"
-              variant="outlined"
-              size="medium"
-              onClick={() => {
-                resetValues();
-                closeUpdateBird();
+              &nbsp;&nbsp;Edit Bird
+            </DialogTitle>
+            <IconButton
+              aria-label="close"
+              onClick={closeUpdateBird}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
               }}
             >
-              Discard
-            </Button>
-          </DialogActions>
-        </BootstrapDialog>
+              <CloseIcon fontSize="medium" />
+            </IconButton>
+            <DialogContent
+              className="hide-scrollbar"
+              sx={{
+                height: "441px",
+              }}
+              dividers
+            >
+              <div className="mt-md-1 px-md-3">
+                <CustomTextField
+                  onChange={(e) => {
+                    setName(e.target.value);
+                    setError({});
+                  }}
+                  label="Bird Name"
+                  value={name}
+                  required={true}
+                  inputError={error.name}
+                  style={{
+                    width: "95%",
+                    marginBottom: "12px",
+                    marginLeft: "2.5%",
+                    marginTop: "1px",
+                  }}
+                />
+                <FormControl
+                  required={true}
+                  size="medium"
+                  error={error.gender}
+                  style={{
+                    width: "33.69%",
+                    marginBottom: "12px",
+                    marginLeft: "2.5%",
+                  }}
+                >
+                  <InputLabel color="success" required={true} id="genderLabel">
+                    Gender
+                  </InputLabel>
+                  <Select
+                    labelId="genderLabel"
+                    id="genderSelect"
+                    color="success"
+                    value={gender}
+                    onClick={() => setError({})}
+                    onChange={(e) => {
+                      setGender(e.target.value);
+                    }}
+                    label="Gender"
+                    required={true}
+                  >
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl
+                  required={true}
+                  size="medium"
+                  error={error.status}
+                  style={{
+                    width: "31.98%",
+                    marginBottom: "12px",
+                    marginLeft: "1%",
+                  }}
+                >
+                  <InputLabel color="success" required={true} id="statusLabel">
+                    Status
+                  </InputLabel>
+                  <Select
+                    labelId="statusLabel"
+                    id="statusSelect"
+                    color="success"
+                    value={status}
+                    onClick={() => setError({})}
+                    onChange={(e) => {
+                      setStatus(e.target.value);
+                    }}
+                    label="Status"
+                    required={true}
+                  >
+                    <MenuItem value="Alive">Alive</MenuItem>
+                    <MenuItem value="Dead">Dead</MenuItem>
+                  </Select>
+                </FormControl>
+                <FormControl
+                  required={true}
+                  size="medium"
+                  error={error.dna}
+                  style={{
+                    width: "27.33%",
+                    marginBottom: "12px",
+                    marginLeft: "1%",
+                  }}
+                >
+                  <InputLabel color="success" required={true} id="dnaLabel">
+                    DNA
+                  </InputLabel>
+                  <Select
+                    labelId="dnaLabel"
+                    id="dnaSelect"
+                    color="success"
+                    value={dna}
+                    onClick={() => setError({})}
+                    onChange={(e) => {
+                      setDna(e.target.value);
+                    }}
+                    label="DNA"
+                    required={true}
+                  >
+                    <MenuItem value={true}>Yes</MenuItem>
+                    <MenuItem value={false}>No</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <CustomTextField
+                  onChange={(e) => {
+                    setRingNo(e.target.value);
+                    setError({});
+                  }}
+                  label="Ring number"
+                  value={ringNo}
+                  inputError={error.ringNo}
+                  style={{
+                    width: "46.75%",
+                    marginBottom: "12px",
+                    marginLeft: "2.5%",
+                  }}
+                  required={false}
+                />
+                <CustomTextField
+                  onChange={(e) => {
+                    setPrice(e.target.value);
+                    setError({});
+                  }}
+                  label="Price"
+                  type="number"
+                  value={price}
+                  style={{
+                    width: "46.75%",
+                    marginBottom: "12px",
+                    marginLeft: "1.5%",
+                  }}
+                  required={true}
+                  inputError={error.price}
+                />
+                <CustomTextField
+                  onChange={(e) => {
+                    setPurchasedFrom(e.target.value);
+                    setError({});
+                  }}
+                  label="Purchased from"
+                  style={{
+                    width: "95%",
+                    marginBottom: "12px",
+                    marginLeft: "2.5%",
+                  }}
+                  inputError={error.purchasedFrom}
+                  required={true}
+                  value={purchasedFrom}
+                />
+                <CustomTextField
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    setError({});
+                  }}
+                  label="Phone number"
+                  style={{
+                    width: "49.75%",
+                    marginBottom: "12px",
+                    marginLeft: "2.5%",
+                  }}
+                  type="number"
+                  inputError={error.phone}
+                  value={phone}
+                  required={true}
+                />
+                <TextField
+                  readOnly={true}
+                  color="success"
+                  onClick={() => {
+                    openDatePicker();
+                    setError({});
+                  }}
+                  label="Date"
+                  value={date}
+                  style={{
+                    width: "43.75%",
+                    marginBottom: "12px",
+                    marginLeft: "1.5%",
+                  }}
+                  inputProps={{ readOnly: true }}
+                  required={true}
+                  error={error.date}
+                  type="text"
+                />
+                <div className="d-flex flex-column align-items-center justify-content-center">
+                  <div
+                    style={{ width: "93%", marginBottom: "4px" }}
+                    className="d-flex justify-content-center"
+                  >
+                    <h5
+                      className="text-muted"
+                      style={{ fontFamily: "Titillium Web", fontSize: "19px" }}
+                    >
+                      Image
+                      <span style={{ fontSize: "14px" }}>(optional)&nbsp;</span>
+                      :&nbsp;
+                    </h5>
+                    <span
+                      className="text-truncate"
+                      style={
+                        selectedImage[0]?.name
+                          ? {
+                              color: "Darkgreen",
+                              marginTop: "1px",
+                              fontFamily: "Titillium Web",
+                            }
+                          : {
+                              color: "#c9b233",
+                              marginTop: "1px",
+                              fontFamily: "Titillium Web",
+                            }
+                      }
+                    >
+                      {selectedImage[0]?.name ? (
+                        selectedImage[0]?.name
+                      ) : data?.image?.name !== "" ? (
+                        <Link
+                          to={`https://ik.imagekit.io/umartariq/birdImages/${data?.image?.name}`}
+                        >
+                          {data?.image?.name + ".jpg"}
+                        </Link>
+                      ) : (
+                        "not selected"
+                      )}
+                    </span>
+                  </div>
+                  {isLoading && selectedImage.length >= 1 ? (
+                    <LoadingBar value={Number(uploadProgress)} width="80%" />
+                  ) : (
+                    <div>
+                      <button
+                        className={`btn btn-outline-success btn-sm mx-2`}
+                        onClick={() => {
+                          document.getElementById("imageUpdateSelect").click();
+                        }}
+                      >
+                        Choose Image
+                      </button>
+                      <button
+                        className={`btn btn-outline-danger btn-sm mx-2`}
+                        onClick={() => {
+                          setSelectedImage([]);
+                        }}
+                      >
+                        Clear Image
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </DialogContent>
+            <DialogActions sx={{ height: "65px" }}>
+              <Button
+                sx={{ fontSize: "15px" }}
+                autoFocus
+                variant="outlined"
+                size="medium"
+                onClick={handleImageUploadOptimized}
+              >
+                Update
+              </Button>
+              <Button
+                sx={{ marginRight: "3.5%", fontSize: "15px" }}
+                color="error"
+                variant="outlined"
+                size="medium"
+                onClick={() => {
+                  resetValues();
+                  closeUpdateBird();
+                }}
+              >
+                Cancel
+              </Button>
+            </DialogActions>
+          </BootstrapDialog>
+        )}
       </div>
-      <Dialog
-        sx={{ zIndex: 1300 }}
-        open={datePickerOpen}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={closeDatePicker}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogContent>
-          <DatePicker
-            mode="date"
-            range={range}
-            handleSelect={handleDatePickerChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <div
-            className="btn btn-primary"
-            onClick={() => {
-              setDate(format(range, "dd-MMM-yy"));
-              setDatePickerOpen(false);
-            }}
-          >
-            Select
-          </div>
-          <div
-            className="btn btn-outline-danger"
-            onClick={() => {
-              if (date !== "" && date !== null && date !== undefined) {
-                handleDatePickerChange(parse(date, "dd-MMM-yy", new Date()));
-              } else {
-                handleDatePickerChange(new Date());
-              }
-              setDatePickerOpen(false);
-            }}
-          >
-            Cancel
-          </div>
-        </DialogActions>
-      </Dialog>
+
+      {datePickerOpen && (
+        <Dialog
+          sx={{ zIndex: 1300 }}
+          open={datePickerOpen}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={closeDatePicker}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogContent>
+            <DatePicker
+              mode="date"
+              range={range}
+              handleSelect={handleDatePickerChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <div
+              className="btn btn-primary"
+              onClick={() => {
+                setDate(format(range, "dd-MMM-yy"));
+                setDatePickerOpen(false);
+              }}
+            >
+              Select
+            </div>
+            <div
+              className="btn btn-outline-danger"
+              onClick={() => {
+                if (date !== "" && date !== null && date !== undefined) {
+                  handleDatePickerChange(parse(date, "dd-MMM-yy", new Date()));
+                } else {
+                  handleDatePickerChange(new Date());
+                }
+                setDatePickerOpen(false);
+              }}
+            >
+              Cancel
+            </div>
+          </DialogActions>
+        </Dialog>
+      )}
     </>
   );
 }

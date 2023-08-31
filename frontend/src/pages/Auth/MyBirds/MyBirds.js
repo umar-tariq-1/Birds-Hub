@@ -17,6 +17,7 @@ import axios from "axios";
 import { reorderKeys } from "../../../utils/objectFunctiions/reorderKeys";
 import { enqueueSnackbar } from "notistack";
 import UpdateBird from "./UpdateBird";
+import { format } from "date-fns";
 
 const order = [
   "name",
@@ -32,8 +33,22 @@ const order = [
   "image",
 ];
 
+var passUpdateData = {
+  name: "",
+  price: "",
+  gender: "",
+  status: "",
+  dna: "",
+  ringNo: "",
+  date: format(new Date(), "dd-MMM-yy"),
+  purchasedFrom: "",
+  phone: "",
+  image: { name: "" },
+  _id: "",
+};
+
 const MyBirds = () => {
-  const [open, setOpen] = useState(false);
+  const [dateFilterOpen, setDateFilterOpen] = useState(false);
   const [addBirdOpen, setAddBirdOpen] = useState(false);
   const [updateBirdOpen, setUpdateBirdOpen] = useState(false);
   const [rowSelection, setRowSelection] = useState({});
@@ -60,29 +75,31 @@ const MyBirds = () => {
         "birds",
         JSON.stringify(reorderKeys(responseData?.data?.orderedData, order))
       );
-      enqueueSnackbar("Data fetched successfully", {
+      enqueueSnackbar("Data refreshed successfully", {
         variant: "success",
         autoHideDuration: 1750,
       });
     },
     onError: (error) => {
-      enqueueSnackbar(error?.response?.data?.message || "Coulnot fetch data", {
-        variant: "error",
-        autoHideDuration: 1750,
-      });
+      enqueueSnackbar(
+        error?.response?.data?.message || "Coulnot refreshed data",
+        {
+          variant: "error",
+          autoHideDuration: 1750,
+        }
+      );
       // if(error?.response?.data?.message===)
     },
     keepPreviousData: true,
   });
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setDateFilterOpen(true);
   };
   const handleClose = () => {
-    setOpen(false);
+    setDateFilterOpen(false);
   };
 
-  console.log();
   const columns = useMemo(
     () => [
       {
@@ -161,12 +178,6 @@ const MyBirds = () => {
 
   return (
     <ResponsiveDrawer MyBirds={1}>
-      <AddBird
-        addBirdOpen={addBirdOpen}
-        setAddBirdOpen={setAddBirdOpen}
-        refetch={refetch}
-      />
-
       <div className="py-2 px-1">
         <MaterialReactTable
           columns={columns}
@@ -207,8 +218,11 @@ const MyBirds = () => {
             sx: {
               cursor: "pointer",
             },
-            onDoubleClick: (rowDblClicked) => {
-              tableInstanceRef.current.setEditingRow(row);
+            onDoubleClick: () => {
+              passUpdateData = JSON.parse(localStorage.getItem("birds"))[
+                row.id
+              ];
+              setUpdateBirdOpen(true);
               setRowSelection({});
             },
           })}
@@ -259,37 +273,30 @@ const MyBirds = () => {
         />
       </div>
 
-      <DateFilterModal
-        tableInstanceRef={tableInstanceRef}
-        open={open}
-        handleClose={handleClose}
-      />
-      <UpdateBird
-        setUpdateBirdOpen={setUpdateBirdOpen}
-        updateBirdOpen={updateBirdOpen}
-        refetch={refetch}
-        data={{
-          name: "Albino / red eye",
-          price: 6000,
-          gender: "M",
-          status: "A",
-          dna: true,
-          ringNo: "190A23",
-          date: "10-Aug-23",
-          purchasedFrom: "Mian Aviary",
-          phone: "03099074437",
-          image: { name: "", id: "" },
-          _id: "64eefa4f76e756fab8ee7137",
-        }}
-      />
-      <div
-        className="btn btn-primary"
-        onClick={() => {
-          setUpdateBirdOpen(true);
-        }}
-      >
-        Update
-      </div>
+      {addBirdOpen && (
+        <AddBird
+          addBirdOpen={addBirdOpen}
+          setAddBirdOpen={setAddBirdOpen}
+          refetch={refetch}
+        />
+      )}
+
+      {updateBirdOpen && (
+        <UpdateBird
+          setUpdateBirdOpen={setUpdateBirdOpen}
+          updateBirdOpen={updateBirdOpen}
+          refetch={refetch}
+          data={passUpdateData}
+        />
+      )}
+
+      {dateFilterOpen && (
+        <DateFilterModal
+          tableInstanceRef={tableInstanceRef}
+          open={dateFilterOpen}
+          handleClose={handleClose}
+        />
+      )}
     </ResponsiveDrawer>
   );
 };

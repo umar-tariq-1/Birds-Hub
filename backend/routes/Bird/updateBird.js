@@ -40,7 +40,7 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
   const price = updatedData.price ? updatedData.price : 9999;
   const gender = updatedData.gender ? updatedData.gender : "M";
   const status = updatedData.status ? updatedData.status : "A";
-  const dna = updatedData.dna ? updatedData.status : true;
+  const dna = updatedData.dna ? updatedData.dna : true;
 
   if (emptyKey !== null && emptyKey !== "ringNo") {
     return res.status(400).send({
@@ -59,7 +59,7 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
   }
 
   try {
-    const birdData = await Bird.findById(birdId);
+    var birdData = await Bird.findById(birdId);
     if (!birdData) {
       return res.status(404).send({ message: "Bird not found" });
     }
@@ -75,21 +75,36 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
 
     if (req.file) {
       try {
-        try {
-          await imagekit.deleteFile(birdData.image.id);
-        } catch (error) {
-          await sess.abortTransaction();
-          await sess.endSession();
-          console.log(error?.message);
-          return res.status(500).send({ message: error?.message });
+        const isImageUploaded =
+          birdData.image.name !== "" && birdData.image.id !== "";
+
+        var newImageData = {
+          name: birdData.image.name,
+          id: birdData.image.id,
+        };
+
+        if (isImageUploaded) {
+          try {
+            await imagekit.deleteFile(birdData.image.id);
+          } catch (error) {
+            await sess.abortTransaction();
+            await sess.endSession();
+            console.log(error?.message);
+            return res.status(500).send({ message: error?.message });
+          }
+        } else {
+          newImageData.name = Math.round(Math.random() * 1e9).toString();
         }
+
         const response = await imagekit.upload({
           file: req.file.buffer,
-          fileName: birdData.image.name,
+          fileName: newImageData.name,
           folder: "birdImages",
           useUniqueFileName: false,
         });
-        image = { name: response.name, id: response.fileId };
+
+        newImageData.name = response.name;
+        newImageData.id = response.fileId;
       } catch (error) {
         await sess.abortTransaction();
         await sess.endSession();
@@ -98,7 +113,7 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
       }
     }
     if (!isEmptyNullOrUndefined(updatedData)) {
-      updatedData = { ...updatedData, image };
+      updatedData = { ...updatedData, image: newImageData };
     } else {
       updatedData = { image };
     }
@@ -114,6 +129,7 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
       const data = { ...updatedBird._doc };
       delete data.creator;
       delete data.__v;
+      delete data.image.id;
       const order = [
         "_id",
         "image",
@@ -135,7 +151,10 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
       await sess.endSession();
       return res.status(500).send({ message: "Error updating bird" });
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error?.message);
+    return res.status(500).send({ message: "Internal server error" });
+  }
 });
 
 module.exports = updateBird;

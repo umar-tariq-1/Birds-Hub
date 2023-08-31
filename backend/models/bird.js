@@ -13,8 +13,8 @@ const birdSchema = new Schema({
   purchasedFrom: { type: String, required: true },
   phone: { type: String, required: true },
   image: {
-    name: { type: String, required: true },
-    id: { type: String, required: true },
+    name: { type: String, default: "" },
+    id: { type: String, default: "" },
   },
   creator: { type: Schema.Types.ObjectId, required: true, ref: "User" },
 });

@@ -17,7 +17,7 @@ deleteBird.delete("/:id", authorize, async (req, res) => {
   const birdId = req.params.id;
   const authorizedUser = getAuthorizedUser();
   try {
-    const birdData = await Bird.findById(birdId);
+    var birdData = await Bird.findById(birdId);
 
     if (!birdData) {
       return res.status(404).send({ message: "Bird not found" });
@@ -41,15 +41,19 @@ deleteBird.delete("/:id", authorize, async (req, res) => {
     );
     await Bird.findByIdAndRemove(birdId, { session: sess });
 
-    try {
-      await imagekit.deleteFile(birdData.image.id);
-    } catch (error) {
-      await sess.abortTransaction();
-      await sess.endSession();
-      console.log(error?.message);
-      return res.status(500).send({ message: error?.message });
-    }
+    const isImageUploaded =
+      birdData.image.name !== "" && birdData.image.id !== "";
 
+    if (isImageUploaded) {
+      try {
+        await imagekit.deleteFile(birdData.image.id);
+      } catch (error) {
+        await sess.abortTransaction();
+        await sess.endSession();
+        console.log(error?.message);
+        return res.status(500).send({ message: error?.message });
+      }
+    }
     await sess.commitTransaction();
     await sess.endSession();
 

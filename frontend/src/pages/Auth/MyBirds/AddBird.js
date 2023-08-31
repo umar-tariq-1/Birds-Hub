@@ -62,14 +62,16 @@ function AddBird(props) {
 
   useEffect(() => {
     if (Number(uploadProgress) === 100) {
-      const timeout = setTimeout(() => {
-        setShowLoadingAnimation(true);
-      }, 600);
+      if (selectedImage.length >= 1) {
+        const timeout = setTimeout(() => {
+          setShowLoadingAnimation(true);
+        }, 600);
 
-      return () => clearTimeout(timeout); // Clear the timeout if the component unmounts
+        return () => clearTimeout(timeout); // Clear the timeout if the component unmounts
+      }
     } else {
       setShowLoadingAnimation(false);
-    }
+    } // eslint-disable-next-line
   }, [uploadProgress]);
 
   const { addBirdOpen, setAddBirdOpen, refetch } = props;
@@ -100,6 +102,7 @@ function AddBird(props) {
     setDna("");
     setRange(new Date());
     setDate("");
+    setDatePickerOpen(false);
     setError({});
     setRingNo("");
     setPrice("");
@@ -167,52 +170,49 @@ function AddBird(props) {
       return;
     }
 
-    if (selectedImage.length === 1) {
-      setIsLoading(true);
-      const formData = new FormData();
-      formData.append(`image`, selectedImage[0]);
+    setIsLoading(true);
+    if (selectedImage.length === 0) {
+      setShowLoadingAnimation(true);
+    }
 
-      const config = {
-        onUploadProgress: (progressEvent) => {
-          const progress = (progressEvent.loaded / progressEvent.total) * 100;
-          setUploadProgress(progress.toFixed(0));
-        },
-        withCredentials: true,
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
+    const formData = new FormData();
+    formData.append(`image`, selectedImage[0]);
 
-      // Perform the image upload using Axios
-      try {
-        formData.append("data", JSON.stringify(jsonData));
+    const config = {
+      onUploadProgress: (progressEvent) => {
+        const progress = (progressEvent.loaded / progressEvent.total) * 100;
+        setUploadProgress(progress.toFixed(0));
+      },
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
 
-        const url = process.env.REACT_APP_BASE_URL + "/addBird";
-        await axios.post(url, formData, config);
-        setShowLoadingAnimation(false);
-        setIsLoading(false);
-        setAddBirdOpen(false);
-        enqueueSnackbar("Bird data uploaded successfully", {
-          variant: "success",
-        });
-        setUploadProgress(0);
-        resetValues();
-        refetch();
-        return;
-      } catch (error) {
-        setShowLoadingAnimation(false);
-        setIsLoading(false);
-        enqueueSnackbar(
-          error?.response?.data?.message ||
-            "Server not working. Try again later",
-          { variant: "error" }
-        );
-        return;
-      }
-    } else {
-      enqueueSnackbar("Select 1 image before uploading", {
-        variant: "error",
+    try {
+      formData.append("data", JSON.stringify(jsonData));
+
+      const url = process.env.REACT_APP_BASE_URL + "/addBird";
+      await axios.post(url, formData, config);
+      setShowLoadingAnimation(false);
+      setIsLoading(false);
+      setAddBirdOpen(false);
+      enqueueSnackbar("Bird data uploaded successfully", {
+        variant: "success",
       });
+      setUploadProgress(0);
+      resetValues();
+      refetch();
+      return;
+    } catch (error) {
+      setUploadProgress(0);
+      setShowLoadingAnimation(false);
+      setIsLoading(false);
+      enqueueSnackbar(
+        error?.response?.data?.message || "Server not working. Try again later",
+        { variant: "error" }
+      );
+      return;
     }
   };
 
@@ -468,9 +468,11 @@ function AddBird(props) {
                 >
                   <h5
                     className="text-muted"
-                    style={{ fontFamily: "Titillium Web", fontSize: "20px" }}
+                    style={{ fontFamily: "Titillium Web", fontSize: "19px" }}
                   >
-                    Image:&nbsp;
+                    Image
+                    <span style={{ fontSize: "14px" }}>(optional)&nbsp;</span>
+                    :&nbsp;
                   </h5>
                   <span
                     className="text-truncate"
@@ -478,12 +480,12 @@ function AddBird(props) {
                       selectedImage[0]?.name
                         ? {
                             color: "Darkgreen",
-                            marginTop: "2px",
+                            marginTop: "1px",
                             fontFamily: "Titillium Web",
                           }
                         : {
-                            color: "red",
-                            marginTop: "2px",
+                            color: "#c9b233",
+                            marginTop: "1px",
                             fontFamily: "Titillium Web",
                           }
                     }
@@ -491,7 +493,7 @@ function AddBird(props) {
                     {selectedImage[0]?.name ?? "not selected"}
                   </span>
                 </div>
-                {isLoading ? (
+                {isLoading && selectedImage.length >= 1 ? (
                   <LoadingBar value={Number(uploadProgress)} width="80%" />
                 ) : (
                   <div>
@@ -541,46 +543,49 @@ function AddBird(props) {
           </DialogActions>
         </BootstrapDialog>
       </div>
-      <Dialog
-        sx={{ zIndex: 1300 }}
-        open={datePickerOpen}
-        TransitionComponent={Transition}
-        keepMounted
-        onClose={closeDatePicker}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogContent>
-          <DatePicker
-            mode="date"
-            range={range}
-            handleSelect={handleDatePickerChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <div
-            className="btn btn-primary"
-            onClick={() => {
-              setDate(format(range, "dd-MMM-yy"));
-              setDatePickerOpen(false);
-            }}
-          >
-            Select
-          </div>
-          <div
-            className="btn btn-outline-danger"
-            onClick={() => {
-              if (date !== "" && date !== null && date !== undefined) {
-                handleDatePickerChange(parse(date, "dd-MMM-yy", new Date()));
-              } else {
-                handleDatePickerChange(new Date());
-              }
-              setDatePickerOpen(false);
-            }}
-          >
-            Cancel
-          </div>
-        </DialogActions>
-      </Dialog>
+
+      {datePickerOpen && (
+        <Dialog
+          sx={{ zIndex: 1300 }}
+          open={datePickerOpen}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={closeDatePicker}
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogContent>
+            <DatePicker
+              mode="date"
+              range={range}
+              handleSelect={handleDatePickerChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <div
+              className="btn btn-primary"
+              onClick={() => {
+                setDate(format(range, "dd-MMM-yy"));
+                setDatePickerOpen(false);
+              }}
+            >
+              Select
+            </div>
+            <div
+              className="btn btn-outline-danger"
+              onClick={() => {
+                if (date !== "" && date !== null && date !== undefined) {
+                  handleDatePickerChange(parse(date, "dd-MMM-yy", new Date()));
+                } else {
+                  handleDatePickerChange(new Date());
+                }
+                setDatePickerOpen(false);
+              }}
+            >
+              Cancel
+            </div>
+          </DialogActions>
+        </Dialog>
+      )}
     </>
   );
 }
