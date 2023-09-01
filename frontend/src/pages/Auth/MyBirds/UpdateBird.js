@@ -10,7 +10,7 @@ import { ImageViewer } from "../../../components/ImageViewer/ImageViewer";
 import { capitalize } from "../../SignUp/Validation";
 import { styled } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
-import UploadIcon from "@mui/icons-material/Upload";
+import SaveIcon from "@mui/icons-material/Save";
 import EditIcon from "@mui/icons-material/Edit";
 import {
   Dialog,
@@ -109,10 +109,12 @@ function UpdateBird(props) {
       }); //eslint-disable-next-line
   }, []);
 
-  const { updateBirdOpen, setUpdateBirdOpen, refetch } = props;
+  const { updateBirdOpen, setUpdateBirdOpen, refetch, viewMode, setViewMode } =
+    props;
 
   const closeUpdateBird = () => {
     setUpdateBirdOpen(false);
+    setViewMode(false);
   };
   const openDatePicker = () => {
     setDatePickerOpen(true);
@@ -320,7 +322,7 @@ function UpdateBird(props) {
               }}
               id="customized-dialog-title"
             >
-              &nbsp;&nbsp;Edit Bird
+              &nbsp;&nbsp;{viewMode ? "View Bird" : "Edit Bird"}
             </DialogTitle>
             <IconButton
               aria-label="close"
@@ -337,7 +339,7 @@ function UpdateBird(props) {
             <DialogContent
               className="hide-scrollbar"
               sx={{
-                height: "441px",
+                height: `${viewMode ? "392" : "441"}px`,
               }}
               dividers
             >
@@ -554,7 +556,11 @@ function UpdateBird(props) {
                       style={{ fontFamily: "Titillium Web", fontSize: "19px" }}
                     >
                       Image
-                      <span style={{ fontSize: "14px" }}>(optional)&nbsp;</span>
+                      {viewMode === false && (
+                        <span style={{ fontSize: "14px" }}>
+                          (optional)&nbsp;
+                        </span>
+                      )}
                       :&nbsp;
                     </h5>
                     <span
@@ -599,40 +605,33 @@ function UpdateBird(props) {
                   {isLoading && selectedImage.length >= 1 ? (
                     <LoadingBar value={Number(uploadProgress)} width="80%" />
                   ) : (
-                    <div>
-                      <button
-                        className={`btn btn-outline-success btn-sm mx-2 ${
-                          !edit && "disabled"
-                        }`}
-                        onClick={() => {
-                          document.getElementById("imageUpdateSelect").click();
-                        }}
-                      >
-                        Choose Image
-                      </button>
-                      <button
-                        className={`btn btn-outline-danger btn-sm mx-2 ${
-                          !edit && "disabled"
-                        }`}
-                        onClick={() => {
-                          selectedImgURL = "";
-                          setSelectedImage([]);
-                        }}
-                      >
-                        Clear Image
-                      </button>
-                      <button
-                        className={`btn btn-outline-danger btn-sm mx-2 ${
-                          !edit && "disabled"
-                        }`}
-                        onClick={() => {
-                          selectedImgURL = "";
-                          setSelectedImage([]);
-                        }}
-                      >
-                        Delete Previous
-                      </button>
-                    </div>
+                    viewMode === false && (
+                      <div>
+                        <button
+                          className={`btn btn-outline-success btn-sm mx-2 ${
+                            !edit && "disabled"
+                          }`}
+                          onClick={() => {
+                            document
+                              .getElementById("imageUpdateSelect")
+                              .click();
+                          }}
+                        >
+                          Choose Image
+                        </button>
+                        <button
+                          className={`btn btn-outline-danger btn-sm mx-2 ${
+                            !edit && "disabled"
+                          }`}
+                          onClick={() => {
+                            selectedImgURL = "";
+                            setSelectedImage([]);
+                          }}
+                        >
+                          Clear Image
+                        </button>
+                      </div>
+                    )
                   )}
                 </div>
               </div>
@@ -646,26 +645,30 @@ function UpdateBird(props) {
               </div>
             </DialogContent>
             <DialogActions sx={{ height: "65px" }}>
-              <Button
-                startIcon={<UploadIcon />}
-                sx={{ fontSize: "14px" }}
-                autoFocus
-                variant="outlined"
-                size="medium"
-                onClick={handleImageUploadOptimized}
-              >
-                Update
-              </Button>
-              <Button
-                startIcon={<EditIcon />}
-                sx={{ fontSize: "14px" }}
-                color="warning"
-                variant="outlined"
-                size="medium"
-                onClick={() => setEdit(!edit)}
-              >
-                Edit
-              </Button>
+              {viewMode === false && (
+                <Button
+                  startIcon={<SaveIcon />}
+                  sx={{ fontSize: "14px" }}
+                  autoFocus
+                  variant="outlined"
+                  size="medium"
+                  onClick={handleImageUploadOptimized}
+                >
+                  Save
+                </Button>
+              )}
+              {viewMode === false && (
+                <Button
+                  startIcon={<EditIcon />}
+                  sx={{ fontSize: "14px" }}
+                  color="warning"
+                  variant="outlined"
+                  size="medium"
+                  onClick={() => setEdit(!edit)}
+                >
+                  Edit
+                </Button>
+              )}
               <Button
                 sx={{ marginRight: "3.5%", fontSize: "14px" }}
                 color="error"
@@ -676,7 +679,7 @@ function UpdateBird(props) {
                   closeUpdateBird();
                 }}
               >
-                Cancel
+                {viewMode ? "Close" : "Cancel"}
               </Button>
             </DialogActions>
           </BootstrapDialog>

@@ -58,7 +58,7 @@ const CustomMenu = (props) => {
           },
         }}
       >
-        {!table.getSelectedRowModel().rows.length === 0 ? (
+        {table.getSelectedRowModel().rows.length !== 0 ? (
           <MenuItem
             sx={{ height: "4.55ch" }}
             disableRipple

@@ -19,6 +19,15 @@ import { enqueueSnackbar } from "notistack";
 import UpdateBird from "./UpdateBird";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ArticleIcon from "@mui/icons-material/Article";
+import Paper from "@mui/material/Paper";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import AlertDialog from "../../../components/AlertDialog/AlertDialog";
 
 const order = [
   "name",
@@ -34,6 +43,7 @@ const order = [
   "image",
 ];
 
+var editableRow = {};
 var passUpdateData = {
   name: "",
   price: "",
@@ -55,8 +65,34 @@ const MyBirds = () => {
   const [rowSelection, setRowSelection] = useState({});
   const tableInstanceRef = useRef(null);
   const [showColumnFilters, setShowColumnFilters] = useState(false);
+  const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: null,
+    y: null,
+  });
+  const [viewMode, setViewMode] = useState(false);
   const [parent] = useAutoAnimate({ duration: 500 });
   const navigate = useNavigate();
+
+  const handleAlertDialogOpen = () => {
+    setAlertDialogOpen(true);
+  };
+
+  const handleAlertDialogClose = () => {
+    setAlertDialogOpen(false);
+  };
+
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+    const x = event.clientX;
+    const y = event.clientY;
+    setContextMenuPosition({ x, y });
+  };
+
+  const handleCloseContextMenu = () => {
+    setContextMenuPosition({ x: null, y: null });
+    setRowSelection({});
+  };
 
   const {
     isFetching,
@@ -233,12 +269,12 @@ const MyBirds = () => {
             sx: {
               cursor: "pointer",
             },
-            onDoubleClick: () => {
-              passUpdateData = JSON.parse(localStorage.getItem("birds"))[
-                row?.id
-              ];
-              setUpdateBirdOpen(true);
-              setRowSelection({});
+            onContextMenu: (e) => {
+              editableRow = row;
+              setRowSelection({
+                [row.id]: true,
+              });
+              handleContextMenu(e);
             },
           })}
           muiTableHeadCellProps={{
@@ -287,7 +323,6 @@ const MyBirds = () => {
           }}
         />
       </div>
-
       {addBirdOpen && (
         <AddBird
           addBirdOpen={addBirdOpen}
@@ -295,16 +330,16 @@ const MyBirds = () => {
           refetch={refetch}
         />
       )}
-
       {updateBirdOpen && (
         <UpdateBird
           setUpdateBirdOpen={setUpdateBirdOpen}
           updateBirdOpen={updateBirdOpen}
           refetch={refetch}
           data={passUpdateData}
+          setViewMode={setViewMode}
+          viewMode={viewMode}
         />
       )}
-
       {dateFilterOpen && (
         <DateFilterModal
           tableInstanceRef={tableInstanceRef}
@@ -312,6 +347,68 @@ const MyBirds = () => {
           handleClose={handleClose}
         />
       )}
+      {alertDialogOpen && <AlertDialog />}
+
+      <Menu
+        anchorReference="anchorPosition"
+        anchorPosition={{
+          top: contextMenuPosition.y,
+          left: contextMenuPosition.x,
+        }}
+        open={Boolean(
+          contextMenuPosition.x !== null && contextMenuPosition.y !== null
+        )}
+        onClose={handleCloseContextMenu}
+      >
+        <Paper elevation={0} sx={{ width: 230, maxWidth: "100%" }}>
+          <MenuItem
+            sx={{ height: "45px" }}
+            onClick={() => {
+              passUpdateData = JSON.parse(localStorage.getItem("birds"))[
+                editableRow?.id
+              ];
+              handleCloseContextMenu();
+              setViewMode(true);
+              setUpdateBirdOpen(true);
+            }}
+          >
+            <ListItemIcon>
+              <ArticleIcon fontSize="medium" />
+            </ListItemIcon>
+            <ListItemText>View Bird Data</ListItemText>
+          </MenuItem>
+          <MenuItem
+            sx={{ height: "45px" }}
+            onClick={() => {
+              passUpdateData = JSON.parse(localStorage.getItem("birds"))[
+                editableRow?.id
+              ];
+              handleCloseContextMenu();
+              setUpdateBirdOpen(true);
+            }}
+          >
+            <ListItemIcon>
+              <EditIcon fontSize="medium" />
+            </ListItemIcon>
+            <ListItemText>Edit Bird Data</ListItemText>
+          </MenuItem>
+          <MenuItem
+            sx={{ height: "45px" }}
+            onClick={() => {
+              setAlertDialogOpen(true);
+              passUpdateData = JSON.parse(localStorage.getItem("birds"))[
+                editableRow?.id
+              ];
+              handleCloseContextMenu();
+            }}
+          >
+            <ListItemIcon>
+              <DeleteIcon color="error" fontSize="medium" />
+            </ListItemIcon>
+            <ListItemText sx={{ color: "red" }}>Delete Bird Data</ListItemText>
+          </MenuItem>
+        </Paper>
+      </Menu>
     </ResponsiveDrawer>
   );
 };
