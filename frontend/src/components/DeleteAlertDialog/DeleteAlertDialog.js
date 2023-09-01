@@ -6,27 +6,30 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function AlertDialog({
+export default function DeleteAlertDialog({
   open,
   deleteFn,
   handleAlertDialogClose,
+  deleteItem,
 }) {
   return (
     <div>
       <Dialog
-        alertDialogOpen={open}
+        open={open}
         onClose={handleAlertDialogClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-          {"Use Google's location service?"}
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title">Confirm Delete?</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description"></DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete {deleteItem}?
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
+            color="error"
+            variant="outlined"
             onClick={() => {
               deleteFn();
               handleAlertDialogClose();
@@ -34,7 +37,7 @@ export default function AlertDialog({
           >
             Delete
           </Button>
-          <Button onClick={handleAlertDialogClose} autoFocus>
+          <Button variant="outlined" onClick={handleAlertDialogClose} autoFocus>
             Cancel
           </Button>
         </DialogActions>

@@ -27,7 +27,8 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import AlertDialog from "../../../components/AlertDialog/AlertDialog";
+import DeleteAlertDialog from "../../../components/DeleteAlertDialog/DeleteAlertDialog";
+import CustomLoadingAnimation from "../../../components/LoadingAnimation/loadingAnimation";
 
 const order = [
   "name",
@@ -70,6 +71,7 @@ const MyBirds = () => {
     x: null,
     y: null,
   });
+  const [showLoadingAnimation, setShowLoadingAnimation] = useState(false);
   const [viewMode, setViewMode] = useState(false);
   const [parent] = useAutoAnimate({ duration: 500 });
   const navigate = useNavigate();
@@ -92,6 +94,24 @@ const MyBirds = () => {
   const handleCloseContextMenu = () => {
     setContextMenuPosition({ x: null, y: null });
     setRowSelection({});
+  };
+
+  const handleDeleteBird = async () => {
+    setShowLoadingAnimation(true);
+    try {
+      await axios.delete(
+        process.env.REACT_APP_BASE_URL + `/deleteBird/${passUpdateData?._id}`
+      );
+      setShowLoadingAnimation(true);
+      enqueueSnackbar("Bird deleted successfully", { variant: "success" });
+    } catch (error) {
+      setShowLoadingAnimation(false);
+      enqueueSnackbar(
+        error?.response?.data?.message || "Server not working. Try again later",
+        { variant: "error" }
+      );
+      return;
+    }
   };
 
   const {
@@ -229,6 +249,7 @@ const MyBirds = () => {
 
   return (
     <ResponsiveDrawer MyBirds={1}>
+      {showLoadingAnimation && <CustomLoadingAnimation />}
       <div className="py-2 px-1">
         <MaterialReactTable
           columns={columns}
@@ -347,7 +368,14 @@ const MyBirds = () => {
           handleClose={handleClose}
         />
       )}
-      {alertDialogOpen && <AlertDialog />}
+      {alertDialogOpen && (
+        <DeleteAlertDialog
+          open={alertDialogOpen}
+          handleAlertDialogClose={handleAlertDialogClose}
+          deleteFn={handleDeleteBird}
+          deleteItem={`the bird ${passUpdateData?.name}`}
+        />
+      )}
 
       <Menu
         anchorReference="anchorPosition"
@@ -395,7 +423,7 @@ const MyBirds = () => {
           <MenuItem
             sx={{ height: "45px" }}
             onClick={() => {
-              setAlertDialogOpen(true);
+              handleAlertDialogOpen();
               passUpdateData = JSON.parse(localStorage.getItem("birds"))[
                 editableRow?.id
               ];
