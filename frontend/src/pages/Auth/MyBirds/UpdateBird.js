@@ -64,6 +64,7 @@ function UpdateBird(props) {
   const [range, setRange] = useState(new Date());
   const [edit, setEdit] = useState(false);
   const [showLoadingAnimation, setShowLoadingAnimation] = useState(false);
+  const [cashedImgURL, setCashedImgURL] = useState("");
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -103,10 +104,8 @@ function UpdateBird(props) {
       .then((response) => response.blob())
       .then((blob) => {
         const imageUrl = URL.createObjectURL(blob);
-        localStorage.setItem(
-          "cachedImgURL",
-          imageUrl /* .slice(process.env.REACT_APP_FRONTEND_BASE_URL.length + 5) */
-        );
+        setCashedImgURL(imageUrl);
+        localStorage.setItem("cachedImgURL", imageUrl);
       }); //eslint-disable-next-line
   }, []);
 
@@ -578,7 +577,7 @@ function UpdateBird(props) {
                         <span
                           className="imgLink"
                           onClick={() => {
-                            document.getElementById("birdImage")?.click();
+                            document.getElementById("updateBirdImage")?.click();
                           }}
                         >
                           {selectedImage[0]?.name}
@@ -587,7 +586,7 @@ function UpdateBird(props) {
                         <span
                           className="imgLink"
                           onClick={() => {
-                            document.getElementById("birdImage")?.click();
+                            document.getElementById("updateBirdImage")?.click();
                           }}
                         >
                           {data?.name + ".jpg"}
@@ -622,20 +621,25 @@ function UpdateBird(props) {
                       >
                         Clear Image
                       </button>
+                      <button
+                        className={`btn btn-outline-danger btn-sm mx-2 ${
+                          !edit && "disabled"
+                        }`}
+                        onClick={() => {
+                          selectedImgURL = "";
+                          setSelectedImage([]);
+                        }}
+                      >
+                        Delete Previous
+                      </button>
                     </div>
                   )}
                 </div>
               </div>
               <div>
-                <ImageViewer ID="birdImage" showChildren={false}>
+                <ImageViewer ID="updateBirdImage" showChildren={false}>
                   <img
-                    src={
-                      selectedImgURL !== ""
-                        ? selectedImgURL
-                        : /* "blob:" +
-                          process.env.REACT_APP_FRONTEND_BASE_URL + */
-                          localStorage.getItem("cachedImgURL")
-                    }
+                    src={selectedImgURL !== "" ? selectedImgURL : cashedImgURL}
                     alt=" Loading..."
                   />
                 </ImageViewer>

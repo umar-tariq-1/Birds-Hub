@@ -3,38 +3,38 @@
     0 3px 10px 3px rgba(0, 0, 0, 0.21) !important;
 }
 
-@media (min-height: 550px) and (max-height: 670px) {
-  .custom-center {
-    margin-top: 4vh;
+@media (min-height: 550px) and (max-height: 745px) {
+  .custom-signup-center {
+    margin-top: 4vh !important;
   }
 }
 
-@media (min-height: 671px) and (max-height: 745px) {
-  .custom-center {
-    margin-top: 6vh;
+/* @media (min-height: 671px) and (max-height: 745px) {
+  .custom-signup-center {
+    margin-top: 5vh !important;
   }
-}
+} */
 
 @media (min-height: 746px) and (max-height: 815px) {
-  .custom-center {
-    margin-top: 8.5vh;
+  .custom-signup-center {
+    margin-top: 7vh !important;
   }
 }
 
 @media (min-height: 816px) and (max-height: 892px) {
-  .custom-center {
-    margin-top: 11vh;
+  .custom-signup-center {
+    margin-top: 10vh !important;
   }
 }
 
 @media (min-height: 893px) and (max-height: 960px) {
-  .custom-center {
-    margin-top: 12.5vh;
+  .custom-signup-center {
+    margin-top: 12vh !important;
   }
 }
 
 @media (min-height: 960px) and (max-height: 1500px) {
-  .custom-center {
-    margin-top: 16vh;
+  .custom-signup-center {
+    margin-top: 15vh !important;
   }
 }

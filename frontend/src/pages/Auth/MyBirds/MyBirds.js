@@ -18,6 +18,7 @@ import { reorderKeys } from "../../../utils/objectFunctiions/reorderKeys";
 import { enqueueSnackbar } from "notistack";
 import UpdateBird from "./UpdateBird";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const order = [
   "name",
@@ -55,6 +56,7 @@ const MyBirds = () => {
   const tableInstanceRef = useRef(null);
   const [showColumnFilters, setShowColumnFilters] = useState(false);
   const [parent] = useAutoAnimate({ duration: 500 });
+  const navigate = useNavigate();
 
   const {
     isFetching,
@@ -85,10 +87,23 @@ const MyBirds = () => {
         error?.response?.data?.message || "Coulnot refresh data",
         {
           variant: "error",
-          autoHideDuration: 1750,
         }
       );
-      // if(error?.response?.data?.message===)
+      const errors = [
+        "Sorry, didn't get cookie in request",
+        "Sorry, you are not authorized for this ",
+        "Access token expired. Please login again!",
+        "Sorry, you are not logged in for this",
+      ];
+      if (errors.includes(error?.response?.data?.message)) {
+        localStorage.setItem(
+          "isLoggedIn",
+          JSON.stringify(error?.response?.data?.isLoggedIn)
+        );
+        localStorage.setItem("tokenExpirationTime", JSON.stringify(null));
+        localStorage.setItem("birds", "[]");
+        navigate("/login");
+      }
     },
     keepPreviousData: true,
   });
@@ -220,7 +235,7 @@ const MyBirds = () => {
             },
             onDoubleClick: () => {
               passUpdateData = JSON.parse(localStorage.getItem("birds"))[
-                row.id
+                row?.id
               ];
               setUpdateBirdOpen(true);
               setRowSelection({});

@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import DatePicker from "../../../components/DatePicker/DatePicker";
 import { format, parse, isValid } from "date-fns";
+import { ImageViewer } from "../../../components/ImageViewer/ImageViewer";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -35,6 +36,8 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
+
+var selectedImgURL = "";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -115,10 +118,12 @@ function AddBird(props) {
 
     if (file && file.type.startsWith("image/")) {
       setSelectedImage([file]);
+      selectedImgURL = URL.createObjectURL(file);
     } else if (file) {
       enqueueSnackbar("Selected file is not a valid image", {
         variant: "error",
       });
+      selectedImgURL = "";
     }
 
     e.target.value = null;
@@ -414,7 +419,7 @@ function AddBird(props) {
                   marginLeft: "1.5%",
                 }}
                 required={true}
-                inputError={error.price}
+                error={error.price}
               />
               <TextField
                 onChange={(e) => {
@@ -429,7 +434,7 @@ function AddBird(props) {
                   marginBottom: "12px",
                   marginLeft: "2.5%",
                 }}
-                inputError={error.purchasedFrom}
+                error={error.purchasedFrom}
                 required={true}
                 value={purchasedFrom}
               />
@@ -446,7 +451,7 @@ function AddBird(props) {
                   marginLeft: "2.5%",
                 }}
                 type="number"
-                inputError={error.phone}
+                error={error.phone}
                 value={phone}
                 required={true}
               />
@@ -498,7 +503,18 @@ function AddBird(props) {
                           }
                     }
                   >
-                    {selectedImage[0]?.name ?? "not selected"}
+                    {selectedImage[0]?.name ? (
+                      <span
+                        className="imgLink"
+                        onClick={() => {
+                          document.getElementById("addBirdImage")?.click();
+                        }}
+                      >
+                        {selectedImage[0]?.name}
+                      </span>
+                    ) : (
+                      "not selected"
+                    )}
                   </span>
                 </div>
                 {isLoading && selectedImage.length >= 1 ? (
@@ -516,6 +532,7 @@ function AddBird(props) {
                     <button
                       className={`btn btn-outline-danger btn-sm mx-2`}
                       onClick={() => {
+                        selectedImgURL = "";
                         setSelectedImage([]);
                       }}
                     >
@@ -524,6 +541,20 @@ function AddBird(props) {
                   </div>
                 )}
               </div>
+            </div>
+            <div>
+              <ImageViewer ID="addBirdImage" showChildren={false}>
+                <img
+                  src={
+                    selectedImgURL !== ""
+                      ? selectedImgURL
+                      : /* "blob:" +
+                          process.env.REACT_APP_FRONTEND_BASE_URL + */
+                        ""
+                  }
+                  alt=" Loading..."
+                />
+              </ImageViewer>
             </div>
           </DialogContent>
           <DialogActions sx={{ height: "65px" }}>

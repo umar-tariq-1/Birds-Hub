@@ -65,7 +65,7 @@ const AllProducts = () => {
 
   return (
     <ResponsiveDrawer Birds={1}>
-      <div ref={parent}>
+      {/* <div ref={parent}>
         {isFetching ? <CustomRefreshAnimation /> : null}
         <div className="container-fluid">
           <ProductCard
@@ -86,7 +86,7 @@ const AllProducts = () => {
         >
           Fetch
         </div>
-      </div>
+      </div> */}
     </ResponsiveDrawer>
   );
 };

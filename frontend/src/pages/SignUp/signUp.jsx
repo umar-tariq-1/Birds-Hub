@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 
+import form_img from "../../utils/pictures/logo-form.png";
 import Navbar from "../../components/Navbar/navbar";
 import "./signUp.css";
 import AOS from "aos";
@@ -112,14 +113,14 @@ function SignUp() {
 
   const styleFirstHalf = {
     width: "49%",
-    marginTop: "1%",
+    marginTop: "0%",
     marginBottom: "3%",
   };
   const styleSecondHalf = {
     width: "49%",
     marginBottom: "3%",
     marginLeft: "2%",
-    marginTop: "1%",
+    marginTop: "0%",
   };
   const styleFull = {
     width: "100%",
@@ -142,9 +143,9 @@ function SignUp() {
   return (
     <>
       {loading && <CustomLoadingAnimation />}
-      <Navbar SignUp={1} data-aos />
+      <Navbar SignUp={1} />
       <div
-        className="d-flex align-items-center justify-content-center custom-center"
+        className="d-flex align-items-center justify-content-center custom-signup-center"
         style={{
           width: "100%",
         }}
@@ -164,7 +165,7 @@ function SignUp() {
             data-aos="zoom-out-up"
           >
             <div className="card-body px-4 px-md-5">
-              <h2
+              {/* <h2
                 className="text-uppercase fw-bold text-center mb-4"
                 style={{
                   letterSpacing: "1px",
@@ -173,8 +174,8 @@ function SignUp() {
                 }}
               >
                 Registration
-              </h2>
-
+              </h2> */}
+            <img className="ps-md-2 pe-md-3" style={{width:"66%",marginLeft:"16.25%"}} src={form_img} alt=" Loading" /><hr style={{marginTop:"9px"}} />
               <form onSubmit={handleSubmit}>
                 <CustomTextField
                   inputError={inputErrors.fname}

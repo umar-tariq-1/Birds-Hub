@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import React, { useEffect } from "react";
 
+import form_img from "../../utils/pictures/logo-form.png";
 import Navbar from "../../components/Navbar/navbar";
 import "./login.css";
 import AOS from "aos";
@@ -123,23 +124,23 @@ function Login() {
   return (
     <>
       {loading && <CustomLoadingAnimation />}
-      <div className="d-flex align-items-center justify-content-center">
+      <Navbar Login={1} />
+      <div style={{
+          width: "100%",
+        }} className="d-flex align-items-center justify-content-center custom-login-center">
         <div
-          className="container d-flex align-items-center justify-content-center"
+          className="container pb-5 mx-auto"
           style={{
-            position: "fixed",
-            hieght: "100%",
-            marginTop: "calc(85vh + 11%)",
             backgroundColor: "#eee",
           }}
         >
           <div
-            className="shadow-custom card"
+            className="shadow-custom card mx-auto"
             style={{ maxWidth: "500px", minWidth: "350px" }}
             data-aos="zoom-out-up"
           >
             <div className="card-body px-4 px-md-5">
-              <h2
+              {/* <h2
                 className="text-uppercase fw-bold text-center mb-4"
                 style={{
                   letterSpacing: "1px",
@@ -148,8 +149,8 @@ function Login() {
                 }}
               >
                 Login
-              </h2>
-
+              </h2> */}
+              <img className="ps-md-2 pe-md-3" style={{width:"66%",marginLeft:"16.25%"}} src={form_img} alt=" Loading" /><hr style={{marginTop:"9px"}} />
               <form onSubmit={handleSubmit}>
                 <CustomTextField
                   inputError={inputErrors.phone}
@@ -224,7 +225,6 @@ function Login() {
         </div>
       </div>
 
-      <Navbar Login={1} />
     </>
   );
 }
