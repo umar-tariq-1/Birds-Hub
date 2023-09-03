@@ -27,6 +27,9 @@ export default function DeleteAlertDialog({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+          <Button variant="outlined" onClick={handleAlertDialogClose} autoFocus>
+            Cancel
+          </Button>
           <Button
             color="error"
             variant="outlined"
@@ -36,9 +39,6 @@ export default function DeleteAlertDialog({
             }}
           >
             Delete
-          </Button>
-          <Button variant="outlined" onClick={handleAlertDialogClose} autoFocus>
-            Cancel
           </Button>
         </DialogActions>
       </Dialog>

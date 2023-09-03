@@ -50,9 +50,9 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
     });
   } else if (Number(price) < 0) {
     return res.status(422).send({ message: "Price cannot be negative" });
-  } else if (gender !== "M" && gender !== "F") {
+  } else if (gender[0] !== "M" && gender[0] !== "F") {
     return res.status(422).send({ message: "Incorrect gender entered" });
-  } else if (status !== "A" && status !== "D") {
+  } else if (status[0] !== "A" && status[0] !== "D") {
     return res.status(422).send({ message: "Incorrect status entered" });
   } else if (dna !== true && dna !== false) {
     return res.status(422).send({ message: "Invalid DNA entered" });

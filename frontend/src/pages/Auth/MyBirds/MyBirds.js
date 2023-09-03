@@ -100,9 +100,13 @@ const MyBirds = () => {
     setShowLoadingAnimation(true);
     try {
       await axios.delete(
-        process.env.REACT_APP_BASE_URL + `/deleteBird/${passUpdateData?._id}`
+        process.env.REACT_APP_BASE_URL + `/deleteBird/${passUpdateData?._id}`,
+        {
+          withCredentials: true,
+        }
       );
-      setShowLoadingAnimation(true);
+      refetch();
+      setShowLoadingAnimation(false);
       enqueueSnackbar("Bird deleted successfully", { variant: "success" });
     } catch (error) {
       setShowLoadingAnimation(false);
