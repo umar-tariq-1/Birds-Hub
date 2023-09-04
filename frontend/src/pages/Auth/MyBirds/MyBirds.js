@@ -367,12 +367,14 @@ const MyBirds = () => {
               fontWeight: "bold",
               fontSize: "19px",
               backgroundColor: "rgb(182,251,203)",
+              userSelect: "none",
             },
             style: { paddingTop: "14px", paddingBottom: "8px" },
           }}
           muiTableBodyCellProps={{
             sx: {
               fontSize: "17px",
+              userSelect: "none",
             },
           }}
           initialState={{
