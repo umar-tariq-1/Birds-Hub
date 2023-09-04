@@ -180,7 +180,7 @@ const MyBirds = () => {
       {
         accessorKey: "name",
         header: "Name",
-        size: 195,
+        size: 200,
         muiTableHeadCellFilterTextFieldProps: { sx: { width: "90%" } },
       },
       {
