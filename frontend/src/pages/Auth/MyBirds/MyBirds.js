@@ -180,53 +180,102 @@ const MyBirds = () => {
       {
         accessorKey: "name",
         header: "Name",
-        size: 200,
+        size: 195,
+        muiTableHeadCellFilterTextFieldProps: { sx: { width: "90%" } },
       },
       {
         accessorKey: "price",
         header: "Price",
-        size: 131,
+        size: 100,
         filterVariant: "range-slider",
         filterFn: "betweenInclusive", // default (or between)
         muiTableHeadCellFilterSliderProps: {
           min: 3000,
-          max: 30000,
+          max: 80000,
           marks: true,
-          step: 1000,
-          sx: { width: "95%", marginLeft: "-8px" },
+          step: 2000,
+          sx: {
+            width: "78px",
+            marginLeft: "-15px",
+            "& .MuiSlider-thumb": { height: "18px", width: "18px" },
+            "& .MuiSlider-valueLabel": {
+              fontSize: 11,
+              paddingTop: "4px",
+              paddingLeft: "4px",
+              paddingRight: "4px",
+              paddingBottom: "2px",
+            },
+          },
+          valueLabelDisplay: "on",
         },
       },
       {
         accessorKey: "gender",
         header: "Gender",
-        size: 160,
+        filterFn: "equals",
+        muiTableHeadCellFilterTextFieldProps: {
+          placeholder: "Gender",
+          sx: { width: "90%", minWidth: "90%" },
+        },
+        filterSelectOptions: [
+          { text: "Male", value: "Male" },
+          { text: "Female", value: "Female" },
+          { text: "Other", value: "Other" },
+        ],
+        filterVariant: "select",
+        size: 133,
       },
       {
         accessorKey: "status",
         header: "Status",
-        size: 150,
+        size: 123,
+        filterFn: "equals",
+        muiTableHeadCellFilterTextFieldProps: {
+          placeholder: "Status",
+          sx: { width: "90%", minWidth: "90%" },
+        },
+        filterSelectOptions: [
+          { text: "Alive", value: "Alive" },
+          { text: "Dead", value: "Dead" },
+        ],
+        filterVariant: "select",
       },
       {
         accessorKey: "dna",
         header: "DNA",
-        size: 140,
+        size: 110,
+        muiTableHeadCellFilterTextFieldProps: {
+          placeholder: "DNA",
+          sx: { width: "90%", minWidth: "90%" },
+        },
         Cell: ({ cell }) =>
           cell.getValue() ? <span>Yes</span> : <span>No</span>,
+        filterFn: "equals",
+        filterSelectOptions: [
+          { text: "Yes", value: "true" },
+          { text: "No", value: "false" },
+        ],
+        filterVariant: "select",
       },
       {
         accessorKey: "ringNo",
         header: "Ring No.",
-        size: 170,
+        muiTableHeadCellFilterTextFieldProps: {
+          placeholder: "Ring No.",
+          sx: { width: "90%", minWidth: "90%" },
+        },
+        size: 130,
       },
       {
         accessorKey: "date",
         header: "Date",
-        size: 140,
+        size: 115,
         Filter: () => (
           <div className="d-flex flex-column justify-content-between align-items-center w-100">
             <Button
               variant="outlined"
               size="small"
+              sx={{ fontSize: "13px", textTransform: "none" }}
               onClick={handleClickOpen}
               className="mt-2"
             >
@@ -240,12 +289,22 @@ const MyBirds = () => {
       {
         accessorKey: "purchasedFrom",
         header: "Purchased From",
-        size: 245,
+        muiTableHeadCellFilterTextFieldProps: {
+          placeholder: "Purchased From",
+          sx: { width: "90%" },
+        },
+
+        size: 218,
       },
       {
         accessorKey: "phone",
         header: "Phone",
-        size: 180,
+        muiTableHeadCellFilterTextFieldProps: {
+          placeholder: "Phone",
+          sx: { width: "90%" },
+        },
+        size: 150,
+        enableClickToCopy: true,
       },
     ],
     []
@@ -279,6 +338,7 @@ const MyBirds = () => {
           enableGlobalFilter={true}
           enableColumnDragging={false}
           enableGrouping={true}
+          enableDensityToggle={false}
           onShowColumnFiltersChange={() => {
             tableInstanceRef.current.resetColumnFilters();
             setShowColumnFilters(!showColumnFilters);
@@ -305,15 +365,14 @@ const MyBirds = () => {
           muiTableHeadCellProps={{
             sx: {
               fontWeight: "bold",
-              fontSize: "21px",
+              fontSize: "19px",
               backgroundColor: "rgb(182,251,203)",
-              whiteSpace: "nowrap",
             },
             style: { paddingTop: "14px", paddingBottom: "8px" },
           }}
           muiTableBodyCellProps={{
             sx: {
-              fontSize: "18px",
+              fontSize: "17px",
             },
           }}
           initialState={{
@@ -324,6 +383,7 @@ const MyBirds = () => {
             rowSelection,
             isLoading: isLoading,
             showProgressBars: isFetching,
+            density: "compact",
           }}
           renderTopToolbarCustomActions={({ table }) => {
             return (
