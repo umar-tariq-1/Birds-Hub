@@ -649,6 +649,7 @@ function UpdateBird(props) {
                 <Button
                   startIcon={<SaveIcon />}
                   sx={{ fontSize: "14px" }}
+                  disabled={isLoading}
                   autoFocus
                   variant="outlined"
                   size="medium"
@@ -661,6 +662,7 @@ function UpdateBird(props) {
                 <Button
                   startIcon={<EditIcon />}
                   sx={{ fontSize: "14px" }}
+                  disabled={isLoading}
                   color="warning"
                   variant="outlined"
                   size="medium"
@@ -672,6 +674,7 @@ function UpdateBird(props) {
               <Button
                 sx={{ marginRight: "3.5%", fontSize: "14px" }}
                 color="error"
+                disabled={isLoading}
                 variant="outlined"
                 size="medium"
                 onClick={() => {

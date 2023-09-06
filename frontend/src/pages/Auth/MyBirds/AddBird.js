@@ -522,7 +522,9 @@ function AddBird(props) {
                 ) : (
                   <div>
                     <button
-                      className={`btn btn-outline-success btn-sm mx-2`}
+                      className={`btn btn-outline-success btn-sm mx-2 ${
+                        isLoading && "disabled"
+                      }`}
                       onClick={() => {
                         document.getElementById("imagesInputSelect").click();
                       }}
@@ -530,7 +532,9 @@ function AddBird(props) {
                       Choose Image
                     </button>
                     <button
-                      className={`btn btn-outline-danger btn-sm mx-2`}
+                      className={`btn btn-outline-danger btn-sm mx-2 ${
+                        isLoading && "disabled"
+                      }`}
                       onClick={() => {
                         selectedImgURL = "";
                         setSelectedImage([]);
@@ -562,6 +566,7 @@ function AddBird(props) {
               startIcon={<UploadIcon />}
               sx={{ fontSize: "14px" }}
               autoFocus
+              disabled={isLoading}
               variant="outlined"
               size="medium"
               onClick={handleImageUploadOptimized}
@@ -572,6 +577,7 @@ function AddBird(props) {
               sx={{ marginRight: "3.5%", fontSize: "14px" }}
               color="error"
               variant="outlined"
+              disabled={isLoading}
               size="medium"
               onClick={() => {
                 resetValues();
