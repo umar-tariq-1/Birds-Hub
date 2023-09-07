@@ -59,7 +59,7 @@ var passUpdateData = {
   _id: "",
 };
 
-const MyBirds = () => {
+const MyPurchases = () => {
   const [dateFilterOpen, setDateFilterOpen] = useState(false);
   const [addBirdOpen, setAddBirdOpen] = useState(false);
   const [updateBirdOpen, setUpdateBirdOpen] = useState(false);
@@ -311,7 +311,7 @@ const MyBirds = () => {
   );
 
   return (
-    <ResponsiveDrawer MyBirds={1}>
+    <ResponsiveDrawer MyPurchases={1}>
       {showLoadingAnimation && <CustomLoadingAnimation />}
       <div className="py-2 px-1">
         <MaterialReactTable
@@ -507,4 +507,4 @@ const MyBirds = () => {
   );
 };
 
-export default MyBirds;
+export default MyPurchases;

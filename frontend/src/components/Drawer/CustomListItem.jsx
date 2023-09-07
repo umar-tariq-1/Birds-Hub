@@ -42,7 +42,7 @@ const CustomListItem = (props) => {
           {props.icon}
         </Icon>
         <ListItemText
-          primaryTypographyProps={{ fontSize: "22px", marginLeft: 2 }}
+          primaryTypographyProps={{ fontSize: "21px", marginLeft: 2 }}
           primary={props.text}
         />
       </ListItemButton>

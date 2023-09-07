@@ -14,10 +14,11 @@ import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 import Dashboard from "./pages/Auth/Dashboard/Dashboard";
 import Birds from "./pages/Auth/Birds/Birds";
-import MyBirds from "./pages/Auth/MyBirds/MyBirds";
+import MyPurchases from "./pages/Auth/MyPurchases/MyPurchases";
 import Favourites from "./pages/Auth/Favourites/Favourites";
 import Profile from "./pages/Auth/Profile/Profile";
 import Settings from "./pages/Auth/Settings/Settings";
+import BreedRecord from "./pages/Auth/BreedRecord/BreedRecord";
 
 const SignUpComponent = lazyWithPreload(() => import("./pages/SignUp/signUp"));
 const LoginComponent = lazyWithPreload(() => import("./pages/Login/login"));
@@ -74,7 +75,8 @@ function App() {
             <Route path="/contact" Component={ContactComponent} />
             <Route path="/dashboard" Component={Dashboard} />
             <Route path="/birds" Component={Birds} />
-            <Route path="/myBirds" Component={MyBirds} />
+            <Route path="/my-purchases" Component={MyPurchases} />
+            <Route path="/breed-record" Component={BreedRecord} />
             <Route path="/favourites" Component={Favourites} />
             <Route path="/profile" Component={Profile} />
             <Route path="/settings" Component={Settings} />

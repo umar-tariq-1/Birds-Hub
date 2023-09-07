@@ -1,5 +1,5 @@
 import React, { useEffect, useState, forwardRef } from "react";
-import "./MyBirds.css";
+import "./MyPurchases.css";
 import axios from "axios";
 import LoadingBar from "../../../components/LoadingBar/LoadingBar";
 import CustomLoadingAnimation from "../../../components/LoadingAnimation/loadingAnimation";

@@ -4,10 +4,8 @@ import Box from "@mui/material/Box";
 // import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import Toolbar from "@mui/material/Toolbar";
-import { FiMenu } from "react-icons/fi";
 import { IoStorefrontOutline } from "react-icons/io5";
 import CustomListItem from "./CustomListItem";
 import { MdDashboard } from "react-icons/md";
@@ -128,11 +126,21 @@ function delay(ms) {
           closeDrawer={closeDrawer}
         />
         <CustomListItem
-          text="My Birds"
-          active={props.MyBirds}
+          text="My Purchases"
+          active={props.MyPurchases}
           icon={<BsBasketFill style={{marginBottom:"3px"}} />}
           handleClick={() => {
-            delay(280).then(() => {navigate("/myBirds");})
+            delay(280).then(() => {navigate("/my-purchases");})
+            
+          }}
+          closeDrawer={closeDrawer}
+        />
+        <CustomListItem
+          text="Breed Record"
+          active={props.BreedRecord}
+          icon={<BsBasketFill style={{marginBottom:"3px"}} />}
+          handleClick={() => {
+            delay(280).then(() => {navigate("/breed-record");})
             
           }}
           closeDrawer={closeDrawer}
@@ -202,12 +210,23 @@ function delay(ms) {
           }}
           closeDrawer={closeDrawer}
         />
-        <CustomListItem
-          text="My Birds"
-          active={props.MyBirds}
+         <CustomListItem
+          text="My Purchases"
+          active={props.MyPurchases}
           icon={<BsBasketFill style={{marginBottom:"3px"}} />}
           handleClick={() => {
-           navigate("/myBirds")
+            delay(280).then(() => {navigate("/my-purchases");})
+            
+          }}
+          closeDrawer={closeDrawer}
+        />
+        <CustomListItem
+          text="Breed Record"
+          active={props.BreedRecord}
+          icon={<BsBasketFill style={{marginBottom:"3px"}} />}
+          handleClick={() => {
+            delay(280).then(() => {navigate("/breed-record");})
+            
           }}
           closeDrawer={closeDrawer}
         />
@@ -259,15 +278,6 @@ function delay(ms) {
         >
           <Toolbar>
             
-            {/* <IconButton
-              color="rgb(33, 37, 41)"
-              aria-label="open drawer"
-              edge="start"
-              onClick={handleDrawerToggle}
-              sx={{ ml: "2px", mr: 2, display: { md: "none" } }}
-            >
-              <FiMenu size={48} />
-            </IconButton> */}
             <div style={{height:"70px"}} className="d-flex justify-content-between w-100">
             <div className="d-flex mt-3 ms-md-5">
               <IoStorefrontOutline color="rgb(33, 37, 41)" size={40} />
@@ -329,7 +339,7 @@ function delay(ms) {
               display: { xs: "none", md: "block" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
-                width: drawerWidth,
+                width: drawerWidth+10,
                 marginTop: "6px",
                 background: "white",
               },
