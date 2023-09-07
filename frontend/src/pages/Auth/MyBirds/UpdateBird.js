@@ -352,7 +352,9 @@ function UpdateBird(props) {
                   label="Bird Name"
                   value={name}
                   required={true}
+                  disabled={!edit && !viewMode}
                   type="text"
+                  variant={viewMode ? "filled" : "outlined"}
                   inputProps={{ readOnly: !edit }}
                   color="success"
                   error={error.name}
@@ -366,6 +368,8 @@ function UpdateBird(props) {
                 <FormControl
                   required={true}
                   size="medium"
+                  variant={viewMode ? "filled" : "outlined"}
+                  disabled={!edit && !viewMode}
                   error={error.gender}
                   style={{
                     width: "33.69%",
@@ -395,6 +399,8 @@ function UpdateBird(props) {
                 </FormControl>
                 <FormControl
                   required={true}
+                  variant={viewMode ? "filled" : "outlined"}
+                  disabled={!edit && !viewMode}
                   size="medium"
                   error={error.status}
                   style={{
@@ -425,7 +431,9 @@ function UpdateBird(props) {
                 </FormControl>
                 <FormControl
                   required={true}
+                  variant={viewMode ? "filled" : "outlined"}
                   size="medium"
+                  disabled={!edit && !viewMode}
                   error={error.dna}
                   style={{
                     width: "27.33%",
@@ -461,6 +469,8 @@ function UpdateBird(props) {
                   }}
                   label="Ring number"
                   value={ringNo}
+                  variant={viewMode ? "filled" : "outlined"}
+                  disabled={!edit && !viewMode}
                   type="text"
                   color="success"
                   inputProps={{ readOnly: !edit }}
@@ -478,6 +488,8 @@ function UpdateBird(props) {
                     setError({});
                   }}
                   label="Price"
+                  variant={viewMode ? "filled" : "outlined"}
+                  disabled={!edit && !viewMode}
                   type="number"
                   inputProps={{ readOnly: !edit }}
                   color="success"
@@ -496,7 +508,9 @@ function UpdateBird(props) {
                     setError({});
                   }}
                   label="Purchased from"
+                  disabled={!edit && !viewMode}
                   type="text"
+                  variant={viewMode ? "filled" : "outlined"}
                   color="success"
                   style={{
                     width: "95%",
@@ -514,6 +528,8 @@ function UpdateBird(props) {
                     setError({});
                   }}
                   label="Phone number"
+                  variant={viewMode ? "filled" : "outlined"}
+                  disabled={!edit && !viewMode}
                   color="success"
                   style={{
                     width: "49.75%",
@@ -534,6 +550,8 @@ function UpdateBird(props) {
                       setError({});
                     }
                   }}
+                  variant={viewMode ? "filled" : "outlined"}
+                  disabled={!edit && !viewMode}
                   label="Date"
                   value={date}
                   style={{
@@ -649,7 +667,7 @@ function UpdateBird(props) {
                 <Button
                   startIcon={<SaveIcon />}
                   sx={{ fontSize: "14px" }}
-                  disabled={isLoading}
+                  disabled={isLoading || (!edit && !viewMode)}
                   autoFocus
                   variant="outlined"
                   size="medium"
@@ -674,7 +692,6 @@ function UpdateBird(props) {
               <Button
                 sx={{ marginRight: "3.5%", fontSize: "14px" }}
                 color="error"
-                disabled={isLoading}
                 variant="outlined"
                 size="medium"
                 onClick={() => {
