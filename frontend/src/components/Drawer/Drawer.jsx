@@ -15,6 +15,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { TbLogout } from "react-icons/tb";
 import { BsBasketFill } from "react-icons/bs";
 import { FaHeart } from "react-icons/fa6";
+import { HiOutlineNewspaper } from "react-icons/hi";
 import CustomLoadingAnimation from "../LoadingAnimation/loadingAnimation";
 import "./Drawer.css";
 import HamburgerButton from "../HamburgerButton/HamburgerButton";
@@ -138,7 +139,7 @@ function delay(ms) {
         <CustomListItem
           text="Breed Record"
           active={props.BreedRecord}
-          icon={<BsBasketFill style={{marginBottom:"3px"}} />}
+          icon={<HiOutlineNewspaper  size={25} style={{marginBottom:"3px"}} />}
           handleClick={() => {
             delay(280).then(() => {navigate("/breed-record");})
             
@@ -223,7 +224,7 @@ function delay(ms) {
         <CustomListItem
           text="Breed Record"
           active={props.BreedRecord}
-          icon={<BsBasketFill style={{marginBottom:"3px"}} />}
+          icon={<HiOutlineNewspaper size={25} style={{marginBottom:"3px"}} />}
           handleClick={() => {
             delay(280).then(() => {navigate("/breed-record");})
             
