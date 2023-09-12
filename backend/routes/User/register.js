@@ -4,6 +4,7 @@ const { capitalize } = require("../../utils/validate");
 const bcrypt = require("bcrypt");
 const User = require("../../models/user");
 const { findKeyWithEmptyStringValue } = require("../../utils/objectFunctions");
+const { createToken } = require("../../utils/token");
 
 const register = express.Router();
 
@@ -71,7 +72,27 @@ register.post("/", async (req, res) => {
 
   try {
     await createdUser.save();
-    res.status(201).send({ message: "User registered successfully" }); //201 indicates successful creation
+    const token = createToken(createdUser._id, "50h");
+
+    const loggedInUser = { ...createdUser._doc };
+    delete loggedInUser?.password;
+    delete loggedInUser?.__v;
+    delete loggedInUser?._id;
+    var tokenExpirationTime = Date.now() + 1000 * 60 * 60 * 50;
+    //console.log(token);
+    res.cookie("token", token, {
+      withCredentials: true,
+      secure: true,
+      sameSite: "none",
+      httpOnly: true,
+      maxAge: 50 * 365 * 24 * 60 * 60 * 1000,
+    });
+    res.status(200).send({
+      message: "User registered and loggedIn successfully",
+      isLoggedIn: true,
+      tokenExpirationTime,
+      loggedInUser,
+    }); //201 indicates successful creation
   } catch (error) {
     res.send({ message: "internal server error" }).status(500); //500 indicates server side error
     return;

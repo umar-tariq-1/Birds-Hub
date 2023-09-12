@@ -91,11 +91,20 @@ function SignUp() {
       // console.log("clicked")
       const url = process.env.REACT_APP_BASE_URL + "/register";
       
-      await axios.post(url, trimmedData);
+      const config = {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      };
+      const { data } =await axios.post(url, trimmedData,config);
       //console.log(res)
       setLoading(false);
-      enqueueSnackbar("Successfully registered", { variant: "success" });
-      navigate("/login");
+      if (data.isLoggedIn) {
+      enqueueSnackbar("Successfully registered and loggedIn", { variant: "success" });
+        localStorage.setItem("isLoggedIn", JSON.stringify(data.isLoggedIn));
+        localStorage.setItem("tokenExpirationTime", JSON.stringify(data.tokenExpirationTime));
+        localStorage.setItem("birds","[]");
+        navigate("/dashboard");
+      }
     } catch (error) {
       setLoading(false);
       if (error?.response?.data?.message) {

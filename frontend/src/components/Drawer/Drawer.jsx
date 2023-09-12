@@ -24,7 +24,7 @@ import { useSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const drawerWidth = 210;
+const drawerWidth = 215;
 
 function ResponsiveDrawer(props) {
   const { window } = props;
@@ -340,7 +340,7 @@ function delay(ms) {
               display: { xs: "none", md: "block" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
-                width: drawerWidth+10,
+                width: drawerWidth+3,
                 marginTop: "6px",
                 background: "white",
               },

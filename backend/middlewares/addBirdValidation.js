@@ -34,7 +34,7 @@ module.exports.addBirdValidation = (req, res, next) => {
     )
   ) {
     return res.status(422).send({ message: "Incomplete details entered" });
-  } else if (gender[0] !== "M" && gender[0] !== "F") {
+  } else if (gender[0] !== "M" && gender[0] !== "F" && gender[0] !== "O") {
     return res.status(422).send({ message: "Incorrect gender entered" });
   } else if (status[0] !== "A" && status[0] !== "D") {
     return res.status(422).send({ message: "Incorrect status entered" });

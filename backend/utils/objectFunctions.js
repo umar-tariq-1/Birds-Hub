@@ -74,6 +74,7 @@ function convertAbbreviations(dataArray) {
   const genderMapping = {
     M: "Male",
     F: "Female",
+    O: "Other",
   };
 
   const statusMapping = {

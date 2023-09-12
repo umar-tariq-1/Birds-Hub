@@ -131,7 +131,7 @@ export default function HomeFeatures() {
                 <GrInstagram />
               </a>
               <a
-                href="https://twitter.com/umar__tariq/"
+                href="https://twitter.com/umar__tariq"
                 className="text-white me-4"
               >
                 <FaTwitter />
@@ -232,11 +232,11 @@ export default function HomeFeatures() {
             </div>
           </section>
           <div
-            className="text-center text-white-50 p-3 p-md-2"
-            style={{ backgroundColor: "black" }}
+            className="text-center text-white p-3 p-md-2"
+            style={{ backgroundColor: "#1b854a",fontSize:"15px" }}
           >
             © 2023 Copyright:&nbsp;
-            <a className="text-white-50" href="/">
+            <a className="text-white" href="/">
               BirdsHub.com
             </a>
           </div>
