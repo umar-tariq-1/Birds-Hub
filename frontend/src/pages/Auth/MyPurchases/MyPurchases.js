@@ -5,7 +5,7 @@ import { MaterialReactTable } from "material-react-table";
 import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 import "react-day-picker/dist/style.css";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { IconButton, Tooltip } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import CustomMenu from "./CustomMenu";
@@ -29,6 +29,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteAlertDialog from "../../../components/DeleteAlertDialog/DeleteAlertDialog";
 import CustomLoadingAnimation from "../../../components/LoadingAnimation/loadingAnimation";
+import { compareArraysOfObjects } from "../../../utils/objectFunctiions/compareArraysOfObjects";
 
 const order = [
   "name",
@@ -229,6 +230,25 @@ const MyPurchases = () => {
         accessorKey: "status",
         header: "Status",
         size: 123,
+        Cell: ({ cell }) => (
+          <Box
+            component="span"
+            sx={(theme) => ({
+              backgroundColor:
+                cell.getValue() === "Dead"
+                  ? theme.palette.error.dark
+                  : cell.getValue() === "Alive"
+                  ? theme.palette.success.dark
+                  : theme.palette.warning.dark,
+              borderRadius: "0.25rem",
+              color: "#fff",
+              py: "0.21rem",
+              px: "0.51rem",
+            })}
+          >
+            {cell.getValue()}
+          </Box>
+        ),
         filterFn: "equals",
         muiTableHeadCellFilterTextFieldProps: {
           placeholder: "Status",
@@ -317,7 +337,10 @@ const MyPurchases = () => {
         <MaterialReactTable
           columns={columns}
           data={
-            reorderKeys(responseData?.data?.orderedData, order) === []
+            compareArraysOfObjects(
+              reorderKeys(responseData?.data?.orderedData, order),
+              []
+            )
               ? reorderKeys(responseData?.data?.orderedData, order)
               : reorderKeys(JSON.parse(localStorage.getItem("birds")), order)
           }

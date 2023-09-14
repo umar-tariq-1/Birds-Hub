@@ -27,6 +27,7 @@ const Navbar = (props) => {
   const navLinkInactiveTextColor = {};
 
   const isLoggedIn = JSON.parse(localStorage.getItem("isLoggedIn"));
+  const tokenExpirationTime = JSON.parse(localStorage.getItem("tokenExpirationTime"));
 
   return (
     <ClickAwayListener onClickAway={()=>setShowNavbar(false)}>
@@ -88,9 +89,11 @@ const Navbar = (props) => {
 
             <li
               onClick={() => {
-                if (isLoggedIn) {
+                if (isLoggedIn && Date.now() < tokenExpirationTime) {
                   navigate("/dashboard");
                 } else {
+                  localStorage.setItem("isLoggedIn","false");
+                  localStorage.setItem("tokenExpirationTime","null");
                   navigate("/login");
                 }
               }}
