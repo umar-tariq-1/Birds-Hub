@@ -142,8 +142,10 @@ const MyPurchases = () => {
         variant: "success",
         autoHideDuration: 1750,
       });
+      localStorage.setItem("myPurchasesFetched", "true");
     },
     onError: (error) => {
+      localStorage.setItem("myPurchasesFetched", "true");
       enqueueSnackbar(
         error?.response?.data?.message || "Coulnot refresh data",
         {
@@ -166,6 +168,7 @@ const MyPurchases = () => {
         navigate("/login");
       }
     },
+    enabled: !JSON.parse(localStorage.getItem("myPurchasesFetched")),
     keepPreviousData: true,
   });
 

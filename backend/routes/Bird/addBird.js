@@ -6,7 +6,7 @@ const multer = require("multer");
 const ImageKit = require("imagekit");
 const User = require("../../models/user");
 const Bird = require("../../models/bird");
-const { trimObject, reorderKeys } = require("../../utils/objectFunctions");
+const { trimObject } = require("../../utils/objectFunctions");
 
 const addBird = express.Router();
 
@@ -87,19 +87,6 @@ addBird.post("/", authorize, upload, addBirdValidation, async (req, res) => {
     delete data.creator;
     delete data.__v;
     delete data.image.id;
-    // const order = [
-    //   "_id",
-    //   "image",
-    //   "name",
-    //   "price",
-    //   "gender",
-    //   "status",
-    //   "ringNo",
-    //   "date",
-    //   "purchasedFrom",
-    //   "phone",
-    // ];
-    // const orderedData = reorderKeys(data, order);
     await sess.commitTransaction();
     await sess.endSession();
     res

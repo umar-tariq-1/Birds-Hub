@@ -50,7 +50,7 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
     });
   } else if (Number(price) < 0) {
     return res.status(422).send({ message: "Price cannot be negative" });
-  } else if (gender[0] !== "M" && gender[0] !== "F") {
+  } else if (gender[0] !== "M" && gender[0] !== "F" && gender[0] !== "O") {
     return res.status(422).send({ message: "Incorrect gender entered" });
   } else if (status[0] !== "A" && status[0] !== "D") {
     return res.status(422).send({ message: "Incorrect status entered" });
@@ -130,19 +130,22 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
       delete data.creator;
       delete data.__v;
       delete data.image.id;
-      const order = [
-        "_id",
-        "image",
-        "name",
-        "price",
-        "gender",
-        "status",
-        "ringNo",
-        "date",
-        "purchasedFrom",
-        "phone",
-      ];
-      const orderedData = reorderKeys(data, order);
+
+      // const birds = await Bird.find(
+      //   { creator: authorizedUser._id },
+      //   { __v: 0, creator: 0 }
+      // );
+      // var birdsData = birds.map((item) => {
+      //   delete item?._doc.image.id;
+      //   return item?._doc;
+      // });
+      // if (birdsData.length > 0) {
+      //   birdsData = sortByName(birdsData);
+      //   var orderedData = convertAbbreviations(birdsData);
+      // } else {
+      //   var orderedData = [];
+      // }
+      const orderedData = data;
       return res
         .status(200)
         .send({ message: "Bird updated successfully", orderedData });

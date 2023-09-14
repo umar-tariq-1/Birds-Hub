@@ -171,8 +171,8 @@ function UpdateBird(props) {
   const handleImageUploadOptimized = async () => {
     const jsonData = trimObject({
       name,
-      gender,
-      status,
+      gender: gender[0],
+      status: status[0],
       dna,
       price,
       purchasedFrom,

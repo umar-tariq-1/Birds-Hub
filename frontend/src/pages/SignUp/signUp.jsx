@@ -101,6 +101,7 @@ function SignUp() {
       if (data.isLoggedIn) {
       enqueueSnackbar("Successfully registered and loggedIn", { variant: "success" });
         localStorage.setItem("isLoggedIn", JSON.stringify(data.isLoggedIn));
+        localStorage.setItem("myPurchasesFetched", "false");
         localStorage.setItem("tokenExpirationTime", JSON.stringify(data.tokenExpirationTime));
         localStorage.setItem("birds","[]");
         navigate("/dashboard");
