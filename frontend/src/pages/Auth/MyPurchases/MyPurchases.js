@@ -409,8 +409,12 @@ const MyPurchases = () => {
           state={{
             showColumnFilters,
             rowSelection,
-            isLoading: isLoading,
-            showProgressBars: isFetching,
+            isLoading:
+              !JSON.parse(localStorage.getItem("myPurchasesFetched")) &&
+              isLoading,
+            showProgressBars:
+              !JSON.parse(localStorage.getItem("myPurchasesFetched")) &&
+              isFetching,
             density: "compact",
           }}
           renderTopToolbarCustomActions={({ table }) => {

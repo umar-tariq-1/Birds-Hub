@@ -60,6 +60,8 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
 
   try {
     var birdData = await Bird.findById(birdId);
+    birdData = birdData?._doc;
+
     if (!birdData) {
       return res.status(404).send({ message: "Bird not found" });
     }
@@ -115,7 +117,7 @@ updateBird.put("/:id", authorize, upload, async (req, res) => {
     if (!isEmptyNullOrUndefined(updatedData)) {
       updatedData = { ...updatedData, image: newImageData };
     } else {
-      updatedData = { image };
+      updatedData = { image: newImageData };
     }
     try {
       const updatedBird = await Bird.findByIdAndUpdate(birdId, updatedData, {

@@ -53,7 +53,7 @@ export default function HomeFeatures() {
             <div className="text-center d-flex flex-column align-items-center align-items-xl-center">
               <div className="bs-icon-lg bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-3 bs-icon">
                 <img
-                  style={{ height: "93px", width: "93px" }}
+                  style={{ height: "92px", width: "92px" }}
                   src={checkPic}
                   alt=" Loading..."
                   data-aos="zoom-in-up"
