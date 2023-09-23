@@ -108,7 +108,7 @@ const MyPurchases = () => {
       );
       refetch();
       setShowLoadingAnimation(false);
-      enqueueSnackbar("Bird deleted successfully", { variant: "success" });
+      // enqueueSnackbar("Bird deleted successfully", { variant: "success" });
     } catch (error) {
       setShowLoadingAnimation(false);
       enqueueSnackbar(
@@ -344,8 +344,8 @@ const MyPurchases = () => {
               reorderKeys(responseData?.data?.orderedData, order),
               []
             )
-              ? reorderKeys(responseData?.data?.orderedData, order)
-              : reorderKeys(JSON.parse(localStorage.getItem("birds")), order)
+              ? reorderKeys(JSON.parse(localStorage.getItem("birds")), order)
+              : reorderKeys(responseData?.data?.orderedData, order)
           }
           tableInstanceRef={tableInstanceRef}
           enablePinning={true}

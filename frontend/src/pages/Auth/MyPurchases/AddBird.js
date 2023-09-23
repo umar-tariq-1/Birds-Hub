@@ -202,9 +202,9 @@ function AddBird(props) {
       setShowLoadingAnimation(false);
       setIsLoading(false);
       setAddBirdOpen(false);
-      enqueueSnackbar("Bird data uploaded successfully", {
-        variant: "success",
-      });
+      // enqueueSnackbar("Bird data uploaded successfully", {
+      //   variant: "success",
+      // });
       setUploadProgress(0);
       resetValues();
       refetch();

@@ -224,8 +224,6 @@ function UpdateBird(props) {
       }
     }
 
-    // if (selectedImage.length === 1) {
-
     try {
       if (
         (deletedSomething && Object.keys(jsonData).length >= 1) ||
@@ -256,9 +254,9 @@ function UpdateBird(props) {
         setShowLoadingAnimation(false);
         setIsLoading(false);
         setUpdateBirdOpen(false);
-        enqueueSnackbar("Bird data updated successfully", {
-          variant: "success",
-        });
+        // enqueueSnackbar("Bird data updated successfully", {
+        //   variant: "success",
+        // });
         setUploadProgress(0);
         setEdit(false);
         refetch();
