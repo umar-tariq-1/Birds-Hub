@@ -334,7 +334,7 @@ const MyPurchases = () => {
   );
 
   return (
-    <ResponsiveDrawer MyPurchases={1}>
+    <ResponsiveDrawer active={{ MyPurchases: true }}>
       {showLoadingAnimation && <CustomLoadingAnimation />}
       <div className="py-2 px-1">
         <MaterialReactTable

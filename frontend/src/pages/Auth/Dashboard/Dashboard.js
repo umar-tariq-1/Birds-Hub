@@ -3,7 +3,7 @@ import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 
 const Dashboard = () => {
   return (
-    <ResponsiveDrawer Dashboard={1}>
+    <ResponsiveDrawer active={{ Dashboard: true }}>
       <div className="d-flex justify-content-center align-items-center h1">
         Dashboard
       </div>

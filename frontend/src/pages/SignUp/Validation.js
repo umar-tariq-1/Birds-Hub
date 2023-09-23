@@ -42,13 +42,7 @@ export const validate = (
     setinputErrors({ lname: 1 });
     enqueueSnackbar("Couldn't register", { variant: "error" });
     return false;
-  }
-  // eslint-disable-next-line
-  else if (
-    /* !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(Email) */ !/^\+?\d{8,15}$/.test(
-      Phone
-    )
-  ) {
+  } else if (!/^\+?\d{8,15}$/.test(Phone)) {
     setError("Invalid Phone Number");
     setinputErrors({ phone: 1 });
     enqueueSnackbar("Couldn't register", { variant: "error" });
@@ -59,7 +53,7 @@ export const validate = (
     enqueueSnackbar("Couldn't register", { variant: "error" });
     return false;
   } else if (!Password.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/)) {
-    setError("Incorrect Password");
+    setError("Invalid Password");
     setinputErrors({ password: 1 });
     enqueueSnackbar("Couldn't register", { variant: "error" });
     return false;

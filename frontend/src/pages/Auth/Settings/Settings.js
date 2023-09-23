@@ -3,7 +3,7 @@ import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 
 const Settings = () => {
   return (
-    <ResponsiveDrawer Settings={1}>
+    <ResponsiveDrawer active={{ Settings: true }}>
       <div className="d-flex justify-content-center align-items-center h1">
         Settings
       </div>

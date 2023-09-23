@@ -4,7 +4,7 @@ import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 
 const Categories = () => {
   return (
-    <ResponsiveDrawer Favourites={1}>
+    <ResponsiveDrawer active={{ Favourites: true }}>
       <div className="d-flex justify-content-center align-items-center h1">
         Categories
       </div>

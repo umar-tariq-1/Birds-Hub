@@ -4,7 +4,7 @@ import ResponsiveDrawer from "../../../components/Drawer/Drawer";
 function BreedRecord(props) {
   return (
     <>
-      <ResponsiveDrawer BreedRecord={1}></ResponsiveDrawer>
+      <ResponsiveDrawer active={{ BreedRecord: true }}></ResponsiveDrawer>
     </>
   );
 }

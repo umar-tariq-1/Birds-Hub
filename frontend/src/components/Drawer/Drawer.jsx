@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 // import CssBaseline from "@mui/material/CssBaseline";
@@ -31,7 +31,12 @@ function ResponsiveDrawer(props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [active, setActive] = useState(props.active);
 
+  // Update state when props change
+  useEffect(() => {
+    setActive(props.active);
+  }, [props.active]);
 
 
   const handleLogout = async () => {
@@ -99,71 +104,64 @@ function delay(ms) {
       <List>
         <CustomListItem
           text="Dashboard"
-          active={props.Dashboard}
+          active={active.Dashboard}
           icon={<MdDashboard />}
           handleClick={() => {
             delay(280).then(() => {navigate("/dashboard");})
-            
           }}
           closeDrawer={closeDrawer}
         />
          <CustomListItem
           text="Birds"
-          active={props.Birds}
+          active={active.Birds}
           icon={<FaListUl size={22} style={{marginBottom:"2px"}} />}
           handleClick={() => {
             delay(280).then(() => {navigate("/birds");})
-            
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Favourites"
-          active={props.Favourites}
+          active={active.Favourites}
           icon={<FaHeart size={22} />}
           handleClick={() => {
             delay(280).then(() => {navigate("/favourites");})
-            
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="My Purchases"
-          active={props.MyPurchases}
+          active={active.MyPurchases}
           icon={<BsBasketFill style={{marginBottom:"3px"}} />}
           handleClick={() => {
             delay(280).then(() => {navigate("/my-purchases");})
-            
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Breed Record"
-          active={props.BreedRecord}
+          active={active.BreedRecord}
           icon={<HiOutlineNewspaper  size={25} style={{marginBottom:"3px"}} />}
           handleClick={() => {
             delay(280).then(() => {navigate("/breed-record");})
-            
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Profile"
-          active={props.Profile}
+          active={active.Profile}
           icon={<CgProfile />}
           handleClick={() => {
             delay(280).then(() => {navigate("/profile");})
-            
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Settings"
-          active={props.Settings}
+          active={active.Settings}
           icon={<IoSettingsOutline />}
           handleClick={() => {
             delay(280).then(() => {navigate("/settings");})
-            
           }}
           closeDrawer={closeDrawer}
         />
@@ -180,73 +178,80 @@ function delay(ms) {
   const pcDrawer = (
     <div
       style={{ fontFamily: "Titillium Web, sans-serif",backgroundColor:"white" }}
-      className="text-secondary"
+      className="text-secondary mt-1"
     >
       <Toolbar />
       <Divider />
-      <List>
+      <List sx={{px:1}}>
         <CustomListItem
           text="Dashboard"
-          active={props.Dashboard}
+          active={active?.Dashboard}
           icon={<MdDashboard />}
           handleClick={() => {
-            navigate("/dashboard")
+            setActive({Dashboard : true})
+            delay(160).then(() => {navigate("/dashboard")})
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Birds"
-          active={props.Birds}
+          active={active?.Birds}
           icon={<FaListUl size={22} style={{marginBottom:"2px"}} />}
           handleClick={() => {
-            navigate("/birds")
+            setActive({Birds : true})
+            delay(160).then(() => {navigate("/birds")})
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Favourites"
-          active={props.Favourites}
+          active={active?.Favourites}
           icon={<FaHeart size={22} style={{marginBottom:"2px"}} />}
           handleClick={() => {
-            navigate("/favourites")
+            setActive({Favourites : true})
+            delay(160).then(() => {navigate("/favourites")})
           }}
           closeDrawer={closeDrawer}
         />
          <CustomListItem
           text="My Purchases"
-          active={props.MyPurchases}
+          active={active?.MyPurchases}
           icon={<BsBasketFill style={{marginBottom:"3px"}} />}
           handleClick={() => {
-            delay(280).then(() => {navigate("/my-purchases");})
+            setActive({MyPurchases : true})
+            delay(160).then(() => {navigate("/my-purchases");})
             
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Breed Record"
-          active={props.BreedRecord}
+          active={active?.BreedRecord}
           icon={<HiOutlineNewspaper size={25} style={{marginBottom:"3px"}} />}
           handleClick={() => {
-            delay(280).then(() => {navigate("/breed-record");})
+            setActive({BreedRecord:true})
+            delay(160).then(() => {navigate("/breed-record");})
             
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Profile"
-          active={props.Profile}
+          active={active?.Profile}
           icon={<CgProfile />}
           handleClick={() => {
-            navigate("/profile")
+            setActive({Profile : true})
+            delay(160).then(() => {navigate("/profile")})
           }}
           closeDrawer={closeDrawer}
         />
         <CustomListItem
           text="Settings"
-          active={props.Settings}
+          active={active?.Settings}
           icon={<IoSettingsOutline />}
           handleClick={() => {
-           navigate("/settings")
+            setActive({Settings : true})
+           delay(160).then(() => {navigate("/settings")})
           }}
           closeDrawer={closeDrawer}
         />
@@ -341,7 +346,7 @@ function delay(ms) {
               display: { xs: "none", md: "block" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
-                width: drawerWidth+3,
+                width: drawerWidth+15,
                 marginTop: "6px",
                 background: "white",
               },

@@ -19,38 +19,6 @@ const AllProducts = () => {
     refetchOnWindowFocus: false,
     onSuccess: (data) => {
       console.log(data.data.data[0].createdAt);
-      // const inputDateStr = data.data.data[0].createdAt;
-
-      // // Month abbreviations
-      // const monthAbbreviations = [
-      //   "Jan",
-      //   "Feb",
-      //   "Mar",
-      //   "Apr",
-      //   "May",
-      //   "Jun",
-      //   "Jul",
-      //   "Aug",
-      //   "Sep",
-      //   "Oct",
-      //   "Nov",
-      //   "Dec",
-      // ];
-
-      // // Create a Date object from the input string
-      // const inputDate = new Date(inputDateStr);
-
-      // // Extract day, month, and year components
-      // const day = inputDate.getUTCDate();
-      // const monthAbbrev = monthAbbreviations[inputDate.getUTCMonth()]; // Get month abbreviation
-      // const year = inputDate.getUTCFullYear() % 100; // Get last two digits of the year
-
-      // // Format components as dd-Mon-yy
-      // const formattedDate = `${day
-      //   .toString()
-      //   .padStart(2, "0")}-${monthAbbrev}-${year.toString().padStart(2, "0")}`;
-
-      // console.log(formattedDate);
     },
     onError: (error) => {
       console.log(error?.response?.data?.message);
@@ -64,7 +32,7 @@ const AllProducts = () => {
   const [parent] = useAutoAnimate({ duration: 250 });
 
   return (
-    <ResponsiveDrawer Birds={1}>
+    <ResponsiveDrawer active={{ Birds: 1 }}>
       {/* <div ref={parent}>
         {isFetching ? <CustomRefreshAnimation /> : null}
         <div className="container-fluid">
