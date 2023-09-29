@@ -64,6 +64,9 @@ const CustomPasswordField = React.forwardRef(function CustomPasswordField(
           </>
         }
         name={name}
+        inputProps={{
+        autoComplete: 'new-password',
+        }}
         onChange={handleChange}
       />
     </FormControl>

@@ -13,6 +13,9 @@ const CustomTextField = (props) => {
        name ={name} 
       onChange={onChange}
       required={true}
+      inputProps={{
+        autoComplete: 'new-password',
+      }}
     />
   );
 };
