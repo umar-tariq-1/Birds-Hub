@@ -4,7 +4,6 @@ import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { useNavigate } from "react-router-dom";
 
 import "./navbar.css";
-// import { FiMenu } from "react-icons/fi";
 
 import { GiEgyptianBird } from "react-icons/gi";
 
@@ -43,7 +42,6 @@ const Navbar = (props) => {
         >
           <HamburgerButton handleShowNavbar={handleShowNavbar} showNavbar={showNavbar} />
           
-          {/* <FiMenu color="#212529c0" size={43} /> */}
         </div>
         <div
           className={`nav-elements rounded ${
