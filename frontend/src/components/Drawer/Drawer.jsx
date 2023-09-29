@@ -279,7 +279,7 @@ function delay(ms) {
           sx={{
             position:{md:"fixed"},
             background: "#1b854a",
-            height: "70px",
+            height: {xs:"70px",md:"65px"},
             zIndex: 1290 /* (theme) => theme.zIndex.drawer + 1 */,  
           }}
         >
