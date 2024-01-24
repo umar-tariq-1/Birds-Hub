@@ -20,17 +20,18 @@ export default function DeleteAlertDialog({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Confirm Delete?</DialogTitle>
-        <DialogContent>
+        <DialogTitle id="alert-dialog-title">Confirm Delete</DialogTitle>
+        <DialogContent sx={{ pb: { xs: 1, md: 2 } }}>
           <DialogContentText id="alert-dialog-description">
             Are you sure you want to delete {deleteItem}?
           </DialogContentText>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ pr: 2, pb: 2 }}>
           <Button variant="outlined" onClick={handleAlertDialogClose} autoFocus>
             Cancel
           </Button>
           <Button
+            // sx={{ marginRight: "12px" }}
             color="error"
             variant="outlined"
             onClick={() => {
